@@ -1,0 +1,543 @@
+.main{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    .main_left{
+      width: 75%;
+      height: 100%;
+      margin-right: 10px;
+      display: flex;
+      flex-direction: column;
+      .main_header_image{
+        width: 100%;
+        height: 224px;
+        border-radius: 10px;
+      }
+      .function_guide{
+        margin-top: 18px;
+        height: 270px;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 10px;
+        .header{
+            height: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: row;
+            box-sizing: border-box;
+            padding: 0px 15px;
+            .label{
+                color: #000000;
+                letter-spacing: 0px;
+                font-weight: 600;
+                font-size: 16px;
+                font-family: Source Han Sans;
+            }
+            .logo{
+                width: 45px;
+                height: 22px;
+            }
+        }
+        .function_item{
+          width: 100%;
+          height: calc(100% - 100px);
+          padding: 0px 80px;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          .item{
+            display: flex;
+            align-items: center;
+            width: 100px;
+            height: 100%;
+            flex-direction: column;
+            justify-content: space-around;
+            position: relative;
+            .menu{
+              width: 64px;
+              height: 64px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              cursor: pointer;
+              z-index: 1;
+              .icon{
+                width: 32px;
+                height: 32px;
+              }
+              .name{
+                width: 100%;
+                height: 32px;
+                text-align: center;
+                line-height: 32px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                font-family: Source Han Sans;
+                font-size: 12px;
+                font-weight: 350;
+                text-align: center;
+                letter-spacing: 0px;
+                color: #424E66;
+              }
+
+            }
+            .line{
+              width: 1px;
+              height: 90px;
+              position: absolute;
+              bottom: 4px;
+              background-color: #0256FF;
+              // background-image: linear-gradient(to bottom, #0256FF 0%, rgba(2, 86, 255, 0.6027) 65%, rgba(2, 86, 255, 0) 100%) ;
+            }
+            .line2{
+              width: 1px;
+              height: 90px;
+              position: absolute;
+              bottom: 4px;
+              background-color: #FF8127;
+              // background-image: linear-gradient(to bottom, #FF8127 0%, #FF8127 65%, rgba(2, 86, 255, 0) 100%);
+            }
+
+          }
+        }
+        .function_direction{
+            height: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0px 80px;
+            .item{
+               width: 100%;
+               height: 100%;
+               background-color: #0256FF;
+               border-radius: 4px;
+               display: flex;
+               align-items: center;
+               justify-content: end;
+               .end{
+                width: 7.8px;
+                height: 7.8px;
+                border-radius: 4px;
+                background-color: #FF8127;
+                border: 0.1px solid #FFFFFF;
+               }
+            }
+        }
+        .function_category{
+            margin-top: 8px;
+            height: 25px;
+            width: 100%;
+            padding: 0px 80px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            .item{
+                width:100px;
+                font-family: Roboto;
+                font-size: 14px;
+                font-weight: 600;
+                text-align: center;
+                letter-spacing: 0px;
+                color: #000000;
+            }
+        }
+      }
+      .notification_message{
+        width: 100%;
+        height: 212px;
+        background-color: #ffffff;
+        margin-top: 18px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        .header{
+          height: 50px;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-direction: row;
+          box-sizing: border-box;
+          padding: 0px 15px;
+          .label{
+              color: #000000;
+              letter-spacing: 0px;
+              font-weight: 600;
+              font-size: 16px;
+              font-family: Source Han Sans;
+          }
+          .more{
+              width: auto;
+              height: 50px;
+              line-height: 50px;
+              font-family: Source Han Sans;
+              font-size: 12px;
+              font-weight: 350;
+              letter-spacing: 0px;
+              color: #165DFF;
+              cursor: pointer;
+          }
+        }
+        .list{
+          width: 100%;
+          height: 150px;
+          display: flex;
+          flex-direction: column;
+          padding: 0px 15px;
+          box-sizing: border-box;
+          overflow-y: auto;
+          .list_item{
+            height: 25px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: left;
+            align-items: center;
+            .type{
+              height: 20px;
+              line-height: 20px;
+              width: 44px;
+              font-family: Source Han Sans;
+              font-size: 14px;
+              font-weight: 350;
+              letter-spacing: 0px;
+              text-align: center;
+              cursor: pointer;
+            }
+            .task{
+              background: #E8F3FF;
+              color: #165DFF;
+            }
+            .activity{
+              background: #FFF7E8;
+              color: #FF7D00;
+            }
+            .message{
+              background: #E8FFFB;
+              color: #0FC6C2;
+            }
+            .tips{
+              width: auto;
+              height: 25px;
+              line-height: 25px;
+              font-family: Source Han Sans;
+              font-size: 14px;
+              font-weight: 350;
+              letter-spacing: 0px;
+              color: #4E5969;
+              margin-left: 8px;
+              cursor: pointer;
+            }
+            .important{
+              height: 25px;
+              line-height: 25px;
+              font-family: Source Han Sans;
+              font-size: 14px;
+              font-weight: 350;
+              letter-spacing: 0px;
+              color: #EA0000;
+              margin-left: 8px;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+    .main_right{
+      margin-left: 10px;
+      width: 25%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      .top{
+        height: 512px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        justify-content: space-between;
+        .other_function{
+          width: 100%;
+          height: 152px;
+          background: #ffffff;
+          border-radius: 10px;
+          padding: 20px;
+          box-sizing: border-box;
+          .title{
+            height: 24px;
+            width: 100%;
+            line-height: 24px;
+            color: #000000;
+            letter-spacing: 0px;
+            font-weight: 600;
+            font-family: Source Han Sans;
+            font-size: 16px;
+          }
+          .menu{
+            width: 100%;
+            height: 64px;
+            display: flex;
+            flex-direction: row;
+            margin-top: 16px;
+            z-index: 1;
+            cursor: pointer;
+            .item{
+              width: 64px;
+              height: 64px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-around;
+              align-items: center;
+              .icon{
+                width: 32px;
+                height: 32px;
+              }
+              .name{
+                height: 32px;
+                line-height: 32px;
+                text-align: center;
+                width: 100%;
+                font-family: Source Han Sans;
+                font-size: 12px;
+                font-weight: 350;
+                text-align: center;
+                letter-spacing: 0px;
+                color: #424E66;
+              }
+            }
+          }
+        }
+        .total_order_amount{
+          width: 100%;
+          height: 160px;
+          border-radius: 10px;
+          background: linear-gradient(180deg, #F6F7FF -3%, #ECECFF 100%);
+          padding:16px;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          .title{
+            width: 100%;
+            height: 25px;
+            line-height: 25px;
+            font-family: Alibaba PuHuiTi 2.0;
+            font-size: 16px;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0px;
+            color: #1D252F;
+          }
+          .content{
+            width: 100%;
+            height: 93px;
+            display:flex;
+            flex-direction: row;
+            .left{
+              width: 45%;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              position: relative;
+              .num{
+                height: 34px;
+                width: 100%;
+                line-height: 34px;
+                text-align: left;
+                font-family: Alibaba PuHuiTi 2.0;
+                font-size: 22px;
+                font-weight: normal;
+                letter-spacing: 0px;
+                color: #1D2129;
+              }
+              .desc{
+                width: 100%;
+                height: 20px;
+                position: absolute;
+                bottom: 8px;
+                display: flex;
+                justify-content: flex-start;
+                box-sizing: border-box;
+                .text1{
+                  font-family: Alibaba PuHuiTi 2.0;
+                  font-size: 12px;
+                  font-weight: normal;
+                  letter-spacing: 0px;
+                  color: #4E5969;
+                  height: 20px;
+                  line-height: 20px;
+                }
+                .text2{
+                  margin-left: 18px;
+                  font-family: Alibaba PuHuiTi 2.0;
+                  font-size: 14px;
+                  font-weight: normal;
+                  letter-spacing: 0px;
+                  color: #F53F3F;
+                  height: 20px;
+                  line-height: 28px;
+                }
+                .text3{
+                  margin-left: 18px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                }
+              }
+            }
+            .right{
+              width: 55%;
+              height: 100%;
+            }
+          }
+        }
+        .aftersales_workorder{
+          width: 100%;
+          height: 160px;
+          border-radius: 10px;
+          background: linear-gradient(180deg, #F6F7FF -3%, #ECECFF 100%);
+          box-sizing: border-box;
+          padding:16px;
+          display: flex;
+          flex-direction: column;
+          .title{
+            width: 100%;
+            height: 25px;
+            line-height: 25px;
+            font-family: Alibaba PuHuiTi 2.0;
+            font-size: 16px;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0px;
+            color: #1D252F;
+          }
+          .content{
+            width: 100%;
+            height: 93px;
+            display:flex;
+            flex-direction: row;
+            .left{
+              width: 45%;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              position: relative;
+              .num{
+                height: 34px;
+                width: 100%;
+                line-height: 34px;
+                text-align: left;
+                font-family: Alibaba PuHuiTi 2.0;
+                font-size: 22px;
+                font-weight: normal;
+                letter-spacing: 0px;
+                color: #1D2129;
+              }
+              .desc{
+                width: 100%;
+                height: 20px;
+                position: absolute;
+                bottom: 8px;
+                display: flex;
+                justify-content: flex-start;
+                box-sizing: border-box;
+                .text1{
+                  font-family: Alibaba PuHuiTi 2.0;
+                  font-size: 12px;
+                  font-weight: normal;
+                  letter-spacing: 0px;
+                  color: #4E5969;
+                  height: 20px;
+                  line-height: 20px;
+                }
+                .text2{
+                  margin-left: 18px;
+                  font-family: Alibaba PuHuiTi 2.0;
+                  font-size: 14px;
+                  font-weight: normal;
+                  letter-spacing: 0px;
+                  color: #F53F3F;
+                  height: 20px;
+                  line-height: 28px;
+                }
+                .text3{
+                  margin-left: 18px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                }
+              }
+            }
+            .right{
+              width: 55%;
+              height: 100%;
+            }
+          }
+        }
+      }
+      .bottom{
+        height: 212px;
+        width: 100%;
+        margin-top: 15px;
+        border-radius: 10px;
+        background-color: #ffffff;
+        padding: 0px 15px;
+        box-sizing: border-box;
+        .header{
+          height: 50px;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          flex-direction: row;
+          align-items: center;
+          .label{
+              color: #000000;
+              letter-spacing: 0px;
+              font-weight: 600;
+              font-size: 16px;
+              font-family: Source Han Sans;
+          }
+          .more{
+              width: auto;
+              height: 50px;
+              line-height: 50px;
+              font-family: Source Han Sans;
+              font-size: 12px;
+              font-weight: 350;
+              letter-spacing: 0px;
+              color: #165DFF;
+              cursor: pointer;
+          }
+        }
+        .list{
+          width: 100%;
+          height: 25px;
+          display: flex;
+          flex-direction: row;
+          margin-top: 12px;
+          .list_item{
+            width: 40%;
+            height: 25px;
+            line-height: 25px;
+            font-family: Source Han Sans;
+            font-size: 14px;
+            font-weight: 350;
+            letter-spacing: 0px;
+            color: #4E5969;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+}

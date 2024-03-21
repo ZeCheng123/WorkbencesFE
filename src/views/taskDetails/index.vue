@@ -29,22 +29,52 @@
         </span>
       </span>
     </div>
-    <div class="shipping_order_details">
-      <span class="title">任务 > 发货单明细</span>
-      <span class="table">
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="status" label="状态" width="100" />
-          <el-table-column prop="text1" label="大类" width="160" />
-          <el-table-column prop="text2" label="实例字段" />
-          <el-table-column prop="text3" label="油漆颜色" />
-          <el-table-column prop="text4" label="修改时间" />
-          <el-table-column prop="text5" label="数量" />
-        </el-table>
-      </span>
-      <span class="action__list">
-        <el-button type="primary" @click="inBound" class="primary_btn"
-          >确认出库</el-button
-        >
+    <div class="task_details">
+      <span class="title">任务详情 <el-button type="primary" class="primary_blue_btn">已派工配送</el-button><el-button type="primary" class="primary_green_btn">已派工安装</el-button></span>
+      <span class="main_field">
+        <span class="row_field">
+          <span class="field">
+            <span class="label">任务编号：</span>
+            <span class="value">SO20240221-0002</span>
+            <!-- <span class="view">查看</span> -->
+          </span>
+          <span class="field">
+            <span class="label">经销商负责人：</span>
+            <span class="value">零售</span>
+          </span>
+          <span class="field">
+            <span class="label">任务开始时间：</span>
+            <span class="value">示例</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">任务类型：</span>
+            <span class="value">交付</span>
+          </span>
+          <span class="field">
+            <span class="label">提货司机：</span>
+            <span class="value">默认</span>
+          </span>
+          <span class="field">
+            <span class="label">预计结束时间：</span>
+            <span class="value">示例</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">示例字段：</span>
+            <span class="value">示例</span>
+          </span>
+          <span class="field">
+            <span class="label">示例字段：</span>
+            <span class="value">示例</span>
+          </span>
+          <span class="field">
+            <span class="label">示例字段：</span>
+            <span class="value">示例</span>
+          </span>
+        </span>
       </span>
     </div>
     <div class="order_status">
@@ -80,83 +110,85 @@
         </span>
       </span>
     </div>
-    <div class="order_details">
-      <span class="title">订单详情</span>
-      <span class="main_field">
-        <span class="row_field">
-          <span class="field">
-            <span class="label">订单编号：</span>
-            <span class="value">SO20240221-0002</span>
-            <span class="view">查看</span>
-          </span>
-          <span class="field">
-            <span class="label">销售类型：</span>
-            <span class="value">零售</span>
-          </span>
-          <span class="field">
-            <span class="label">客户来源：</span>
-            <span class="value">自然进店</span>
-          </span>
-        </span>
-        <span class="row_field">
-          <span class="field">
-            <span class="label">交期类型：</span>
-            <span class="value">标准产品类</span>
-          </span>
-          <span class="field">
-            <span class="label">订单状态：</span>
-            <span class="value">已发货</span>
-          </span>
-          <span class="field">
-            <span class="label">加急类型：</span>
-            <span class="value">正常交期</span>
-          </span>
-        </span>
-        <span class="row_field">
-          <span class="field">
-            <span class="label">生产单号：</span>
-            <span class="value">H404304</span>
-          </span>
-          <span class="field">
-            <span class="label">交期天数：</span>
-            <span class="value">35</span>
-          </span>
-          <span class="field">
-            <span class="label">预计延迟天数：</span>
-            <span class="value">0</span>
-          </span>
-        </span>
+    <div class="related_items">
+      <span class="title">相关项 > 订单</span>
+      <span class="table">
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="text1" label="操作">
+            <template #default="scope">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  color: #165dff;
+                  cursor: pointer;
+                "
+                @click="console.log(scope)"
+              >
+                查看
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="text2" label="订单编号" />
+          <el-table-column prop="text3" label="其他字段" />
+          <el-table-column prop="text4" label="其他字段" />
+          <el-table-column prop="text5" label="创建时间" />
+          <el-table-column prop="text6" label="其他字段" />
+        </el-table>
       </span>
-      <span class="title">其他字段</span>
-      <span class="other_field">
-        <span class="row_field">
-          <span class="field">
-            <span class="label">入库状态：</span>
-            <span class="status1">未全部入库</span>
-          </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-        </span>
-        <span class="row_field">
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-        </span>
+    </div>
+    <div class="related_items">
+      <span class="title">相关项 > 发货单</span>
+      <span class="table">
+        <el-table :data="tableData2" style="width: 100%">
+          <el-table-column prop="text1" label="操作">
+            <template #default="scope">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  color: #165dff;
+                  cursor: pointer;
+                "
+                @click="console.log(scope)"
+              >
+                查看&nbsp;&nbsp;&nbsp;批量提货
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="text2" label="XX编号" />
+          <el-table-column prop="text3" label="发货单状态" />
+          <el-table-column prop="text4" label="其他字段" />
+          <el-table-column prop="text5" label="创建时间" />
+          <el-table-column prop="text6" label="其他字段" />
+        </el-table>
+      </span>
+    </div>
+    <div class="related_items">
+      <span class="title">相关项 > 派工单</span>
+      <span class="table">
+        <el-table :data="tableData3" style="width: 100%">
+          <el-table-column prop="text1" label="操作">
+            <template #default="scope">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  color: #165dff;
+                  cursor: pointer;
+                "
+                @click="console.log(scope)"
+              >
+                查看
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="text2" label="XX编号" />
+          <el-table-column prop="text3" label="派工单状态" />
+          <el-table-column prop="text4" label="其他字段" />
+          <el-table-column prop="text5" label="创建时间" />
+          <el-table-column prop="text6" label="其他字段" />
+        </el-table>
       </span>
     </div>
     <div class="action_list">
@@ -196,7 +228,9 @@
         <img src="@/assets/images/userinfo.png" alt="" />
         <span class="username">配送司机-张师傅</span>
       </div>
-      <div class="content">客户对于配送比较满意，但是仍然需要快点上门安装！</div>
+      <div class="content">
+        客户对于配送比较满意，但是仍然需要快点上门安装！
+      </div>
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
     <div class="deliveryOrderDialog">
@@ -384,6 +418,12 @@
                 v-model="installationOrderForm.phone"
               />
             </el-form-item>
+            <el-form-item label="人员备注">
+              <el-input
+                placeholder="若该人员不存在，则显示该字段进行新增备注"
+                v-model="installationOrderForm.userRemark"
+              />
+            </el-form-item>
             <el-form-item label="安装小组">
               <span style="width: 300px">
                 <el-checkbox
@@ -404,19 +444,20 @@
             label-width="90px"
             label-position="left"
           >
+            <el-form-item label="预约安装" prop="scheduleInstallationTime">
+              <el-date-picker
+                v-model="installationOrderForm.scheduleInstallationTime"
+                type="datetime"
+                placeholder="日期/时间"
+              />
+            </el-form-item>
             <el-form-item label="优先级" prop="priority">
               <el-input
                 v-model="installationOrderForm.priority"
-                placeholder="紧急/普通"
+                placeholder="高/中/低"
               />
             </el-form-item>
-            <el-form-item label="其他字段" prop="otherField">
-              <el-input
-                v-model="installationOrderForm.otherField"
-                placeholder="参考数据字典"
-              />
-            </el-form-item>
-            <el-form-item label="安装派工单备注" class="customLayout">
+            <el-form-item label="派工单备注" class="customLayout">
               <el-input
                 v-model="installationOrderForm.remark"
                 :rows="5"
@@ -425,6 +466,15 @@
                 placeholder="请清点货品数量，确保准确..."
                 show-word-limit
               />
+            </el-form-item>
+            <el-form-item label="上传图片" class="custom_upload">
+              <el-upload
+                class="avatar-uploader"
+                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                :show-file-list="false"
+              >
+                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              </el-upload>
             </el-form-item>
           </el-form>
         </div>
@@ -459,7 +509,7 @@
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive } from "vue"
-
+import { Plus } from "@element-plus/icons-vue";
 const { proxy }: any = getCurrentInstance()
 
 const currentDeliveryOrderStep = ref(1)
@@ -470,6 +520,7 @@ const deliveryOrderForm = reactive({
   priority: "",
   otherField: "",
   remark: "",
+  userRemark: "",
 })
 
 const deliveryOrderRule = reactive({
@@ -490,6 +541,7 @@ const installationOrderForm = reactive({
   phone: "",
   installationTeam: false,
   remark: "",
+  scheduleInstallationTime: "",
 })
 
 const installationOrderRule = reactive({
@@ -497,6 +549,16 @@ const installationOrderRule = reactive({
     { required: true, message: "Please input username", trigger: "blur" },
   ],
   phone: [{ required: true, message: "Please input phone", trigger: "blur" }],
+  scheduleInstallationTime: [
+    {
+      required: true,
+      message: "Please input schedule installation time",
+      trigger: "blur",
+    },
+  ],
+  priority: [
+    { required: true, message: "Please input priority", trigger: "blur" },
+  ],
 })
 
 const deliveryOrderDialog = ref(false)
@@ -505,36 +567,34 @@ const installationOrderDialog = ref(false)
 
 const tableData = ref([
   {
-    status: "...",
-    text1: "门套",
-    text2: "示例字段...",
-    text3: "混油米灰1#",
-    text4: "2024-02-21 10:30:50",
-    text5: "6",
+    text1: "查看",
+    text2: "XXX",
+    text3: "示例字段...",
+    text4: "XXXX",
+    text5: "2024-02-21 10:30:50",
+    text6: "XXX",
   },
+])
+
+const tableData2 = ref([
   {
-    status: "...",
-    text1: "门套",
-    text2: "示例字段...",
-    text3: "混油米灰1#",
-    text4: "2024-02-21 10:30:50",
-    text5: "10",
+    text1: "查看",
+    text2: "XXX",
+    text3: "示例字段...",
+    text4: "XXXX",
+    text5: "2024-02-21 10:30:50",
+    text6: "XXX",
   },
+])
+
+const tableData3 = ref([
   {
-    status: "...",
-    text1: "门套",
-    text2: "示例字段...",
-    text3: "混油米灰1#",
-    text4: "2024-02-21 10:30:50",
-    text5: "19",
-  },
-  {
-    status: "...",
-    text1: "门套",
-    text2: "示例字段...",
-    text3: "混油米灰1#",
-    text4: "2024-02-21 10:30:50",
-    text5: "20",
+    text1: "查看",
+    text2: "XXX",
+    text3: "示例字段...",
+    text4: "XXXX",
+    text5: "2024-02-21 10:30:50",
+    text6: "XXX",
   },
 ])
 

@@ -1,6 +1,6 @@
 .main{
     width: 100%;
-    height: 100%;
+    height: calc(100% - 26px);
     display: flex;
     flex-direction: row;
     .main_left{
@@ -32,7 +32,7 @@
             .label{
                 color: #000000;
                 letter-spacing: 0px;
-                font-weight: 600;
+                font-weight: normal;
                 font-size: 16px;
                 font-family: Source Han Sans;
             }
@@ -84,8 +84,35 @@
                 text-align: center;
                 letter-spacing: 0px;
                 color: #424E66;
+                cursor: pointer;
               }
-
+              .tips{
+                width: 14px;
+                height: 14px;
+                background: red;
+                position: absolute;
+                right: 24px;
+                top: 0px;
+                font-size: 12px;
+                text-align: center;
+                line-height: 15px;
+                border-radius: 50%;
+                color: #ffffff;
+                font-weight: 100;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 1px;
+              }
+            }
+            .menu:hover{
+              .icon{
+                background: #0256FF;
+              }
+              .name{
+                color:#0256FF;
+                font-weight: 600;
+              }
             }
             .line{
               width: 1px;
@@ -142,7 +169,7 @@
                 width:100px;
                 font-family: Roboto;
                 font-size: 14px;
-                font-weight: 600;
+                font-weight: normal;
                 text-align: center;
                 letter-spacing: 0px;
                 color: #000000;
@@ -157,6 +184,7 @@
         border-radius: 10px;
         display: flex;
         flex-direction: column;
+        box-sizing: border-box;
         .header{
           height: 50px;
           width: 100%;
@@ -169,7 +197,7 @@
           .label{
               color: #000000;
               letter-spacing: 0px;
-              font-weight: 600;
+              font-weight: normal;
               font-size: 16px;
               font-family: Source Han Sans;
           }
@@ -277,7 +305,7 @@
             line-height: 24px;
             color: #000000;
             letter-spacing: 0px;
-            font-weight: 600;
+            font-weight: normal;
             font-family: Source Han Sans;
             font-size: 16px;
           }
@@ -311,6 +339,15 @@
                 text-align: center;
                 letter-spacing: 0px;
                 color: #424E66;
+              }
+            }
+            .item:hover{
+              .icon{
+                background: #0256FF;
+              }
+              .name{
+                color:#0256FF;
+                font-weight: 600;
               }
             }
           }
@@ -504,7 +541,7 @@
           .label{
               color: #000000;
               letter-spacing: 0px;
-              font-weight: 600;
+              font-weight: normal;
               font-size: 16px;
               font-family: Source Han Sans;
           }

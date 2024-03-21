@@ -1,14 +1,46 @@
 <template>
-  <div ref="mainElement">
+  <div style="width:100%; height: calc(100% - 16px);" ref="mainElement">
+    <div class="nav_list">
+       <ul>
+          <li v-for="(record, index) in routes" :key="index" @click="clickNav(record,index)" >
+             <template v-if="index == 0"><img  src="@/assets/images/main_icon.png" alt=""></template>
+             <template v-if="index > 0"><span :class="{ 'default_li': index < routes.length - 1 , 'current_li': index == (routes.length - 1) }">{{record.name}}</span></template>
+             <span v-if="index != (routes.length - 1)">/</span>
+          </li>
+       </ul>
+    </div>
     <router-view />
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouteRecordRaw, RouterLink, RouterView, useRoute } from 'vue-router'
 import _ from "lodash"
-import { onMounted, ref ,nextTick} from 'vue'
+import { onMounted, ref ,nextTick, getCurrentInstance, computed, watch} from 'vue'
+const { proxy }: any = getCurrentInstance()
+
+const routes = ref([]);
+
 const mainElement = ref<HTMLDivElement | null>(null);
+
+
+// 实时监听路由变化
+watch(() => proxy.$route,
+      (to, from) => {
+        // 在路由变化时执行其他操作
+        var index = routes.value.findIndex(route => route.path == to.path)
+        if(index != -1)
+        {
+          routes.value = routes.value.slice(0,index + 1);
+        }
+        else{
+          routes.value.push({
+            name: to.name,
+            path: to.path
+          });
+        }
+      }
+    );
 
 onMounted(() =>{
   nextTick(() =>{
@@ -31,7 +63,7 @@ onMounted(() =>{
           }
           else{
             // 以宽度计算
-            scale = docWidth / 1920;
+            scale = (docWidth-20) / 1920;
             const shouleHeight = 1080 * scale;
             const offsetHeight = docHeight - shouleHeight;
             translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
@@ -43,7 +75,9 @@ onMounted(() =>{
           `;
         }
         else{
-          mainElement.value.style.cssText = "";
+          if(mainElement.value){
+            mainElement.value.style.cssText = "width: 100%; height: calc(100% - 16px)";
+          }
         }
       },0));
       if(document.createEvent){
@@ -60,8 +94,56 @@ onMounted(() =>{
 })
 
 
+const clickNav = (item,index) =>{
+  if(index != routes.value.length - 1)
+  {
+    proxy.$router.push(item.path);
+  }
+}
+
 </script>
 
 <style scoped lang="scss">
-
+.nav_list{
+  width:100%;
+  height: 25px;
+  margin: 8px 0px;
+  ul{
+    list-style: none;
+    width: 100%;
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 0px;
+    box-sizing: border-box;
+    li{
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      height: 25px;
+      justify-content: center;
+    }
+    .default_li{
+      font-family: Alibaba PuHuiTi 2.0;
+      font-size: 14px;
+      font-weight: normal;
+      color: #4E5969;
+    }
+    .current_li{
+      color: #1D2129;
+      font-size: 14px;
+      font-weight: normal;
+    }
+    img{
+      margin-right: 3px;
+      margin-bottom: 1px;
+    }
+    span{
+      margin: 0px 3px;
+      color: #4E5969;
+    }
+  }
+}
 </style>

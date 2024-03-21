@@ -45,7 +45,7 @@ const routes = [
     component: () => import('../views/dispatchList/index.vue') 
   },
   { 
-    path: '/dispatch_detials',
+    path: '/dispatch_details',
     name:'派工单详情',
     component: () => import('../views/dispatchDetails/index.vue') 
   },
@@ -71,5 +71,17 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 });
+
+
+router.beforeEach((to, from, next) => {
+  const allowedRoutes = ['/main']; // 可以直接访问的路由，例如指定的页面
+  console.log(from);
+  if (!allowedRoutes.includes(to.path) && from.name != "工作台") {
+    next({ path: "/main" }); // 如果不是允许的路由且不是从主界面跳转，则重定向到主界面
+  } else {
+    next(); // 允许访问目标路由
+  }
+});
+
 
 export default router;

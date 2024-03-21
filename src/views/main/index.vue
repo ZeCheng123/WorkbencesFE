@@ -13,31 +13,33 @@
         </div>
         <div class="function_item">
           <div class="item">
-            <div class="menu">
+            <div class="menu" @click="clickMenu('qualification_information')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">资质信息</label>
             </div>
-            <div class="menu">
+            <div class="menu" @click="clickMenu('my_personnel')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">我的人员</label>
             </div>
             <div class="line"></div>
           </div>
           <div class="item">
-            <div class="menu">
+            <div class="menu" @click="clickMenu('order_center')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
-              <label class="name">订单任务</label>
+              <label class="name">交付任务</label>
+              <span class="tips">1</span>
             </div>
-            <div class="menu">
-              <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
-              <label class="name">问题提报</label>
+            <div class="menu" @click="clickMenu('problem_reporting')">
+              <!-- <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
+              <label class="name">问题提报</label> -->
             </div>
             <div class="line"></div>
           </div>
           <div class="item">
-            <div class="menu">
+            <div class="menu" @click="clickMenu('dispatch_list')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">派工单</label>
+              <span class="tips">1</span>
             </div>
             <div class="menu">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
@@ -46,7 +48,7 @@
             <div class="line"></div>
           </div>
           <div class="item">
-            <div class="menu">
+            <div class="menu" @click="clickMenu('problem_reporting')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">问题提报</label>
             </div>
@@ -54,9 +56,10 @@
             <div class="line2"></div>
           </div>
           <div class="item">
-            <div class="menu">
+            <div class="menu" @click="clickMenu('aftersales_workorder')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">售后工单</label>
+              <span class="tips">2</span>
             </div>
             <div class="menu"></div>
             <div class="line2"></div>
@@ -68,7 +71,7 @@
         </div>
         <div class="function_category">
           <div class="item">管理我的组织</div>
-          <div class="item">订单执行</div>
+          <div class="item">交付执行</div>
           <div class="item">技工服务</div>
           <div class="item">售后无忧</div>
           <div class="item">售后进度</div>
@@ -81,49 +84,49 @@
           <label class="more">查看更多</label>
         </div>
         <div class="list">
-          <div class="list_item">
+          <div class="list_item" @click="goTaskDetail">
             <span class="type task">任务</span>
             <span class="tips"
               >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span class="important">重要</span>
           </div>
-          <div class="list_item">
+          <div class="list_item" @click="goTaskDetail">
             <span class="type activity">活动</span>
             <span class="tips"
               >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
-          <div class="list_item">
+          <div class="list_item" @click="goTaskDetail">
             <span class="type message">消息</span>
             <span class="tips"
               >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
-          <div class="list_item">
+          <div class="list_item" @click="goTaskDetail">
             <span class="type message">消息</span>
             <span class="tips"
               >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
-          <div class="list_item">
+          <div class="list_item" @click="goTaskDetail">
             <span class="type message">消息</span>
             <span class="tips"
               >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
-          <div class="list_item">
+          <div class="list_item" @click="goTaskDetail">
             <span class="type message">消息</span>
             <span class="tips"
               >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
-          <div class="list_item">
+          <div class="list_item" @click="goTaskDetail">
             <span class="type message">消息</span>
             <span class="tips"
               >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
@@ -143,13 +146,12 @@
               <span class="name">用户信息</span>
             </div>
             <div class="item" style="margin-left: 30px">
-              <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
+              <img class="icon" src="@/assets/images/data_report.png" alt="" />
               <span class="name">数据报表</span>
             </div>
           </div>
         </div>
         <div class="total_order_amount">
-          <!-- <e-charts class="chart" :option="option1" /> -->
           <span class="title">订单总额</span>
           <span class="content">
             <div class="left">
@@ -202,8 +204,8 @@
 
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
-
+import { ref, computed, getCurrentInstance } from "vue"
+const { proxy }: any = getCurrentInstance();
 
 const option1 = computed(() => {
   return {
@@ -308,6 +310,16 @@ const option2 = computed(() => {
     ],
   }
 })
+
+const goTaskDetail = () =>{
+  proxy.$router.push("/task_details");
+}
+
+const clickMenu = (url) =>{
+  proxy.$router.push(url);
+}
+
+
 </script>
 
 <style lang="scss" scoped>

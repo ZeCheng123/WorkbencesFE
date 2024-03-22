@@ -75,7 +75,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const allowedRoutes = ['/main']; // 可以直接访问的路由，例如指定的页面
-  console.log(from);
   if (!allowedRoutes.includes(to.path) && from.name != "工作台") {
     next({ path: "/main" }); // 如果不是允许的路由且不是从主界面跳转，则重定向到主界面
   } else {

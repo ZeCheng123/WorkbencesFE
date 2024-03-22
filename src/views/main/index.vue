@@ -152,51 +152,59 @@
           </div>
         </div>
         <div class="total_order_amount">
-          <span class="title">订单总额</span>
+          <span class="title">当前订单</span>
           <span class="content">
             <div class="left">
-               <span class="num">¥233,000</span>
-               <span class="desc">
-                 <span class="text1">较上月</span>
-                 <span class="text2">20%</span>
-                 <span class="text3"><img src="@/assets/images/up.png" alt=""></span>
-               </span>
+              <span class="num">¥233,000</span>
+              <span class="desc">
+                <span class="text1">较上月</span>
+                <span class="text2">20%</span>
+                <span class="text3"
+                  ><img src="@/assets/images/up.png" alt=""
+                /></span>
+              </span>
             </div>
             <div class="right">
-              <e-charts class="chart" :option="option1" />
+              <e-charts ref="chart1" class="chart" :option="option1" />
             </div>
           </span>
         </div>
         <div class="aftersales_workorder">
-           <span class="title">本月售后订单</span>
-           <span class="content">
-              <div class="left">
-                <span class="num">12</span>
-                <span class="desc">
-                  <span class="text1">较上月</span>
-                  <span class="text2">6</span>
-                  <span class="text3"><img src="@/assets/images/up.png" alt=""></span>
-                </span>
-              </div>
-              <div class="right">
-                <e-charts class="chart" :option="option2" />
-              </div>
-           </span>
+          <span class="title">任务分布</span>
+          <span class="content">
+            <div class="left">
+              <span class="num">12</span>
+              <span class="desc">
+                <span class="text1">较上月</span>
+                <span class="text2">6</span>
+                <span class="text3"
+                  ><img src="@/assets/images/up.png" alt=""
+                /></span>
+              </span>
+            </div>
+            <div class="right">
+              <e-charts ref="chart2" class="chart" :option="option2" />
+            </div>
+          </span>
         </div>
       </div>
-      <div class="bottom">
-        <div class="header">
-          <label class="label">帮助文档 (跳转)</label>
-          <label class="more">查看更多</label>
-        </div>
-        <div class="list">
-          <label class="list_item">梦天产品</label>
-          <label class="list_item">使用指南</label>
-        </div>
-        <div class="list">
-          <label class="list_item">培训手册</label>
-          <label class="list_item">活动指南</label>
-        </div>
+      <div class="dispatch_distribution">
+        <span class="title">派工分布</span>
+        <span class="content">
+          <div class="left">
+            <span class="num">12</span>
+            <span class="desc">
+              <span class="text1">较上月</span>
+              <span class="text2">2</span>
+              <span class="text3"
+                ><img src="@/assets/images/up.png" alt=""
+              /></span>
+            </span>
+          </div>
+          <div class="right">
+            <e-charts ref="chart3" class="chart" :option="option3" />
+          </div>
+        </span>
       </div>
     </div>
   </div>
@@ -204,8 +212,19 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance } from "vue"
-const { proxy }: any = getCurrentInstance();
+import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount } from "vue"
+import * as echarts from "echarts"
+const { proxy }: any = getCurrentInstance()
+
+const timer = ref(null)
+
+const chart1 = ref(null)
+
+const chart2 = ref(null)
+
+const chart3 = ref(null)
+
+const currentTooltips = ref(1)
 
 const option1 = computed(() => {
   return {
@@ -215,19 +234,19 @@ const option1 = computed(() => {
     legend: {
       top: "10",
       left: "50%",
-      orient: 'vertical', // 设置图例垂直显示
+      orient: "vertical", // 设置图例垂直显示
       data: [
-        { name: '总部分配', icon: 'circle'},
-        { name: '零售订单', icon: 'circle'},
-        { name: '其他', icon: 'circle'}
+        { name: "总部分配", icon: "circle" },
+        { name: "零售订单", icon: "circle" },
+        { name: "其他", icon: "circle" },
       ],
     },
     series: [
       {
-        name: "订单总额",
+        name: "当前订单",
         type: "pie",
         radius: ["50%", "80%"],
-        center: ["20%","55%"],
+        center: ["20%", "55%"],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 1,
@@ -248,11 +267,11 @@ const option1 = computed(() => {
         labelLine: {
           show: false,
         },
-        color: ["#8D4EDA","#165DFF","#00B2FF"],
+        color: ["#8D4EDA", "#165DFF", "#00B2FF"],
         data: [
           { value: 1048, name: "总部分配" },
           { value: 735, name: "零售订单" },
-          { value: 580, name: "其他" }
+          { value: 580, name: "其他" },
         ],
       },
     ],
@@ -267,19 +286,19 @@ const option2 = computed(() => {
     legend: {
       top: "10",
       left: "50%",
-      orient: 'vertical', // 设置图例垂直显示
+      orient: "vertical", // 设置图例垂直显示
       data: [
-            { name: '待处理', icon: 'circle'},
-            { name: '进行中', icon: 'circle'},
-            { name: '已完成', icon: 'circle'}
+        { name: "待处理", icon: "circle" },
+        { name: "进行中", icon: "circle" },
+        { name: "已完成", icon: "circle" },
       ],
     },
     series: [
       {
-        name: "本月售后工单",
+        name: "任务分布",
         type: "pie",
         radius: ["50%", "80%"],
-        center: ["20%","55%"],
+        center: ["20%", "55%"],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 1,
@@ -300,25 +319,110 @@ const option2 = computed(() => {
         labelLine: {
           show: false,
         },
-        color: ["#8D4EDA","#165DFF","#00B2FF"],
+        color: ["#8D4EDA", "#165DFF", "#00B2FF"],
         data: [
           { value: 1048, name: "待处理" },
           { value: 735, name: "进行中" },
-          { value: 580, name: "已完成" }
+          { value: 580, name: "已完成" },
         ],
       },
     ],
   }
 })
 
-const goTaskDetail = () =>{
-  proxy.$router.push("/task_details");
+const option3 = computed(() => {
+  return {
+    tooltip: {
+      trigger: "item",
+    },
+    legend: {
+      top: "10",
+      left: "50%",
+      orient: "vertical", // 设置图例垂直显示
+      data: [
+        { name: "待处理", icon: "circle" },
+        { name: "进行中", icon: "circle" },
+        { name: "已完成", icon: "circle" },
+      ],
+    },
+    series: [
+      {
+        name: "派工分布",
+        type: "pie",
+        radius: ["50%", "80%"],
+        center: ["20%", "55%"],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 1,
+          borderColor: "#fff",
+          borderWidth: 2,
+        },
+        label: {
+          show: false,
+          position: "center",
+        },
+        emphasis: {
+          label: {
+            show: false,
+            fontSize: 40,
+            fontWeight: "bold",
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        color: ["#8D4EDA", "#165DFF", "#00B2FF"],
+        data: [
+          { value: 1048, name: "待处理" },
+          { value: 735, name: "进行中" },
+          { value: 580, name: "已完成" },
+        ],
+      },
+    ],
+  }
+})
+
+onMounted(() => {
+  proxy.$nextTick(() =>{
+    initEchart();
+  })
+})
+
+const initEchart = () => {
+  timer.value = setInterval(() => {
+    chart1.value.dispatchAction({
+      type: "showTip",
+      seriesIndex: 0,
+      dataIndex: currentTooltips.value,
+    })
+    chart2.value.dispatchAction({
+      type: "showTip",
+      seriesIndex: 0,
+      dataIndex: currentTooltips.value,
+    })
+    chart3.value.dispatchAction({
+      type: "showTip",
+      seriesIndex: 0,
+      dataIndex: currentTooltips.value,
+    })
+    currentTooltips.value++
+    if (currentTooltips.value >= 3) {
+      currentTooltips.value = 0
+    }
+  }, 3000)
 }
 
-const clickMenu = (url) =>{
-  proxy.$router.push(url);
+const goTaskDetail = () => {
+  proxy.$router.push("/task_details")
 }
 
+const clickMenu = (url) => {
+  proxy.$router.push(url)
+}
+
+onBeforeUnmount(() =>{
+  clearInterval(timer.value)
+})
 
 </script>
 

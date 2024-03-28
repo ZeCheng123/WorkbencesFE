@@ -1,42 +1,42 @@
 <template>
   <div class="main">
-    <div class="header">
+    <span class="header">
       <span class="title">任务状态</span>
       <span class="step">
-        <span class="item">
-          <span class="num_selected">1</span>
+        <span class="item" @click="changeStep(1)">
+          <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
           <span class="name">待处理</span>
         </span>
-        <span class="item">
-          <span class="num">2</span>
+        <span class="item" @click="changeStep(2)">
+          <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
           <span class="name">提货</span>
         </span>
-        <span class="item">
-          <span class="num">3</span>
+        <span class="item" @click="changeStep(3)">
+          <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
           <span class="name">入库</span>
         </span>
-        <span class="item">
-          <span class="num">4</span>
+        <span class="item" @click="changeStep(4)">
+          <span :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>
           <span class="name">配送</span>
         </span>
-        <span class="item">
-          <span class="num">5</span>
+        <span class="item" @click="changeStep(5)">
+          <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
           <span class="name">安装</span>
         </span>
-        <span class="item">
-          <span class="num">6</span>
+        <span class="item" @click="changeStep(6)">
+          <span :class="currentStep == 6 ? 'num_selected' : 'num'">6</span>
           <span class="name">完成</span>
         </span>
       </span>
-    </div>
-    <div class="task_details">
-      <span class="title">任务详情 <el-button type="primary" class="primary_blue_btn">已派工配送</el-button><el-button type="primary" class="primary_green_btn">已派工安装</el-button></span>
+    </span>
+    <span class="task_info">
+      <span class="title">任务详情</span>
       <span class="main_field">
         <span class="row_field">
           <span class="field">
             <span class="label">任务编号：</span>
-            <span class="value">SO20240221-0002</span>
-            <!-- <span class="view">查看</span> -->
+            <span class="value">CS0011-06665-01</span>
+            <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
             <span class="label">经销商负责人：</span>
@@ -63,58 +63,58 @@
         </span>
         <span class="row_field">
           <span class="field">
-            <span class="label">客户名：</span>
-            <span class="value">李女士</span>
-          </span>
-          <span class="field">
             <span class="label">示例字段：</span>
             <span class="value">示例</span>
           </span>
           <span class="field">
             <span class="label">示例字段：</span>
             <span class="value">示例</span>
+          </span>
+          <span class="field">
+            <span class="label">剩余时间：</span>
+            <span class="value">XX</span>
           </span>
         </span>
       </span>
-    </div>
-    <div class="order_status">
+    </span>
+    <span class="order_status">
       <span class="title">订单状态</span>
       <span class="step">
-        <span class="item">
-          <span class="num"></span>
+        <span class="item" @click="changeStep2(1)">
+          <span :class="currentStep2 == 1 ? 'num_selected' : 'num'">1</span>
           <span class="name">...</span>
         </span>
-        <span class="item">
-          <span class="num"></span>
+        <span class="item" @click="changeStep2(2)">
+          <span :class="currentStep2 == 2 ? 'num_selected' : 'num'">2</span>
           <span class="name">已包装</span>
         </span>
-        <span class="item">
-          <span class="num"></span>
-          <span class="name">已入成品库</span>
+        <span class="item" @click="changeStep2(3)">
+          <span :class="currentStep2 == 3 ? 'num_selected' : 'num'">3</span>
+          <span class="name">已成品入库</span>
         </span>
-        <span class="item">
-          <span class="num_selected">4</span>
+        <span class="item" @click="changeStep2(4)">
+          <span :class="currentStep2 == 4 ? 'num_selected' : 'num'">4</span>
           <span class="name">已发货</span>
         </span>
-        <span class="item">
-          <span class="num"></span>
-          <span class="name">已经销商收货 </span>
+        <span class="item" @click="changeStep2(5)">
+          <span :class="currentStep2 == 5 ? 'num_selected' : 'num'">5</span>
+          <span class="name">已经销商收货</span>
         </span>
-        <span class="item">
-          <span class="num"></span>
+        <span class="item" @click="changeStep2(6)">
+          <span :class="currentStep2 == 6 ? 'num_selected' : 'num'">6</span>
           <span class="name">订单完结</span>
         </span>
-        <span class="item">
-          <span class="num"></span>
+        <span class="item" @click="changeStep2(7)">
+          <span :class="currentStep2 == 7 ? 'num_selected' : 'num'">7</span>
           <span class="name">...</span>
         </span>
       </span>
-    </div>
-    <div class="related_items">
-      <span class="title">相关项 > 订单</span>
-      <span class="table">
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="text1" label="操作">
+    </span>
+    <span class="related_item_order">
+      <span class="table_title">相关项>订单</span>
+      <span class="table_content">
+        <el-table :data="tableDataOrder" :stripe="true" style="width: 100%">
+          <el-table-column prop="text1" label="操作" width="80px">
             <template #default="scope">
               <div
                 style="
@@ -136,12 +136,12 @@
           <el-table-column prop="text6" label="其他字段" />
         </el-table>
       </span>
-    </div>
-    <div class="related_items">
-      <span class="title">相关项 > 发货单</span>
-      <span class="table">
-        <el-table :data="tableData2" style="width: 100%">
-          <el-table-column prop="text1" label="操作">
+    </span>
+    <span class="related_item_invoice">
+      <span class="table_title">相关项>发货单</span>
+      <span class="table_content">
+        <el-table :data="tableDataInvoice" :stripe="true" style="width: 100%">
+          <el-table-column prop="text1" label="操作" width="160px">
             <template #default="scope">
               <div
                 style="
@@ -152,23 +152,23 @@
                 "
                 @click="console.log(scope)"
               >
-                查看&nbsp;&nbsp;&nbsp;批量提货
+                <span>查看</span>&nbsp;&nbsp;<span>批量提货</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column prop="text2" label="XX编号" />
           <el-table-column prop="text3" label="发货单状态" />
-          <el-table-column prop="text4" label="其他字段" />
+          <el-table-column prop="text4" label="其它字段" />
           <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="其他字段" />
+          <el-table-column prop="text6" label="其它字段" />
         </el-table>
       </span>
-    </div>
-    <div class="related_items">
-      <span class="title">相关项 > 派工单</span>
-      <span class="table">
-        <el-table :data="tableData3" style="width: 100%">
-          <el-table-column prop="text1" label="操作">
+    </span>
+    <span class="related_item_invoice">
+      <span class="table_title">相关项>派工单</span>
+      <span class="table_content">
+        <el-table :data="tableDataDispatch" :stripe="true" style="width: 100%">
+          <el-table-column prop="text1" label="操作" width="160px">
             <template #default="scope">
               <div
                 style="
@@ -179,18 +179,18 @@
                 "
                 @click="console.log(scope)"
               >
-                查看
+                <span>查看</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column prop="text2" label="XX编号" />
           <el-table-column prop="text3" label="派工单状态" />
-          <el-table-column prop="text4" label="其他字段" />
+          <el-table-column prop="text4" label="其它字段" />
           <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="其他字段" />
+          <el-table-column prop="text6" label="其它字段" />
         </el-table>
       </span>
-    </div>
+    </span>
     <div class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
@@ -198,12 +198,14 @@
       </div>
       <div class="right">
         <el-button
+          v-if="currentStep == 4"
           type="primary"
           @click="createDeliveryOrder"
           class="primary_btn"
           >创建配送派工单</el-button
         >
         <el-button
+        v-if="currentStep == 5"
           type="primary"
           @click="createInstallationOrder"
           class="primary_btn"
@@ -212,7 +214,7 @@
         <el-button type="primary" @click="takeGoods" class="primary_btn"
           >一键确认提货</el-button
         >
-        <el-button type="primary" class="primary_btn">问题报告</el-button>
+        <el-button type="primary" class="primary_btn">问题提报</el-button>
       </div>
     </div>
     <div class="comment">
@@ -221,16 +223,6 @@
         <span class="username">经销商A</span>
       </div>
       <div class="content">客户对于此单比较着急，需要加速安排交付。</div>
-      <img class="tips" src="@/assets/images/tips.png" alt="" />
-    </div>
-    <div class="comment">
-      <div class="userinfo">
-        <img src="@/assets/images/userinfo.png" alt="" />
-        <span class="username">配送司机-张师傅</span>
-      </div>
-      <div class="content">
-        客户对于配送比较满意，但是仍然需要快点上门安装！
-      </div>
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
     <div class="deliveryOrderDialog">
@@ -510,7 +502,12 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive } from "vue"
 import { Plus } from "@element-plus/icons-vue";
+
 const { proxy }: any = getCurrentInstance()
+
+const currentStep = ref(2)
+
+const currentStep2 = ref(4)
 
 const currentDeliveryOrderStep = ref(1)
 const currentInstallationOrderStep = ref(1)
@@ -565,9 +562,20 @@ const deliveryOrderDialog = ref(false)
 
 const installationOrderDialog = ref(false)
 
-const tableData = ref([
+const tableDataOrder = ref([
   {
-    text1: "查看",
+    text1: "",
+    text2: "XXX",
+    text3: "示例字段...",
+    text4: "XXXX",
+    text5: "2021-02-28 10:30:50",
+    text6: "xxxx",
+  },
+])
+
+const tableDataInvoice = ref([
+  {
+    text1: "",
     text2: "XXX",
     text3: "示例字段...",
     text4: "XXXX",
@@ -576,9 +584,9 @@ const tableData = ref([
   },
 ])
 
-const tableData2 = ref([
+const tableDataDispatch = ref([
   {
-    text1: "查看",
+    text1: "",
     text2: "XXX",
     text3: "示例字段...",
     text4: "XXXX",
@@ -587,16 +595,13 @@ const tableData2 = ref([
   },
 ])
 
-const tableData3 = ref([
-  {
-    text1: "查看",
-    text2: "XXX",
-    text3: "示例字段...",
-    text4: "XXXX",
-    text5: "2024-02-21 10:30:50",
-    text6: "XXX",
-  },
-])
+const changeStep = (step) => {
+  currentStep.value = step
+}
+
+const changeStep2 = (step) => {
+  currentStep2.value = step
+}
 
 const changeDeliveryOrderStep = (step) => {
   currentDeliveryOrderStep.value = step
@@ -632,14 +637,6 @@ const finishDeliveryOrder = () => {
   deliveryOrderDialog.value = false
   proxy.$message.success("派工单创建完成!")
   currentDeliveryOrderStep.value = 1
-}
-
-const takeGoods = () => {
-  proxy.$message.success("提货任务完成!")
-}
-
-const inBound = () => {
-  proxy.$message.success("已全部入库!")
 }
 </script>
 

@@ -24,14 +24,15 @@
             <div class="line"></div>
           </div>
           <div class="item">
-            <div class="menu" @click="clickMenu('order_center')">
+            <div class="menu" @click="clickMenu('delivery_tasks')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">交付任务</label>
               <span class="tips">1</span>
             </div>
-            <div class="menu" @click="clickMenu('problem_reporting')">
-              <!-- <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
-              <label class="name">问题提报</label> -->
+            <div class="menu" @click="clickMenu('historical_orders')">
+              <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
+              <label class="name">历史订单</label>
+              <span class="tips">5</span>
             </div>
             <div class="line"></div>
           </div>
@@ -41,14 +42,14 @@
               <label class="name">派工单</label>
               <span class="tips">1</span>
             </div>
-            <div class="menu">
+            <div class="menu" @click="clickMenu('service_workorder')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">服务评价</label>
             </div>
             <div class="line"></div>
           </div>
           <div class="item">
-            <div class="menu" @click="clickMenu('problem_reporting')">
+            <div class="menu" @click="clickMenu('problem_report_list')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">问题提报</label>
             </div>
@@ -94,42 +95,21 @@
           <div class="list_item" @click="goTaskDetail">
             <span class="type activity">活动</span>
             <span class="tips"
-              >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
+              >您的郭女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
           <div class="list_item" @click="goTaskDetail">
             <span class="type message">消息</span>
             <span class="tips"
-              >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
+              >您的刘女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
           <div class="list_item" @click="goTaskDetail">
             <span class="type message">消息</span>
             <span class="tips"
-              >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
-            >
-            <span hidden class="important">重要</span>
-          </div>
-          <div class="list_item" @click="goTaskDetail">
-            <span class="type message">消息</span>
-            <span class="tips"
-              >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
-            >
-            <span hidden class="important">重要</span>
-          </div>
-          <div class="list_item" @click="goTaskDetail">
-            <span class="type message">消息</span>
-            <span class="tips"
-              >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
-            >
-            <span hidden class="important">重要</span>
-          </div>
-          <div class="list_item" @click="goTaskDetail">
-            <span class="type message">消息</span>
-            <span class="tips"
-              >您的李女士订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
+              >您的黄先生订单SO20240221-0002已到上海物流中心，请点击执行提货...</span
             >
             <span hidden class="important">重要</span>
           </div>
@@ -413,10 +393,11 @@ const initEchart = () => {
 }
 
 const goTaskDetail = () => {
-  proxy.$router.push("/task_details")
+  proxy.$router.push("task_details")
 }
 
 const clickMenu = (url) => {
+  console.log(url)
   proxy.$router.push(url)
 }
 

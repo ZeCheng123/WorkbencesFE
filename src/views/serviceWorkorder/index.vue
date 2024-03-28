@@ -1,6 +1,13 @@
 <template>
   <div class="main">
-    <span class="header"><span class="title">售后工单</span> <el-button type="primary" class="tips_btn"><template #icon> <img src="@/assets/images/clock.png" alt=""> </template>售后工单草稿箱</el-button></span>
+    <span class="header"
+      ><span class="title">服务工单</span>
+      <el-button type="primary" class="tips_btn"
+        ><template #icon>
+          <img src="@/assets/images/clock.png" alt="" /> </template
+        >服务工单草稿箱</el-button
+      ></span
+    >
     <span class="search">
       <span class="left">
         <el-form
@@ -47,8 +54,8 @@
               end-placeholder="结束时间"
             />
           </el-form-item>
-          <el-form-item label="订单状态">
-            <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
+          <el-form-item label="工单状态">
+            <el-select v-model="form.orderStatus" placeholder="请选择工单状态">
               <el-option
                 v-for="item in orderStatusOptions"
                 :key="item.value"
@@ -60,8 +67,16 @@
         </el-form>
       </span>
       <span class="right">
-        <el-button type="primary" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
-        <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
+        <el-button type="primary" class="search_btn"
+          ><template #icon>
+            <img src="@/assets/images/search.png" alt="" /> </template
+          >查询</el-button
+        >
+        <el-button type="primary" class="reset_btn"
+          ><template #icon>
+            <img src="@/assets/images/reset.png" alt="" /> </template
+          >重置</el-button
+        >
       </span>
     </span>
     <span class="table_header">
@@ -70,18 +85,27 @@
         <span class="title">经销商名称：梦天慈溪经销商</span>
       </span>
       <span class="right">
-        <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/download.png" alt=""> </template>下载</el-button>
+        <el-button type="primary" class="reset_btn"
+          ><template #icon>
+            <img src="@/assets/images/download.png" alt="" /> </template
+          >下载</el-button
+        >
       </span>
     </span>
     <span class="table">
-      <el-table class="table_content" :data="tableData" :stripe="true" style="width: 100%">
-        <el-table-column prop="text1" label="售后工单编号" />
-        <el-table-column prop="text2" label="专卖店名称" />
-        <el-table-column prop="text3" label="生产单号" />
-        <el-table-column prop="text4" label="客户名称" />
-        <el-table-column prop="text5" label="处理方式" />
+      <el-table
+        class="table_content"
+        :data="tableData"
+        :stripe="true"
+        style="width: 100%"
+      >
+        <el-table-column prop="text1" label="服务工单编号" />
+        <el-table-column prop="text2" label="客户姓名" />
+        <el-table-column prop="text3" label="问题描述" />
+        <el-table-column prop="text4" label="优先级" />
+        <el-table-column prop="text5" label="提报人" />
         <el-table-column prop="text6" label="创建时间" />
-        <el-table-column prop="text7" label="售后状态" />
+        <el-table-column prop="text7" label="问题状态" />
         <el-table-column prop="text8" label="操作" width="80px">
           <template #default="scope">
             <div
@@ -140,81 +164,60 @@ const orderStatusOptions = ref([
 
 const tableData = ref([
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "高",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "高",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "高",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "高",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "高",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
 ])
 
-const viewDetails = () =>{
-  proxy.$router.push("/aftersales_workorder_details");
+const viewDetails = () => {
+  proxy.$router.push("/service_workorder_details")
 }
-
 </script>
 
 <style lang="scss" scoped>

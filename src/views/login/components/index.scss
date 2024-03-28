@@ -1,0 +1,124 @@
+.main{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-y: hidden;
+    background: #ffffff;
+    background-image: url('@/assets/images/login_background.jpg');
+    background-size: 100% 100%;
+    justify-content: center;
+    align-items: end;
+    padding-right: 100px;
+    padding-bottom: 100px;
+    .login_box{
+        display: flex;
+        flex-direction: column;
+        width: 320px;
+        height: auto;
+        .desc{
+            height: 50px;
+            line-height: 50px;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 26px;
+            text-align: center;
+        }
+        .content{
+            width: 100%;
+            background-color: #285D85;
+            opacity: 0.8;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 20px;
+            border-radius: 4px;
+            .title{
+              height: 30px;
+              line-height: 30px;
+              font-size: 18px;
+              font-weight: bolder;
+              color: #ffffff;
+              text-align: center;
+            }
+            .title::after{
+                content: "(Login)";
+                margin-left: 5px;
+                font-size: 12px;
+            }
+            .phone{
+                width: 100%;
+                margin: 10px 0px;
+                
+            }
+            .code{
+                width: 100%;
+                margin: 10px 0px;
+            }
+            .sendCode{
+                font-size: 12px;
+                color: #285D85;
+                cursor: pointer;
+            }
+            .login_btn{
+                width: 100%;
+                height: 34px;
+                line-height: 34px;
+                border-radius: 0px;
+                margin: 10px 0px;
+            }
+            .checkbox_btn{
+                width: 100%;
+            }
+            .protocol{
+                color: mediumblue;
+            }
+        }
+    }
+}
+
+:deep(.content .el-input__wrapper){
+    border-radius: 0px;
+    height: 34px;
+    line-height: 34px;
+    border: none;
+}
+
+:deep(.content .el-input__wrapper:hover){
+    box-shadow: unset;
+    border: none;
+}
+
+:deep(.content .el-input__wrapper:focus){
+    box-shadow: unset;
+    border: none;
+}
+
+:deep(.content .el-input__wrapper.is-focus){
+    box-shadow: unset;
+    border: none;
+}
+
+:deep(.content .el-checkbox__label){
+   color: #333333;
+   font-size: 13px;
+} 
+
+
+
+
+
+:deep(.content .el-input-group__prepend){
+    padding: 0 6px;
+    background-color: #ffffff;
+    border-radius: 0px;
+    box-shadow: unset;
+}
+
+:deep(.content .el-input-group__append){
+    padding: 0 6px;
+    background-color: #ffffff;
+    border-radius: 0px;
+    box-shadow: unset;
+}

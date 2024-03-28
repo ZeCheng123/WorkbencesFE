@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%; height: calc(100% - 16px);" ref="mainElement">
-    <div class="nav_list">
+    <div class="nav_list" v-if="proxy.$route.path!='/login'">
        <ul>
           <li v-for="(record, index) in routes" :key="index" @click="clickNav(record,index)" >
              <template v-if="index == 0"><img  src="@/assets/images/main_icon.png" alt=""></template>
@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { RouteRecordRaw, RouterLink, RouterView, useRoute } from 'vue-router'
 import _ from "lodash"
 import { onMounted, ref ,nextTick, getCurrentInstance, computed, watch} from 'vue'
 const { proxy }: any = getCurrentInstance()
@@ -33,11 +32,24 @@ watch(() => proxy.$route,
         {
           routes.value = routes.value.slice(0,index + 1);
         }
-        else{
+        else if(to.path!="/login"){
           routes.value.push({
             name: to.name,
             path: to.path
           });
+        }
+        var appEl = document.getElementById("app");
+        if(to.path == "/login" && appEl){
+          appEl.style.padding = "0px 0px 0px 0px";
+          if(mainElement.value){
+            mainElement.value.style.height = "100%";
+          }
+        }
+        else{
+          appEl.style.padding = "0px 16px 16px 16px";
+          if(mainElement.value){
+            mainElement.value.style.height = "calc(100% - 16px)";
+          }
         }
       }
     );
@@ -48,35 +60,37 @@ onMounted(() =>{
     {
       const standardScale = (("100%") as any) / (("100%") as any);
       window.addEventListener("resize", _.debounce(function (){
-        const docHeight = document.body.clientHeight;
-        const docWidth = document.body.clientWidth;
-        if(docWidth < 1680)
-        {
-          const currentSacle = docHeight / docWidth;
-          let [scale, translate]:any = [0,0];
-          if(currentSacle < standardScale){
-            // 以高度计算
-            scale = docHeight / 1080;
-            const shouleWidth = 1920 * scale;
-            const offsetWidth = docWidth - shouleWidth;
-            translate = offsetWidth > 0 ? `translate(${offsetWidth / 2}px, 0)` : "";
+        if(proxy.$route.path!="/login"){
+          const docHeight = document.body.clientHeight;
+          const docWidth = document.body.clientWidth;
+          if(docWidth < 1680)
+          {
+            const currentSacle = docHeight / docWidth;
+            let [scale, translate]:any = [0,0];
+            if(currentSacle < standardScale){
+              // 以高度计算
+              scale = docHeight / 1080;
+              const shouleWidth = 1920 * scale;
+              const offsetWidth = docWidth - shouleWidth;
+              translate = offsetWidth > 0 ? `translate(${offsetWidth / 2}px, 0)` : "";
+            }
+            else{
+              // 以宽度计算
+              scale = (docWidth-20) / 1920;
+              const shouleHeight = 1080 * scale;
+              const offsetHeight = docHeight - shouleHeight;
+              translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
+            }
+            mainElement.value.style.cssText = `
+              transform: scale(${scale}) ${translate};transform-origin: top left;
+              min-width: 1920px;
+              min-height: 1080px;
+            `;
           }
           else{
-            // 以宽度计算
-            scale = (docWidth-20) / 1920;
-            const shouleHeight = 1080 * scale;
-            const offsetHeight = docHeight - shouleHeight;
-            translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
-          }
-          mainElement.value.style.cssText = `
-            transform: scale(${scale}) ${translate};transform-origin: top left;
-            min-width: 1920px;
-            min-height: 1080px;
-          `;
-        }
-        else{
-          if(mainElement.value){
-            mainElement.value.style.cssText = "width: 100%; height: calc(100% - 16px)";
+            if(mainElement.value){
+              mainElement.value.style.cssText = "width: 100%; height: calc(100% - 16px)";
+            }
           }
         }
       },0));
@@ -90,6 +104,7 @@ onMounted(() =>{
         window.dispatchEvent(new Event('resize'));
       }
     }
+
   })
 })
 

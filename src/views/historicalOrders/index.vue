@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <span class="header"> 派工单 </span>
+    <span class="header"> 订单中心 </span>
     <span class="search">
       <span class="left">
         <el-form
@@ -9,21 +9,17 @@
           label-width="80px"
           label-position="left"
         >
-          <el-form-item label="派工编号">
-            <el-input placeholder="请输入派工编号" v-model="form.dispatchWorkerNo" />
+          <el-form-item label="订单编号">
+            <el-input placeholder="请输入任务编号" v-model="form.orderNo" />
           </el-form-item>
-          <el-form-item label="技工姓名">
-            <el-input placeholder="输入技工姓名" v-model="form.technicianName" />
+          <el-form-item label="客户名称">
+            <el-input placeholder="输入客户名称" v-model="form.customerName" />
           </el-form-item>
-          <el-form-item label="技工种类">
-            <el-select v-model="form.technicianType" placeholder="请选择派工种类">
-              <el-option
-                v-for="item in technicianTypeOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <el-form-item label="客户电话">
+            <el-input
+              placeholder="请输入客户电话"
+              v-model="form.customerName"
+            />
           </el-form-item>
         </el-form>
         <el-form
@@ -35,7 +31,7 @@
           <el-form-item label="筛选方式">
             <el-select v-model="form.filterMethod" placeholder="请选择筛选方式">
               <el-option
-                v-for="item in filterMethodOptions"
+                v-for="item in filterMethodPtions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -51,10 +47,10 @@
               end-placeholder="结束时间"
             />
           </el-form-item>
-          <el-form-item label="派工状态">
-            <el-select v-model="form.dispatchWorkerStatus" placeholder="请选择派工状态">
+          <el-form-item label="订单状态">
+            <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
               <el-option
-                v-for="item in dispatchWorkerStatusOption"
+                v-for="item in orderStatusPtions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -64,8 +60,16 @@
         </el-form>
       </span>
       <span class="right">
-        <el-button type="primary" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
-        <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
+        <el-button type="primary" class="search_btn"
+          ><template #icon>
+            <img src="@/assets/images/search.png" alt="" /> </template
+          >查询</el-button
+        >
+        <el-button type="primary" class="reset_btn"
+          ><template #icon>
+            <img src="@/assets/images/reset.png" alt="" /> </template
+          >重置</el-button
+        >
       </span>
     </span>
     <span class="table_header">
@@ -74,18 +78,27 @@
         <span class="title">经销商名称：梦天慈溪经销商</span>
       </span>
       <span class="right">
-        <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/download.png" alt=""> </template>下载</el-button>
+        <el-button type="primary" class="reset_btn"
+          ><template #icon>
+            <img src="@/assets/images/download.png" alt="" /> </template
+          >下载</el-button
+        >
       </span>
     </span>
     <span class="table">
-      <el-table class="table_content" :data="tableData" :stripe="true" style="width: 100%">
-        <el-table-column prop="text1" label="派工编号" />
+      <el-table
+        class="table_content"
+        :data="tableData"
+        :stripe="true"
+        style="width: 100%"
+      >
+        <el-table-column prop="text1" label="订单编号" />
         <el-table-column prop="text2" label="专卖店名称" />
         <el-table-column prop="text3" label="生产单号" />
-        <el-table-column prop="text4" label="技工名称" />
-        <el-table-column prop="text5" label="派工种类" />
+        <el-table-column prop="text4" label="客户名称" />
+        <el-table-column prop="text5" label="订单来源" />
         <el-table-column prop="text6" label="创建时间" />
-        <el-table-column prop="text7" label="派工状态" />
+        <el-table-column prop="text7" label="状态" />
         <el-table-column prop="text8" label="操作" width="80px">
           <template #default="scope">
             <div
@@ -120,29 +133,22 @@ import { ref, computed, getCurrentInstance, reactive } from "vue"
 const { proxy }: any = getCurrentInstance()
 
 const form = reactive({
-  dispatchWorkerNo: "",
-  technicianName: "",
-  technicianType: "",
+  orderNo: "",
+  customerName: "",
+  customerPhone: "",
   filterMethod: "",
   createDate: [],
-  dispatchWorkerStatus: "",
+  orderStatus: "",
 })
 
-const filterMethodOptions = ref([
+const filterMethodPtions = ref([
   {
     value: "all",
     label: "全部",
   },
 ])
 
-const technicianTypeOption = ref([
-  {
-    value: "all",
-    label: "全部",
-  },
-])
-
-const dispatchWorkerStatusOption = ref([
+const orderStatusPtions = ref([
   {
     value: "all",
     label: "全部",
@@ -155,9 +161,9 @@ const tableData = ref([
     text2: "梦天慈溪经销商-专卖店A",
     text3: "H404304",
     text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
+    text5: "自然进店",
+    text6: "2021-02-29 10:30",
+    text7: "已财务批准",
     text8: "",
   },
   {
@@ -165,9 +171,9 @@ const tableData = ref([
     text2: "梦天慈溪经销商-专卖店A",
     text3: "H404304",
     text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
+    text5: "自然进店",
+    text6: "2021-02-29 10:30",
+    text7: "已财务批准",
     text8: "",
   },
   {
@@ -175,9 +181,9 @@ const tableData = ref([
     text2: "梦天慈溪经销商-专卖店A",
     text3: "H404304",
     text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
+    text5: "自然进店",
+    text6: "2021-02-29 10:30",
+    text7: "已财务批准",
     text8: "",
   },
   {
@@ -185,9 +191,9 @@ const tableData = ref([
     text2: "梦天慈溪经销商-专卖店A",
     text3: "H404304",
     text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
+    text5: "自然进店",
+    text6: "2021-02-29 10:30",
+    text7: "已财务批准",
     text8: "",
   },
   {
@@ -195,9 +201,9 @@ const tableData = ref([
     text2: "梦天慈溪经销商-专卖店A",
     text3: "H404304",
     text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
+    text5: "自然进店",
+    text6: "2021-02-29 10:30",
+    text7: "已财务批准",
     text8: "",
   },
   {
@@ -205,9 +211,9 @@ const tableData = ref([
     text2: "梦天慈溪经销商-专卖店A",
     text3: "H404304",
     text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
+    text5: "自然进店",
+    text6: "2021-02-29 10:30",
+    text7: "已财务批准",
     text8: "",
   },
   {
@@ -215,17 +221,16 @@ const tableData = ref([
     text2: "梦天慈溪经销商-专卖店A",
     text3: "H404304",
     text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
+    text5: "自然进店",
+    text6: "2021-02-29 10:30",
+    text7: "已财务批准",
     text8: "",
   },
 ])
 
-const viewDetails = () =>{
-  proxy.$router.push("/dispatch_details");
+const viewDetails = () => {
+  proxy.$router.push("/historical_orders_details")
 }
-
 </script>
 
 <style lang="scss" scoped>

@@ -74,7 +74,7 @@
       </span>
     </span>
     <span class="table">
-      <el-table class="table_content" :data="tableData" :stripe="true" @cell-dblclick="viewDetails" style="width: 100%">
+      <el-table class="table_content" :data="tableData" :stripe="false" @cell-dblclick="viewDetails" style="width: 100%">
         <el-table-column prop="text1" label="订单编号" />
         <el-table-column prop="text2" label="专卖店名称" />
         <el-table-column prop="text3" label="生产单号" />

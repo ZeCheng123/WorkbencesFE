@@ -5,15 +5,15 @@
       <span class="step">
         <span class="item" @click="changeStep(1)">
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span class="name">待处理</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">待处理</span>
         </span>
         <span class="item" @click="changeStep(2)">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span class="name">处理中</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">处理中</span>
         </span>
         <span class="item" @click="changeStep(3)">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span class="name">已完成</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已完成</span>
         </span>
       </span>
     </span>
@@ -101,7 +101,7 @@
       <span class="table_content">
         <el-table
           :data="tableDataOrderDetials"
-          :stripe="true"
+          :stripe="false"
           style="width: 100%"
         >
           <el-table-column prop="text1" label="订单明细编号" />
@@ -155,11 +155,15 @@
       <span class="table_content">
         <el-table
           :data="tableDataAssociation"
-          :stripe="true"
+          :stripe="false"
           style="width: 100%"
         >
           <el-table-column prop="text1" label="派工单编号" />
-          <el-table-column prop="text2" label="状态" />
+          <el-table-column prop="text3" label="状态">
+            <template #default="scope">
+              <el-button class="statused" @click="console.log(scope)">已完成</el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="text3" label="其它字段" />
           <el-table-column prop="text4" label="处理人" />
           <el-table-column prop="text5" label="创建时间" />
@@ -191,19 +195,21 @@
     <span class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span>发起任务评论</span>
+        <span class="initiate_comments" @click="initiateComments">发起任务评论</span>
       </div>
       <div class="right">
         <el-button type="primary" class="cancel_btn">编辑问题</el-button>
         <el-button type="primary" class="primary_btn">新建派工</el-button>
       </div>
     </span>
-    <div class="comment">
+    <div class="comment" v-for="item in commentList" :key="item.date">
       <div class="userinfo">
         <img src="@/assets/images/userinfo.png" alt="" />
-        <span class="username">经销商A</span>
+        <span class="username">{{item["userName"]}}</span>
       </div>
-      <div class="content">客户对于此单比较着急，需要加速安排交付。</div>
+      <div class="content">{{item["text"]}}</div>
+      <div class="date">{{item["date"]}}</div>
+      <span class="reply">回复</span>
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
   </div>
@@ -212,10 +218,14 @@
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
 
 const { proxy }: any = getCurrentInstance()
 
 const currentStep = ref(2)
+
+const commentList = ref<any>([
+])
 
 const tableDataOrderDetials = ref([
   {
@@ -266,6 +276,24 @@ const tableDataAssociation = ref([
 const changeStep = (step) => {
   currentStep.value = step
 }
+
+const initiateComments = () => {
+  ElMessageBox.prompt("请填写评论内容", "发起评论", {
+    inputPattern: /\S/,
+    inputErrorMessage: '评论内容不能为空!',
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+  })
+    .then(({ value }) => {
+      commentList.value.push({
+        userName: "经销商",
+        text: value,
+        date: new Date().toLocaleString(),
+      })
+    })
+    .catch(() => {})
+}
+
 </script>
 
 <style lang="scss" scoped>

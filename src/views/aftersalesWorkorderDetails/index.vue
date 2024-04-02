@@ -5,31 +5,31 @@
       <span class="step">
         <span class="item" @click="changeStep(1)">
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span class="name">...</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">...</span>
         </span>
         <span class="item" @click="changeStep(2)">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span class="name">已包装</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已包装</span>
         </span>
         <span class="item" @click="changeStep(3)">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span class="name">已定损</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已定损</span>
         </span>
         <span class="item" @click="changeStep(4)">
           <span :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>
-          <span class="name">已追责</span>
+          <span :class="currentStep >= 4 ? 'name_selected' : 'name'">已追责</span>
         </span>
         <span class="item" @click="changeStep(5)">
           <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
-          <span class="name">已财务审核</span>
+          <span :class="currentStep >= 5 ? 'name_selected' : 'name'">已财务审核</span>
         </span>
         <span class="item" @click="changeStep(6)">
           <span :class="currentStep == 6 ? 'num_selected' : 'num'">6</span>
-          <span class="name">已经销商审核</span>
+          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">已经销商审核</span>
         </span>
         <span class="item" @click="changeStep(7)">
           <span :class="currentStep == 7 ? 'num_selected' : 'num'">7</span>
-          <span class="name">...</span>
+          <span :class="currentStep >= 7 ? 'name_selected' : 'name'">...</span>
         </span>
       </span>
     </span>
@@ -120,7 +120,7 @@
       <span class="table_content">
         <el-table
           :data="tableDataOrderDetials"
-          :stripe="true"
+          :stripe="false"
           style="width: 100%"
         >
           <el-table-column prop="text1" label="订单明细编号" />
@@ -156,19 +156,21 @@
     <span class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span>发起任务评论</span>
+        <span class="initiate_comments" @click="initiateComments">发起任务评论</span>
       </div>
       <div class="right">
         <el-button type="primary" class="primary_btn" @click="openDialog2(1)">完善问题描述</el-button>
         <el-button type="primary" class="primary_btn" @click="openDialog2(2)">定义处理方式</el-button>
       </div>
     </span>
-    <div class="comment">
+    <div class="comment" v-for="item in commentList" :key="item.date">
       <div class="userinfo">
         <img src="@/assets/images/userinfo.png" alt="" />
-        <span class="username">经销商A</span>
+        <span class="username">{{item["userName"]}}</span>
       </div>
-      <div class="content">客户对于此单比较着急，需要加速安排交付。</div>
+      <div class="content">{{item["text"]}}</div>
+      <div class="date">{{item["date"]}}</div>
+      <span class="reply">回复</span>
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
     <div class="showMainDialog2">
@@ -179,9 +181,9 @@
         <span class="content" v-if="dialogType == '1'">
           <span class="item">
             <span class="label">问题大类</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.problemType" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in problemTypeList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -190,9 +192,9 @@
           </span>
           <span class="item">
             <span class="label">售后问题</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.afterSalesIssues" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in afterSalesIssuesList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -201,14 +203,15 @@
           </span>
           <span class="item">
             <span class="label">责任人</span>
-            <el-input></el-input>
+            <el-input v-model="dialog2Form.responsiblePerson"></el-input>
           </span>
           <span class="item">
             <span class="label">问题描述</span>
-            <el-input></el-input>
+            <el-input v-model="dialog2Form.problemDesc"></el-input>
           </span>
           <span class="item">
             <el-upload
+              :file-list="dialog2Form.fileList"
               class="upload"
               drag
               action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
@@ -227,9 +230,9 @@
         <span class="content" v-if="dialogType == '2'">
           <span class="item">
             <span class="label">产品分类</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.poductType" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in poductTypeList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -238,9 +241,9 @@
           </span>
           <span class="item">
             <span class="label">部件分类</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.componentType" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in componentTypeList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -249,9 +252,9 @@
           </span>
           <span class="item">
             <span class="label">不良分类</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.badType" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in badTypeList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -260,9 +263,9 @@
           </span>
           <span class="item">
             <span class="label">质量指标一</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.qualityIndicator1" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in qualityIndicator1List"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -271,9 +274,9 @@
           </span>
           <span class="item">
             <span class="label">质量指标二</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.qualityIndicator2" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in qualityIndicator2List"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -282,9 +285,9 @@
           </span>
           <span class="item">
             <span class="label">处理方式</span>
-            <el-select placeholder="">
+            <el-select v-model="dialog2Form.handleWay" placeholder="">
               <el-option
-                v-for="item in []"
+                v-for="item in handleWayList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -302,13 +305,11 @@
               >取消</el-button
             >
             <el-button
-              @click="
-                showMainDialog2 = false
-              "
+              @click="confirmDialog"
               type="primary"
               class="primary_btn"
               style="margin-left：50px !important"
-              >确认</el-button
+              >保存</el-button
             >
           </div>
         </template>
@@ -320,10 +321,68 @@
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
 
 const { proxy }: any = getCurrentInstance()
 
 const currentStep = ref(4)
+
+const commentList = ref<any>([
+])
+
+const dialog2Form = ref<any>({
+  problemType: "",
+  afterSalesIssues: "",
+  responsiblePerson: "",
+  problemDesc: "",
+  fileList: [],
+  poductType: "",
+  componentType: "",
+  badType: "",
+  qualityIndicator1: "", 
+  qualityIndicator2: "", 
+  handleWay: ""
+})
+
+const problemTypeList = ref<any>([{
+  label: "问题大类",
+  value: "1"
+}])
+
+const afterSalesIssuesList = ref<any>([{
+  label: "售后问题",
+  value: "1"
+}])
+
+const poductTypeList = ref<any>([{
+  label: "产品分类",
+  value: "1"
+}])
+
+const componentTypeList = ref<any>([{
+  label: "部件分类",
+  value: "1"
+}])
+
+const badTypeList = ref<any>([{
+  label: "不良分类",
+  value: "1"
+}])
+
+const qualityIndicator1List = ref<any>([{
+  label: "质量指标一",
+  value: "1"
+}])
+
+const qualityIndicator2List = ref<any>([{
+  label: "质量指标二",
+  value: "1"
+}])
+
+const handleWayList = ref<any>([{
+  label: "处理方式",
+  value: "1"
+}])
 
 
 const showMainDialog2 = ref(false)
@@ -384,6 +443,7 @@ const filterList5 = ref([{ label: "油漆颜色", value: "1" }])
 
 const filterList6 = ref([{ label: "尺寸", value: "1" }])
 
+
 const tableDataOrderDetials = ref([
   {
     text1: "CS0011-06665-01",
@@ -419,6 +479,31 @@ const openDialog2 = (type) =>{
   dialogType.value = type;
   showMainDialog2.value = true
 }
+
+const initiateComments = () => {
+  ElMessageBox.prompt("请填写评论内容", "发起评论", {
+    inputPattern: /\S/,
+    inputErrorMessage: '评论内容不能为空!',
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+  })
+    .then(({ value }) => {
+      commentList.value.push({
+        userName: "经销商",
+        text: value,
+        date: new Date().toLocaleString(),
+      })
+    })
+    .catch(() => {})
+}
+
+const confirmDialog = () =>{
+  proxy.$message.success("保存成功!");
+  setTimeout(() => {
+      showMainDialog2.value = false;
+  }, 500);
+}
+
 
 </script>
 

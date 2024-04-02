@@ -96,7 +96,7 @@
       <el-table
         class="table_content"
         :data="tableData"
-        :stripe="true"
+        :stripe="false"
         style="width: 100%"
       >
         <el-table-column prop="text1" label="服务工单编号" />

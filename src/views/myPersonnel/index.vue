@@ -71,10 +71,14 @@
       </span>
     </span>
     <span class="table">
-      <el-table class="table_content" :data="tableData" :stripe="true" style="width: 100%">
+      <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
         <el-table-column prop="text1" label="人员编号" />
         <el-table-column prop="text2" label="专卖店名称" />
-        <el-table-column prop="text3" label="资质认证" />
+        <el-table-column prop="text3" label="资质认证">
+          <template #default="scope">
+            <el-button class="statused" @click="console.log(scope)">已完成</el-button>
+          </template>
+        </el-table-column>
         <el-table-column prop="text4" label="客户姓名" />
         <el-table-column prop="text5" label="职位" />
         <el-table-column prop="text6" label="创建时间" />

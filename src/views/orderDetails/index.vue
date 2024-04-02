@@ -117,7 +117,7 @@
       <span class="table_content">
         <el-table
           :data="tableDataOrderDetials"
-          :stripe="true"
+          :stripe="false"
           style="width: 100%"
         >
           <el-table-column prop="text1" label="订单明细编号" />
@@ -156,7 +156,7 @@
       <span class="table_content">
         <el-table
           :data="tableDataRelatedDocuments"
-          :stripe="true"
+          :stripe="false"
           style="width: 100%"
         >
           <el-table-column prop="text1" label="单据编号" />

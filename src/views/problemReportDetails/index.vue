@@ -10,15 +10,15 @@
       <span class="step">
         <span class="item" @click="changeStep(1)">
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span class="name">待处理</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">待处理</span>
         </span>
         <span class="item" @click="changeStep(2)">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span class="name">处理中</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">处理中</span>
         </span>
         <span class="item" @click="changeStep(3)">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span class="name">已完成</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已完成</span>
         </span>
       </span>
     </span>
@@ -105,23 +105,26 @@
       <span class="title">相关单据</span>
       <el-button class="btn">1个售后工单</el-button>
       <el-button class="btn">1个派工单</el-button>
-      <span class="view">点击查看</span>
+      <span class="view" @click="showRelatedDocumentsDialog = true">点击查看</span>
     </span>
     <span class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span>发起任务评论</span>
+        <span class="initiate_comments" @click="initiateComments">发起任务评论</span>
       </div>
       <div class="right">
-        <el-button type="primary" class="primary_btn">编辑</el-button>
+        <el-button type="primary" @click="initiateComments" class="primary_btn">编辑</el-button>
+        <el-button type="primary" class="primary_btn">创建派工单</el-button>
       </div>
     </span>
-    <div class="comment">
+    <div class="comment" v-for="item in commentList" :key="item.date">
       <div class="userinfo">
         <img src="@/assets/images/userinfo.png" alt="" />
-        <span class="username">经销商A</span>
+        <span class="username">{{item["userName"]}}</span>
       </div>
-      <div class="content">客户对于此单比较着急，需要加速安排交付。</div>
+      <div class="content">{{item["text"]}}</div>
+      <div class="date">{{item["date"]}}</div>
+      <span class="reply">回复</span>
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
     <div class="showMainDialog">
@@ -169,11 +172,11 @@
         <template v-if="currentDialogStep == 1">
             <span class="form_row">
               <span class="label required">订单编号</span>
-              <el-input></el-input>
+              <el-input v-model="formDialog.orderNo" placeholder="订单编号"></el-input>
             </span>
             <span class="form_row">
               <span class="label">升级备注</span>
-              <el-input></el-input>
+              <el-input v-model="formDialog.remark" placeholder="输入自定义备注"></el-input>
             </span>
         </template>
         <template v-if="currentDialogStep == 2">
@@ -189,10 +192,10 @@
             </span>
           </div>
           <div class="search">
-            <el-input :prefix-icon="Search" placeholder="搜索"></el-input>
+            <el-input v-model="formDialog.searchValue" :prefix-icon="Search"  placeholder="搜索"></el-input>
           </div>
           <div class="filter_list">
-            <el-select v-model="filterList.value1">
+            <el-select v-model="formDialog.orderType">
               <el-option
                 v-for="item in filterList1"
                 :key="item.value"
@@ -200,7 +203,7 @@
                 :value="item.value"
               />
             </el-select>
-            <el-select v-model="filterList.value2">
+            <el-select v-model="formDialog.productType">
               <el-option
                 v-for="item in filterList2"
                 :key="item.value"
@@ -208,7 +211,7 @@
                 :value="item.value"
               />
             </el-select>
-            <el-select v-model="filterList.value3">
+            <el-select v-model="formDialog.productModel">
               <el-option
                 v-for="item in filterList3"
                 :key="item.value"
@@ -216,7 +219,7 @@
                 :value="item.value"
               />
             </el-select>
-            <el-select v-model="filterList.value4">
+            <el-select v-model="formDialog.treeSpecies">
               <el-option
                 v-for="item in filterList4"
                 :key="item.value"
@@ -224,7 +227,7 @@
                 :value="item.value"
               />
             </el-select>
-            <el-select v-model="filterList.value5">
+            <el-select v-model="formDialog.paintColor">
               <el-option
                 v-for="item in filterList5"
                 :key="item.value"
@@ -232,7 +235,7 @@
                 :value="item.value"
               />
             </el-select>
-            <el-select v-model="filterList.value6">
+            <el-select v-model="formDialog.size">
               <el-option
                 v-for="item in filterList6"
                 :key="item.value"
@@ -242,7 +245,7 @@
             </el-select>
           </div>
           <div class="table">
-            <el-table :data="tableData" :stripe="true" style="width: 100%">
+            <el-table :data="tableData" :stripe="false" style="width: 100%">
               <el-table-column prop="text1" label="全选" width="80px">
                 <template #default="scope">
                   <el-checkbox v-model="scope.text1" />
@@ -404,19 +407,147 @@
         </template>
       </el-dialog>
     </div>
+    <div class="relatedDocumentsDialog">
+      <el-dialog
+        v-model="showRelatedDocumentsDialog"
+        title="相关单据"
+        width="80%"
+        :show-close="false"
+      >
+        <div class="content">
+          <!-- <span class="tableItem">
+            <span class="tableTitle"> 1. 问题提报 </span>
+            <span class="tableContent">
+              <el-table :data="relatedDocumentsProblemReportingList" :stripe="false" style="width: 100%">
+                <el-table-column prop="text1" label="问题提报编号" />
+                <el-table-column prop="text2" label="类别" />
+                <el-table-column prop="text3" label="负责人" />
+                <el-table-column prop="text4" label="状态" />
+                <el-table-column prop="text5" label="修改时间" />
+                <el-table-column prop="text6" label="操作" width="80px">
+                  <template #default="scope">
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        color: #165dff;
+                        cursor: pointer;
+                      "
+                      @click="console.log(scope)"
+                    >
+                      查看
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </span>
+          </span> -->
+          <span class="tableItem">
+            <span class="tableTitle"> 1. 售后工单 </span>
+            <span class="tableContent">
+              <el-table :data="relatedDocumentsAftersalesWorkorderList" :stripe="false" style="width: 100%">
+                <el-table-column prop="text1" label="售后工单编号" />
+                <el-table-column prop="text2" label="类别" />
+                <el-table-column prop="text3" label="负责人" />
+                <el-table-column prop="text3" label="状态">
+                  <template #default="scope">
+                    <el-button class="statusing" @click="console.log(scope)">进行中</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="text5" label="修改时间" />
+                <el-table-column prop="text6" label="操作" width="80px">
+                  <template #default="scope">
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        color: #165dff;
+                        cursor: pointer;
+                      "
+                      @click="console.log(scope)"
+                    >
+                      查看
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </span>
+          </span>
+          <span class="tableItem">
+            <span class="tableTitle"> 2. 派工单 </span>
+            <span class="tableContent">
+              <el-table :data="relatedDocumentsDispatchList" :stripe="false" style="width: 100%">
+                <el-table-column prop="text1" label="派工单编号" />
+                <el-table-column prop="text2" label="类别" />
+                <el-table-column prop="text3" label="负责人" />
+                <el-table-column prop="text3" label="状态">
+                  <template #default="scope">
+                    <el-button class="statusing" @click="console.log(scope)">进行中</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="text5" label="修改时间" />
+                <el-table-column prop="text7" label="操作" width="80px">
+                  <template #default="scope">
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        color: #165dff;
+                        cursor: pointer;
+                      "
+                      @click="console.log(scope)"
+                    >
+                      查看
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </span>
+          </span>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button
+              type="primary"
+              class="primary_btn"
+              @click="showRelatedDocumentsDialog = false"
+              >返回</el-button
+            >
+          </div>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive } from "vue"
-import { Search, UploadFilled } from "@element-plus/icons-vue"
+import { ElMessage, ElMessageBox } from "element-plus"
 
 const { proxy }: any = getCurrentInstance()
 
 const currentStep = ref(2)
 
-const currentDialogStep = ref(2)
+const commentList = ref<any>([
+])
+
+const showRelatedDocumentsDialog = ref(false)
+
+const formDialog = ref<any>({
+  orderNo: "",
+  remark: "",
+  searchValue: "",
+  orderType: "1",
+  productType: "1",
+  productModel: "1",
+  treeSpecies: "1",
+  paintColor: "1",
+  size: "1",
+})
+
+
+const currentDialogStep = ref(1)
 
 const showMainDialog = ref(false)
 
@@ -524,6 +655,35 @@ const tableDataServiceEvaluation = ref([
   },
 ])
 
+
+const relatedDocumentsProblemReportingList = ref([
+  
+])
+
+const relatedDocumentsAftersalesWorkorderList = ref([
+  {
+    text1: "XXX",
+    text2: "交付任务",
+    text3: "XXX",
+    text4: "进行中",
+    text5: "2021-02-28 10:30:50",
+    text6: "",
+  }
+])
+
+const relatedDocumentsDispatchList = ref([
+  {
+    text1: "XXX",
+    text2: "交付任务",
+    text3: "XXX",
+    text4: "进行中",
+    text5: "2021-02-28 10:30:50",
+    text6: "",
+  }
+])
+
+
+
 const changeStep = (step) => {
   currentStep.value = step
 }
@@ -543,9 +703,30 @@ const openDialog2 = (type) => {
 }
 
 const submitDialog = () =>{
-  showMainDialog.value = false
-  proxy.$router.push("/aftersales_workorder_details")
+  proxy.$message.success("提交成功!");
+  setTimeout(() => {
+    showMainDialog.value = false
+    proxy.$router.push("/aftersales_workorder_details")
+  }, 500);
 }
+
+const initiateComments = () => {
+  ElMessageBox.prompt("请填写评论内容", "发起评论", {
+    inputPattern: /\S/,
+    inputErrorMessage: '评论内容不能为空!',
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+  })
+    .then(({ value }) => {
+      commentList.value.push({
+        userName: "经销商",
+        text: value,
+        date: new Date().toLocaleString(),
+      })
+    })
+    .catch(() => {})
+}
+
 
 </script>
 

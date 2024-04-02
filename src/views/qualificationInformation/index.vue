@@ -5,15 +5,15 @@
       <span class="step">
         <span class="item" @click="changeStep(1)">
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span class="name">待准入</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">待准入</span>
         </span>
         <span class="item" @click="changeStep(2)">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span class="name">已准入</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已准入</span>
         </span>
         <span class="item" @click="changeStep(3)">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span class="name">已退出</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已退出</span>
         </span>
       </span>
     </span>
@@ -99,12 +99,16 @@
       <span class="table">
         <el-table
           :data="tableData"
-          :stripe="true"
+          :stripe="false"
           style="width: 100%"
         >
           <el-table-column prop="text1" label="人员编号" />
           <el-table-column prop="text2" label="专卖店名称" />
-          <el-table-column prop="text3" label="资质认证" />
+          <el-table-column prop="text3" label="资质认证">
+            <template #default="scope">
+              <el-button class="statused" @click="console.log(scope)">已完成</el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="text4" label="客户姓名" />
           <el-table-column prop="text5" label="职位" />
           <el-table-column prop="text6" label="创建时间" />

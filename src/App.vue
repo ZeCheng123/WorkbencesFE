@@ -143,13 +143,13 @@ const clickNav = (item,index) =>{
     .default_li{
       font-family: Alibaba PuHuiTi 2.0;
       font-size: 14px;
-      font-weight: normal;
+      font-weight: 500;
       color: #4E5969;
     }
     .current_li{
       color: #1D2129;
       font-size: 14px;
-      font-weight: normal;
+      font-weight: 600;
     }
     img{
       margin-right: 3px;

@@ -218,7 +218,7 @@
           >一键确认提货</el-button
         >
         <el-button
-          v-if="currentStep == 4"
+          v-if="currentStep == 3"
           type="primary"
           @click="createDeliveryOrder"
           class="primary_btn"
@@ -652,6 +652,7 @@
 import { ref, computed, getCurrentInstance, reactive } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
+import { useRoute } from 'vue-router';
 
 const { proxy }: any = getCurrentInstance()
 
@@ -661,6 +662,12 @@ const currentStep2 = ref(4)
 
 const commentList = ref<any>([
 ])
+
+const route = useRoute();
+const id = route.query.id;
+const serviceCaseNeoId = route.query.serviceCaseNeoId;
+const dispatchNoteNeoId = route.query.dispatchNoteNeoId;
+const fieldJobNeoId = route.query.fieldJobNeoId
 
 const currentDeliveryOrderStep = ref(1)
 const currentInstallationOrderStep = ref(1)
@@ -828,7 +835,7 @@ const finishDeliveryOrder = () => {
   deliveryOrderDialog.value = false
   proxy.$message.success("派工单创建完成!")
   currentDeliveryOrderStep.value = 1
-  currentStep.value = 5
+  currentStep.value = 4
 }
 
 const OpenProblemReportingDialog = () => {

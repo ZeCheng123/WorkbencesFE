@@ -672,7 +672,7 @@
 import { ref, computed, getCurrentInstance, reactive } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import { useRoute } from "vue-router"
+import { useRoute } from 'vue-router';
 
 const { proxy }: any = getCurrentInstance()
 

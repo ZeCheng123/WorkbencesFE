@@ -554,6 +554,28 @@
                    white-space: nowrap;
                 }
             }
+            .name_selected{
+                font-family: Alibaba PuHuiTi;
+                font-size: 16px;
+                font-weight: normal;
+                letter-spacing: 0px;
+                color: #1D2129;
+                height: 28px;
+                line-height: 28px;
+                margin-left: 12px;
+                position: relative;
+                .remark{
+                   position: absolute;
+                   font-family: Alibaba PuHuiTi;
+                   font-size: 12px;
+                   height: 20px;
+                   line-height: 20px;
+                   color: #86909C;
+                   left: 0;
+                   bottom: -20px;
+                   white-space: nowrap;
+                }
+            }
         }
     }
     .content{
@@ -611,6 +633,28 @@
                 font-weight: normal;
                 letter-spacing: 0px;
                 color: #4E5969;
+                height: 28px;
+                line-height: 28px;
+                margin-left: 12px;
+                position: relative;
+                .remark{
+                   position: absolute;
+                   font-family: Alibaba PuHuiTi;
+                   font-size: 12px;
+                   height: 20px;
+                   line-height: 20px;
+                   color: #86909C;
+                   left: 0;
+                   bottom: -20px;
+                   white-space: nowrap;
+                }
+            }
+            .name_selected{
+                font-family: Alibaba PuHuiTi;
+                font-size: 16px;
+                font-weight: normal;
+                letter-spacing: 0px;
+                color: #1D2129;
                 height: 28px;
                 line-height: 28px;
                 margin-left: 12px;
@@ -687,6 +731,15 @@
     width: 100%;
     bottom: 20px;
 }
+
+.check_item{
+    width: 100%;
+}
+:deep(.check_item .el-form-item__label){
+    width: auto !important;
+}
+
+
 
 //////////////////
 :deep(.installationOrderDialog .el-dialog){

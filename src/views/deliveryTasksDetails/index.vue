@@ -5,7 +5,9 @@
       <span class="step">
         <span class="item">
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">待处理</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'"
+            >待处理</span
+          >
         </span>
         <span class="item">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
@@ -16,7 +18,11 @@
           <span :class="currentStep >= 3 ? 'name_selected' : 'name'">入库</span>
         </span>
         <span class="item">
-          <span @click="currentStep = 4" :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>
+          <span
+            @click="currentStep = 4"
+            :class="currentStep == 4 ? 'num_selected' : 'num'"
+            >4</span
+          >
           <span :class="currentStep >= 4 ? 'name_selected' : 'name'">配送</span>
         </span>
         <span class="item">
@@ -95,27 +101,37 @@
       <span class="step">
         <span class="item">
           <span :class="currentStep2 == 1 ? 'num_selected' : 'num'">1</span>
-          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">...</span>
+          <span :class="currentStep2 >= 1 ? 'name_selected' : 'name'">...</span>
         </span>
         <span class="item">
           <span :class="currentStep2 == 2 ? 'num_selected' : 'num'">2</span>
-          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已包装</span>
+          <span :class="currentStep2 >= 2 ? 'name_selected' : 'name'"
+            >已包装</span
+          >
         </span>
         <span class="item">
           <span :class="currentStep2 == 3 ? 'num_selected' : 'num'">3</span>
-          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已成品入库</span>
+          <span :class="currentStep2 >= 3 ? 'name_selected' : 'name'"
+            >已成品入库</span
+          >
         </span>
         <span class="item">
           <span :class="currentStep2 == 4 ? 'num_selected' : 'num'">4</span>
-          <span :class="currentStep >= 4 ? 'name_selected' : 'name'">已发货</span>
+          <span :class="currentStep2 >= 4 ? 'name_selected' : 'name'"
+            >已发货</span
+          >
         </span>
         <span class="item">
           <span :class="currentStep2 == 5 ? 'num_selected' : 'num'">5</span>
-          <span :class="currentStep >= 5 ? 'name_selected' : 'name'">已经销商收货</span>
+          <span :class="currentStep2 >= 5 ? 'name_selected' : 'name'"
+            >已经销商收货</span
+          >
         </span>
         <span class="item">
           <span :class="currentStep2 == 6 ? 'num_selected' : 'num'">6</span>
-          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">订单完结</span>
+          <span :class="currentStep >= 6 ? 'name_selected' : 'name'"
+            >订单完结</span
+          >
         </span>
         <span class="item">
           <span :class="currentStep2 == 7 ? 'num_selected' : 'num'">7</span>
@@ -196,18 +212,20 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="text2" label="XX编号" />
+          <el-table-column prop="text2" label="派工单编号" />
           <el-table-column prop="text3" label="派工单状态" />
-          <el-table-column prop="text4" label="其它字段" />
+          <el-table-column prop="text4" label="评价状态" />
           <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="其它字段" />
+          <el-table-column prop="text6" label="计划完成时间" />
         </el-table>
       </span>
     </span>
     <div class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span class="initiate_comments" @click="initiateComments">发起任务评论</span>
+        <span class="initiate_comments" @click="initiateComments"
+          >发起任务评论</span
+        >
       </div>
       <div class="right">
         <el-button
@@ -218,7 +236,7 @@
           >一键确认提货</el-button
         >
         <el-button
-          v-if="currentStep == 4"
+          v-if="currentStep == 3"
           type="primary"
           @click="createDeliveryOrder"
           class="primary_btn"
@@ -227,7 +245,7 @@
         <el-button
           v-if="currentStep == 4"
           type="primary"
-          @click="currentStep = 5"
+          @click="currentStep = 5;currentStep2 = 5"
           class="primary_btn"
           >一键跳过配送</el-button
         >
@@ -249,10 +267,10 @@
     <div class="comment" v-for="item in commentList" :key="item.date">
       <div class="userinfo">
         <img src="@/assets/images/userinfo.png" alt="" />
-        <span class="username">{{item["userName"]}}</span>
+        <span class="username">{{ item["userName"] }}</span>
       </div>
-      <div class="content">{{item["text"]}}</div>
-      <div class="date">{{item["date"]}}</div>
+      <div class="content">{{ item["text"] }}</div>
+      <div class="date">{{ item["date"] }}</div>
       <span class="reply">回复</span>
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
@@ -270,7 +288,7 @@
               :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'"
               >1</span
             >
-            <span class="name"
+            <span :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
               >选择配送司机
               <span class="remark">选择配送货品的司机</span>
             </span>
@@ -281,7 +299,7 @@
               :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'"
               >2</span
             >
-            <span class="name"
+            <span :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'"
               >输入派工单注意事项
               <span class="remark">如有,请填写关键备注</span>
             </span>
@@ -292,7 +310,7 @@
               :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'"
               >3</span
             >
-            <span class="name"
+            <span :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'"
               >完成创建
               <span class="remark">等待司机配送</span>
             </span>
@@ -318,11 +336,26 @@
                 placeholder="查找或输入服务人员姓名"
               />
             </el-form-item>
-            <el-form-item label="人员备注" prop="userRemark">
-              <el-input
-                v-model="deliveryOrderForm.userRemark"
-                placeholder="若该人员不存在，则显示该字段进行新增备注"
+            <el-form-item label="预约开始" prop="appointmentStartTime">
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentStartTime"
+                type="datetime"
+                placeholder="日期/时间"
               />
+            </el-form-item>
+            <el-form-item label="预约结束" prop="appointmentEndTime">
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentEndTime"
+                type="datetime"
+                placeholder="日期/时间"
+              />
+            </el-form-item>
+            <el-form-item label="是否具备安装条件" class="check_item">
+              <span>
+                <el-checkbox
+                  v-model="deliveryOrderForm.haveInstallConditions"
+                ></el-checkbox>
+              </span>
             </el-form-item>
           </el-form>
           <el-form
@@ -332,13 +365,6 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="预约配送" prop="deliveryTime">
-              <el-date-picker
-                v-model="deliveryOrderForm.deliveryTime"
-                type="datetime"
-                placeholder="日期/时间"
-              />
-            </el-form-item>
             <el-form-item label="优先级" prop="priority">
               <el-input
                 placeholder="高/中/低"
@@ -412,7 +438,7 @@
               "
               >1</span
             >
-            <span class="name"
+            <span :class="currentInstallationOrderStep >= 1 ? 'name_selected' : 'name'"
               >选择安装技工
               <span class="remark">选择负责安装的技工</span>
             </span>
@@ -425,7 +451,7 @@
               "
               >2</span
             >
-            <span class="name"
+            <span :class="currentInstallationOrderStep >= 2 ? 'name_selected' : 'name'"
               >输入安装派工单注意事项
               <span class="remark">如有,请填写关键备注</span>
             </span>
@@ -438,7 +464,7 @@
               "
               >3</span
             >
-            <span class="name"
+            <span :class="currentInstallationOrderStep >= 3 ? 'name_selected' : 'name'"
               >完成创建
               <span class="remark">等待现场服务</span>
             </span>
@@ -449,19 +475,19 @@
             v-if="currentInstallationOrderStep == 1"
             :model="installationOrderForm"
             :rules="installationOrderRule"
-            label-width="90px"
+            label-width="80px"
             label-position="left"
           >
-            <el-form-item label="联系方式" prop="phone">
-              <el-input
-                placeholder="输入联系方式"
-                v-model="installationOrderForm.phone"
-              />
-            </el-form-item>
             <el-form-item label="人员名称" prop="username">
               <el-input
                 placeholder="查找或输入服务人员姓名"
                 v-model="installationOrderForm.username"
+              />
+            </el-form-item>
+            <el-form-item label="联系方式" prop="phone">
+              <el-input
+                placeholder="输入联系方式"
+                v-model="installationOrderForm.phone"
               />
             </el-form-item>
             <el-form-item label="人员备注">
@@ -493,13 +519,6 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="预约安装" prop="scheduleInstallationTime">
-              <el-date-picker
-                v-model="installationOrderForm.scheduleInstallationTime"
-                type="datetime"
-                placeholder="日期/时间"
-              />
-            </el-form-item>
             <el-form-item label="优先级" prop="priority">
               <el-input
                 v-model="installationOrderForm.priority"
@@ -519,6 +538,7 @@
             <el-form-item label="上传图片" class="custom_upload">
               <el-upload
                 class="avatar-uploader"
+                :file-list="installationOrderForm.fileList"
                 action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
                 :show-file-list="false"
               >
@@ -652,6 +672,7 @@
 import { ref, computed, getCurrentInstance, reactive } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
+import { useRoute } from "vue-router"
 
 const { proxy }: any = getCurrentInstance()
 
@@ -659,8 +680,13 @@ const currentStep = ref(2)
 
 const currentStep2 = ref(4)
 
-const commentList = ref<any>([
-])
+const commentList = ref<any>([])
+
+const route = useRoute()
+const id = route.query.id
+const serviceCaseNeoId = route.query.serviceCaseNeoId
+const dispatchNoteNeoId = route.query.dispatchNoteNeoId
+const fieldJobNeoId = route.query.fieldJobNeoId
 
 const currentDeliveryOrderStep = ref(1)
 const currentInstallationOrderStep = ref(1)
@@ -669,9 +695,11 @@ const deliveryOrderForm = reactive({
   phone: "",
   priority: "",
   type: "",
-  deliveryTime: "",
   remark: "",
   userRemark: "",
+  appointmentStartTime: "",
+  appointmentEndTime: "",
+  haveInstallConditions: false,
 })
 
 const deliveryOrderRule = reactive({
@@ -682,17 +710,30 @@ const deliveryOrderRule = reactive({
   priority: [
     { required: true, message: "Please input priority", trigger: "blur" },
   ],
-  deliveryTime: [
-    { required: true, message: "Please input delivery time", trigger: "blur" },
+  appointmentStartTime: [
+    {
+      required: true,
+      message: "Please input appointment start time",
+      trigger: "blur",
+    },
+  ],
+  appointmentEndTime: [
+    {
+      required: true,
+      message: "Please input appointment end time",
+      trigger: "blur",
+    },
   ],
 })
 
 const installationOrderForm = reactive({
   username: "",
   phone: "",
-  installationTeam: false,
   remark: "",
-  scheduleInstallationTime: "",
+  userRemark: "",
+  installationTeam: false,
+  priority: "",
+  fileList: [],
 })
 
 const installationOrderRule = reactive({
@@ -700,13 +741,6 @@ const installationOrderRule = reactive({
     { required: true, message: "Please input username", trigger: "blur" },
   ],
   phone: [{ required: true, message: "Please input phone", trigger: "blur" }],
-  scheduleInstallationTime: [
-    {
-      required: true,
-      message: "Please input schedule installation time",
-      trigger: "blur",
-    },
-  ],
   priority: [
     { required: true, message: "Please input priority", trigger: "blur" },
   ],
@@ -777,11 +811,11 @@ const tableDataInvoice = ref([
 const tableDataDispatch = ref([
   {
     text1: "",
-    text2: "XXX",
-    text3: "示例字段...",
-    text4: "XXXX",
+    text2: "PG0001",
+    text3: "已完成",
+    text4: "已评价",
     text5: "2024-02-21 10:30:50",
-    text6: "XXX",
+    text6: "2024-02-21 10:30:50",
   },
 ])
 
@@ -828,7 +862,7 @@ const finishDeliveryOrder = () => {
   deliveryOrderDialog.value = false
   proxy.$message.success("派工单创建完成!")
   currentDeliveryOrderStep.value = 1
-  currentStep.value = 5
+  currentStep.value = 4
 }
 
 const OpenProblemReportingDialog = () => {
@@ -848,7 +882,7 @@ const takeGoods = () => {
 const initiateComments = () => {
   ElMessageBox.prompt("请填写评论内容", "发起评论", {
     inputPattern: /\S/,
-    inputErrorMessage: '评论内容不能为空!',
+    inputErrorMessage: "评论内容不能为空!",
     confirmButtonText: "确认",
     cancelButtonText: "取消",
   })
@@ -861,8 +895,6 @@ const initiateComments = () => {
     })
     .catch(() => {})
 }
-
-
 </script>
 
 <style lang="scss" scoped>

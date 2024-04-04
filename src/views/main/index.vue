@@ -121,11 +121,11 @@
         <div class="other_function">
           <div class="title">其他功能</div>
           <div class="menu">
-            <div class="item">
+            <!-- <div class="item">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <span class="name">用户信息</span>
-            </div>
-            <div class="item" style="margin-left: 30px">
+            </div> -->
+            <div class="item">
               <img class="icon" src="@/assets/images/data_report.png" alt="" />
               <span class="name">数据报表</span>
             </div>

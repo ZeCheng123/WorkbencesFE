@@ -28,7 +28,7 @@
           label-width="80px"
           label-position="left"
         >
-          <el-form-item label="筛选方式">
+          <!-- <el-form-item label="筛选方式">
             <el-select v-model="form.filterMethod" placeholder="请选择筛选方式">
               <el-option
                 v-for="item in filterMethodOptions"
@@ -37,7 +37,7 @@
                 :value="item.value"
               />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="创建时间">
             <el-date-picker
               v-model="form.createDate"
@@ -57,6 +57,7 @@
               />
             </el-select>
           </el-form-item>
+          <span style="width:336px;height:32px"></span>
         </el-form>
       </span>
       <span class="right">
@@ -67,7 +68,9 @@
     <span class="table_header">
       <span class="left">
         <img src="@/assets/images/logoXX.png" alt="" />
-        <span class="title">经销商名称：梦天慈溪经销商</span>
+        <span class="title">
+          <!-- 经销商名称：梦天慈溪经销商 -->
+        </span>
       </span>
       <span class="right">
         <el-button @click="OpenProblemReportingDialog" type="primary" class="search_btn"><template #icon> <img src="@/assets/images/plus.png" alt=""> </template>新建</el-button>
@@ -114,7 +117,135 @@
         width="80%"
         :show-close="false"
       >
+                <span class="step">
+          <span class="item">
+            <span
+              :class="currentProblemReportingStep == 1 ? 'num_selected' : 'num'"
+              >1</span
+            >
+            <span class="name"
+              >完善提报信息
+              <span class="remark">完善问题提报的信息</span>
+            </span>
+          </span>
+          <span class="item">
+            <span
+              :class="currentProblemReportingStep == 2 ? 'num_selected' : 'num'"
+              >2</span
+            >
+            <span class="name"
+              >完成创建
+              <span class="remark">等待售服部处理</span>
+            </span>
+          </span>
+        </span>
         <div class="content">
+          <el-form
+            :model="problemReportingForm"
+            :rules="problemReportingRule"
+            label-width="90px"
+            label-position="left"
+          >
+            <el-form-item label="订单编号" prop="orderNo">
+              <el-input
+                placeholder="请选择订单编号"
+                v-model="problemReportingForm.orderNo"
+              />
+            </el-form-item>
+            <el-form-item label="客户姓名" prop="customerName">
+              <el-input
+                placeholder="请输入客户姓名"
+                v-model="problemReportingForm.customerName"
+              />
+            </el-form-item>
+            <el-form-item label="客户电话" prop="customerPhone">
+              <el-input
+                placeholder="请输入客户电话"
+                v-model="problemReportingForm.customerPhone"
+              />
+            </el-form-item>
+             <el-form-item label="问题描述" class="customLayout" prop="desc">
+              <el-input
+                v-model="problemReportingForm.desc"
+                :rows="5"
+                type="textarea"
+                maxlength="500"
+                placeholder="请输入问题描述"
+                show-word-limit
+              />
+            </el-form-item>
+             <el-form-item label="上传图片" class="custom_upload">
+              <el-upload
+                class="avatar-uploader"
+                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                :show-file-list="false"
+                v-model:file-list="problemReportingForm.fileList"
+              >
+                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              </el-upload>
+            </el-form-item>
+            <!-- <el-form-item label="姓名" prop="userName">
+              <el-input
+                placeholder="请输入姓名"
+                v-model="problemReportingForm.userName"
+              />
+            </el-form-item>
+            <el-form-item label="省" prop="province">
+              <el-input
+                placeholder="请输入省"
+                v-model="problemReportingForm.province"
+              />
+            </el-form-item>
+            <el-form-item label="市" prop="city">
+              <el-input
+                placeholder="请输入市"
+                v-model="problemReportingForm.city"
+              />
+            </el-form-item>
+            <el-form-item label="详细地址" prop="address">
+              <el-input
+                placeholder="请输入详细地址"
+                v-model="problemReportingForm.address"
+              />
+            </el-form-item>
+            <el-form-item label="问题类别" prop="type">
+              <el-radio-group
+                style="width: 300px"
+                v-model="problemReportingForm.type"
+              >
+                <el-radio value="1">售后报修</el-radio>
+                <el-radio value="2">投诉建议</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="选择订单" prop="orderNo">
+              <el-input
+                placeholder="请输入订单"
+                v-model="problemReportingForm.orderNo"
+              />
+            </el-form-item>
+            <el-form-item label="问题描述" class="customLayout">
+              <el-input
+                v-model="problemReportingForm.desc"
+                :rows="5"
+                type="textarea"
+                maxlength="500"
+                placeholder="请输入问题描述"
+                show-word-limit
+              />
+            </el-form-item>
+            <el-form-item label="上传图片" class="custom_upload">
+              <el-upload
+                class="avatar-uploader"
+                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                :show-file-list="false"
+                v-model:file-list="problemReportingForm.fileList"
+              >
+                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              </el-upload>
+            </el-form-item> -->
+          </el-form>
+        </div>
+        <!-- <div class="content">
           <el-form
             :model="problemReportingForm"
             :rules="problemReportingRule"
@@ -181,7 +312,7 @@
               </el-upload>
             </el-form-item>
           </el-form>
-        </div>
+        </div> -->
         <template #footer>
           <div class="dialog-footer">
             <el-button
@@ -233,40 +364,57 @@ const orderStatusOptions = ref([
 
 const showProblemReportingDialog = ref(false)
 
+
+const currentProblemReportingStep = ref(1)
+
+
 const problemReportingForm = reactive({
-  userName: "",
-  province: "",
-  city: "",
-  address: "",
-  type: "1",
-  desc: "",
+  // userName: "",
+  // province: "",
+  // city: "",
+  // address: "",
+  // type: "1",
+  // desc: "",
+  // orderNo: "",
+  // fileList: "",
   orderNo: "",
-  fileList: "",
+  customerName: "",
+  customerPhone: "",
+  desc: "",
+  fileList: []
 })
 
 const problemReportingRule = reactive({
-  userName: [
-    { required: true, message: "Please input userName", trigger: "blur" },
+  // userName: [
+  //   { required: true, message: "Please input userName", trigger: "blur" },
+  // ],
+  // province: [
+  //   { required: true, message: "Please input province", trigger: "blur" },
+  // ],
+  // city: [{ required: true, message: "Please input city", trigger: "blur" }],
+  // address: [
+  //   { required: true, message: "Please input address", trigger: "blur" },
+  // ],
+  // type: [
+  //   { required: true, message: "Please input problem type", trigger: "blur" },
+  // ],
+  // orderNo: [
+  //   {
+  //     required: true,
+  //     message: "Please input problem order no",
+  //     trigger: "blur",
+  //   },
+  // ],
+  customerName: [
+    { required: true, message: "Please input customer name", trigger: "blur" },
   ],
-  province: [
-    { required: true, message: "Please input province", trigger: "blur" },
+  customerPhone: [
+    { required: true, message: "Please input customer phone", trigger: "blur" },
   ],
-  city: [{ required: true, message: "Please input city", trigger: "blur" }],
-  address: [
-    { required: true, message: "Please input address", trigger: "blur" },
-  ],
-  type: [
-    { required: true, message: "Please input problem type", trigger: "blur" },
-  ],
-  orderNo: [
-    {
-      required: true,
-      message: "Please input problem order no",
-      trigger: "blur",
-    },
-  ],
+  desc: [
+     { required: true, message: "Please input problem description", trigger: "blur" },
+  ]
 })
-
 
 const tableData = ref([
   {

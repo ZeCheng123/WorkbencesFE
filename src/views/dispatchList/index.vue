@@ -32,7 +32,7 @@
           label-width="80px"
           label-position="left"
         >
-          <el-form-item label="筛选方式">
+          <!-- <el-form-item label="筛选方式">
             <el-select v-model="form.filterMethod" placeholder="请选择筛选方式">
               <el-option
                 v-for="item in filterMethodOptions"
@@ -41,7 +41,7 @@
                 :value="item.value"
               />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="创建时间">
             <el-date-picker
               v-model="form.createDate"
@@ -61,6 +61,7 @@
               />
             </el-select>
           </el-form-item>
+          <span style="width:336px;height:32px"></span>
         </el-form>
       </span>
       <span class="right">
@@ -71,7 +72,9 @@
     <span class="table_header">
       <span class="left">
         <img src="@/assets/images/logoXX.png" alt="" />
-        <span class="title">经销商名称：梦天慈溪经销商</span>
+        <span class="title">
+          <!-- 经销商名称：梦天慈溪经销商 -->
+        </span>
       </span>
       <span class="right">
         <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/download.png" alt=""> </template>下载</el-button>

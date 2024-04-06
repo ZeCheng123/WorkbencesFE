@@ -12,8 +12,8 @@
           <el-form-item label="订单编号">
             <el-input placeholder="请输入任务编号" v-model="form.orderNo" />
           </el-form-item>
-          <el-form-item label="客户名称">
-            <el-input placeholder="输入客户名称" v-model="form.customerName" />
+          <el-form-item label="客户姓名">
+            <el-input placeholder="输入客户姓名" v-model="form.customerName" />
           </el-form-item>
           <el-form-item label="客户电话">
             <el-input
@@ -28,16 +28,6 @@
           label-width="80px"
           label-position="left"
         >
-          <el-form-item label="筛选方式">
-            <el-select v-model="form.filterMethod" placeholder="请选择筛选方式">
-              <el-option
-                v-for="item in filterMethodPtions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
           <el-form-item label="创建时间">
             <el-date-picker
               v-model="form.createDate"
@@ -57,6 +47,17 @@
               />
             </el-select>
           </el-form-item>
+          <span style="width:336px;height:32px"></span>
+          <!-- <el-form-item label="筛选方式">
+            <el-select v-model="form.filterMethod" placeholder="请选择筛选方式">
+              <el-option
+                v-for="item in filterMethodPtions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item> -->
         </el-form>
       </span>
       <span class="right">
@@ -75,7 +76,9 @@
     <span class="table_header">
       <span class="left">
         <img src="@/assets/images/logoXX.png" alt="" />
-        <span class="title">经销商名称：梦天慈溪经销商</span>
+        <span class="title">
+          <!-- 经销商名称：梦天慈溪经销商 -->
+        </span>
       </span>
       <span class="right">
         <el-button type="primary" class="reset_btn"
@@ -94,9 +97,9 @@
       >
         <el-table-column prop="text1" label="订单编号" />
         <el-table-column prop="text2" label="专卖店名称" />
-        <el-table-column prop="text3" label="生产单号" />
+        <el-table-column prop="text3" label="装卖店编号" />
         <el-table-column prop="text4" label="客户名称" />
-        <el-table-column prop="text5" label="订单来源" />
+        <el-table-column prop="text5" label="生产单号" />
         <el-table-column prop="text6" label="创建时间" />
         <el-table-column prop="text7" label="状态" />
         <el-table-column prop="text8" label="操作" width="80px">
@@ -159,70 +162,70 @@ const tableData = ref([
   {
     text1: "CS0011-06665-01",
     text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
+    text3: "CS0011",
     text4: "李女士",
-    text5: "自然进店",
-    text6: "2021-02-29 10:30",
+    text5: "83047",
+    text6: "2021-02-28 10:30",
     text7: "已财务批准",
     text8: "",
   },
   {
     text1: "CS0011-06665-01",
     text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
+    text3: "CS0011",
     text4: "李女士",
-    text5: "自然进店",
-    text6: "2021-02-29 10:30",
+    text5: "83047",
+    text6: "2021-02-28 10:30",
     text7: "已财务批准",
     text8: "",
   },
   {
     text1: "CS0011-06665-01",
     text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
+    text3: "CS0011",
     text4: "李女士",
-    text5: "自然进店",
-    text6: "2021-02-29 10:30",
+    text5: "83047",
+    text6: "2021-02-28 10:30",
     text7: "已财务批准",
     text8: "",
   },
   {
     text1: "CS0011-06665-01",
     text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
+    text3: "CS0011",
     text4: "李女士",
-    text5: "自然进店",
-    text6: "2021-02-29 10:30",
+    text5: "83047",
+    text6: "2021-02-28 10:30",
     text7: "已财务批准",
     text8: "",
   },
   {
     text1: "CS0011-06665-01",
     text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
+    text3: "CS0011",
     text4: "李女士",
-    text5: "自然进店",
-    text6: "2021-02-29 10:30",
+    text5: "83047",
+    text6: "2021-02-28 10:30",
     text7: "已财务批准",
     text8: "",
   },
   {
     text1: "CS0011-06665-01",
     text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
+    text3: "CS0011",
     text4: "李女士",
-    text5: "自然进店",
-    text6: "2021-02-29 10:30",
+    text5: "83047",
+    text6: "2021-02-28 10:30",
     text7: "已财务批准",
     text8: "",
   },
   {
     text1: "CS0011-06665-01",
     text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
+    text3: "CS0011",
     text4: "李女士",
-    text5: "自然进店",
-    text6: "2021-02-29 10:30",
+    text5: "83047",
+    text6: "2021-02-28 10:30",
     text7: "已财务批准",
     text8: "",
   },

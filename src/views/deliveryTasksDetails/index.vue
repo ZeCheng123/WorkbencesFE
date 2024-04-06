@@ -288,7 +288,8 @@
               :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'"
               >1</span
             >
-            <span :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
+            <span
+              :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
               >选择配送司机
               <span class="remark">选择配送货品的司机</span>
             </span>
@@ -299,7 +300,8 @@
               :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'"
               >2</span
             >
-            <span :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'"
+            <span
+              :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'"
               >输入派工单注意事项
               <span class="remark">如有,请填写关键备注</span>
             </span>
@@ -310,7 +312,8 @@
               :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'"
               >3</span
             >
-            <span :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'"
+            <span
+              :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'"
               >完成创建
               <span class="remark">等待司机配送</span>
             </span>
@@ -438,7 +441,10 @@
               "
               >1</span
             >
-            <span :class="currentInstallationOrderStep >= 1 ? 'name_selected' : 'name'"
+            <span
+              :class="
+                currentInstallationOrderStep >= 1 ? 'name_selected' : 'name'
+              "
               >选择安装技工
               <span class="remark">选择负责安装的技工</span>
             </span>
@@ -451,7 +457,10 @@
               "
               >2</span
             >
-            <span :class="currentInstallationOrderStep >= 2 ? 'name_selected' : 'name'"
+            <span
+              :class="
+                currentInstallationOrderStep >= 2 ? 'name_selected' : 'name'
+              "
               >输入安装派工单注意事项
               <span class="remark">如有,请填写关键备注</span>
             </span>
@@ -464,7 +473,10 @@
               "
               >3</span
             >
-            <span :class="currentInstallationOrderStep >= 3 ? 'name_selected' : 'name'"
+            <span
+              :class="
+                currentInstallationOrderStep >= 3 ? 'name_selected' : 'name'
+              "
               >完成创建
               <span class="remark">等待现场服务</span>
             </span>
@@ -579,6 +591,28 @@
         width="80%"
         :show-close="false"
       >
+        <span class="step">
+          <span class="item">
+            <span
+              :class="currentProblemReportingStep == 1 ? 'num_selected' : 'num'"
+              >1</span
+            >
+            <span class="name"
+              >完善提报信息
+              <span class="remark">完善问题提报的信息</span>
+            </span>
+          </span>
+          <span class="item">
+            <span
+              :class="currentProblemReportingStep == 2 ? 'num_selected' : 'num'"
+              >2</span
+            >
+            <span class="name"
+              >完成创建
+              <span class="remark">等待售服部处理</span>
+            </span>
+          </span>
+        </span>
         <div class="content">
           <el-form
             :model="problemReportingForm"
@@ -586,7 +620,45 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="姓名" prop="userName">
+            <el-form-item label="订单编号" prop="orderNo">
+              <el-input
+                placeholder="请选择订单编号"
+                v-model="problemReportingForm.orderNo"
+              />
+            </el-form-item>
+            <el-form-item label="客户姓名" prop="customerName">
+              <el-input
+                placeholder="请输入客户姓名"
+                v-model="problemReportingForm.customerName"
+              />
+            </el-form-item>
+            <el-form-item label="客户电话" prop="customerPhone">
+              <el-input
+                placeholder="请输入客户电话"
+                v-model="problemReportingForm.customerPhone"
+              />
+            </el-form-item>
+             <el-form-item label="问题描述" class="customLayout" prop="desc">
+              <el-input
+                v-model="problemReportingForm.desc"
+                :rows="5"
+                type="textarea"
+                maxlength="500"
+                placeholder="请输入问题描述"
+                show-word-limit
+              />
+            </el-form-item>
+             <el-form-item label="上传图片" class="custom_upload">
+              <el-upload
+                class="avatar-uploader"
+                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                :show-file-list="false"
+                v-model:file-list="problemReportingForm.fileList"
+              >
+                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              </el-upload>
+            </el-form-item>
+            <!-- <el-form-item label="姓名" prop="userName">
               <el-input
                 placeholder="请输入姓名"
                 v-model="problemReportingForm.userName"
@@ -644,7 +716,7 @@
               >
                 <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
               </el-upload>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
         </div>
         <template #footer>
@@ -672,7 +744,7 @@
 import { ref, computed, getCurrentInstance, reactive } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router"
 
 const { proxy }: any = getCurrentInstance()
 
@@ -690,6 +762,7 @@ const fieldJobNeoId = route.query.fieldJobNeoId
 
 const currentDeliveryOrderStep = ref(1)
 const currentInstallationOrderStep = ref(1)
+const currentProblemReportingStep = ref(1)
 const deliveryOrderForm = reactive({
   username: "",
   phone: "",
@@ -747,37 +820,51 @@ const installationOrderRule = reactive({
 })
 
 const problemReportingForm = reactive({
-  userName: "",
-  province: "",
-  city: "",
-  address: "",
-  type: "1",
-  desc: "",
+  // userName: "",
+  // province: "",
+  // city: "",
+  // address: "",
+  // type: "1",
+  // desc: "",
+  // orderNo: "",
+  // fileList: "",
   orderNo: "",
-  fileList: "",
+  customerName: "",
+  customerPhone: "",
+  desc: "",
+  fileList: []
 })
 
 const problemReportingRule = reactive({
-  userName: [
-    { required: true, message: "Please input userName", trigger: "blur" },
+  // userName: [
+  //   { required: true, message: "Please input userName", trigger: "blur" },
+  // ],
+  // province: [
+  //   { required: true, message: "Please input province", trigger: "blur" },
+  // ],
+  // city: [{ required: true, message: "Please input city", trigger: "blur" }],
+  // address: [
+  //   { required: true, message: "Please input address", trigger: "blur" },
+  // ],
+  // type: [
+  //   { required: true, message: "Please input problem type", trigger: "blur" },
+  // ],
+  // orderNo: [
+  //   {
+  //     required: true,
+  //     message: "Please input problem order no",
+  //     trigger: "blur",
+  //   },
+  // ],
+  customerName: [
+    { required: true, message: "Please input customer name", trigger: "blur" },
   ],
-  province: [
-    { required: true, message: "Please input province", trigger: "blur" },
+  customerPhone: [
+    { required: true, message: "Please input customer phone", trigger: "blur" },
   ],
-  city: [{ required: true, message: "Please input city", trigger: "blur" }],
-  address: [
-    { required: true, message: "Please input address", trigger: "blur" },
-  ],
-  type: [
-    { required: true, message: "Please input problem type", trigger: "blur" },
-  ],
-  orderNo: [
-    {
-      required: true,
-      message: "Please input problem order no",
-      trigger: "blur",
-    },
-  ],
+  desc: [
+     { required: true, message: "Please input problem description", trigger: "blur" },
+  ]
 })
 
 const deliveryOrderDialog = ref(false)

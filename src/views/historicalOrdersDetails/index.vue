@@ -43,71 +43,85 @@
             <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
-            <span class="label">销售类型：</span>
-            <span class="value">零售</span>
+            <span class="label">订单流程：</span>
+            <span class="value">渠道</span>
           </span>
-          <span class="field">
-            <span class="label">客户来源：</span>
-            <span class="value">自然进店</span>
-          </span>
-        </span>
-        <span class="row_field">
-          <span class="field">
-            <span class="label">交期类型：</span>
-            <span class="value">标准产品类</span>
-          </span>
-          <span class="field">
-            <span class="label">订单状态：</span>
-            <span class="value">已财务批准</span>
-          </span>
-          <span class="field">
-            <span class="label">加急类型：</span>
-            <span class="value">正常交期</span>
-          </span>
-        </span>
-        <span class="row_field">
           <span class="field">
             <span class="label">生产单号：</span>
-            <span class="value">H404304</span>
+            <span class="value">XXX</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">经销商编号：</span>
+            <span class="value">XXX</span>
           </span>
           <span class="field">
-            <span class="label">交期天数：</span>
-            <span class="value">35</span>
+            <span class="label">专卖店编号：</span>
+            <span class="value">XXX</span>
           </span>
           <span class="field">
-            <span class="label">预计延迟天数：</span>
-            <span class="value">0</span>
+            <span class="label">出库方式：</span>
+            <span class="value">直发出库</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">供应基地：</span>
+            <span class="value">庆元基地</span>
+          </span>
+          <span class="field">
+            <span class="label">预订单编号：</span>
+            <span class="value">3CS0011-24012630295</span>
+          </span>
+          <span class="field">
+            <span class="label">创建时间：</span>
+            <span class="value">XX</span>
           </span>
         </span>
       </span>
       <span class="title">其他字段</span>
       <span class="other_field">
-        <span class="row_field">
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">未全部入库</span>
+        <span class="row_field" style="justify-content: space-around;">
+          <span class="field" style="width: 400px;">
+            <span class="label">客户姓名：</span>
+            <span class="value">张三</span>
           </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+          <span class="field" style="width: 400px;">
+            <span class="label">客户电话：</span>
+            <span class="value">15356789570</span>
           </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+          <span class="field" style="width: 400px;">
+            <span class="label">客户地址：</span>
+            <span class="value">XXX</span>
           </span>
         </span>
-        <span class="row_field">
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+        <span class="row_field" style="justify-content: space-around;">
+          <span class="field" style="width: 400px;display: flex; align-items: center;">
+            <span class="label">是否具备安装条件：</span>
+            <span class="value" style="display:flex">
+              <el-checkbox v-model="otherField.haveInstallationConditions"></el-checkbox>
+            </span>
           </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+          <span class="field" style="width: 400px;">
+            <span class="label">预计配送时间：</span>
+            <span class="value">
+              <el-date-picker
+                v-model="otherField.scheduleDeliveryTime"
+                type="datetime"
+                placeholder="日期/时间"
+              />
+            </span>
           </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+          <span class="field" style="width: 400px;">
+            <span class="label">预计安装时间：</span>
+            <span class="value">
+              <el-date-picker
+                v-model="otherField.scheduleInstallationTime"
+                type="datetime"
+                placeholder="日期/时间"
+              />
+            </span>
           </span>
         </span>
       </span>
@@ -128,7 +142,7 @@
               <el-button class="statusing" @click="console.log(scope)">进行中</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="text5" label="修改时间" />
+          <el-table-column prop="text5" label="创建时间" />
           <el-table-column prop="text7" label="操作" width="80px">
             <template #default="scope">
               <div
@@ -165,11 +179,18 @@
           style="width: 100%"
         >
           <el-table-column prop="text1" label="订单明细编号" />
-          <el-table-column prop="text2" label="大类" />
-          <el-table-column prop="text3" label="其它字段" />
-          <el-table-column prop="text4" label="油漆颜色" />
-          <el-table-column prop="text5" label="修改时间" />
-          <el-table-column prop="text6" label="操作" width="80px">
+          <el-table-column prop="text2" label="部件名称" />
+          <el-table-column prop="text3" label="部件尺寸" />
+          <el-table-column prop="text4" label="型号">
+             <template #default="scope">
+              <div class="custom_cell">
+                {{scope.row.text4}}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="text5" label="数量" />
+          <el-table-column prop="text6" label="创建时间" />
+          <el-table-column prop="text7" label="操作" width="80px">
             <template #default="scope">
               <div
                 style="
@@ -489,6 +510,12 @@ const commentList = ref<any>([
 ])
 
 
+const otherField = ref<any>({
+  haveInstallationConditions: false,
+  scheduleDeliveryTime: null,
+  scheduleInstallationTime: null,
+})
+
 
 const currentProblemReportingStep = ref(1)
 
@@ -559,35 +586,39 @@ const tableDataRelatedTask = ref([
 const tableDataOrderDetailsList = ref([
   {
     text1: "CS015-00023-0-1-1",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
+    text2: "A横主板",
+    text3: "844*150*24",
+    text4: "QKMT24档条",
+    text5: "1",
+    text6: "2021-02-28 10:30:50",
+    text7: "",
   },
   {
     text1: "CS015-00023-0-1-1",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
+    text2: "A横主板",
+    text3: "844*150*24",
+    text4: "QKMT24档条",
+    text5: "1",
+    text6: "2021-02-28 10:30:50",
+    text7: "",
   },
   {
     text1: "CS015-00023-0-1-1",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
+    text2: "A横主板",
+    text3: "844*150*24",
+    text4: "QKMT24档条",
+    text5: "1",
+    text6: "2021-02-28 10:30:50",
+    text7: "",
   },
   {
     text1: "CS015-00023-0-1-1",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
+    text2: "A横主板",
+    text3: "844*150*24",
+    text4: "QKMT24档条",
+    text5: "1",
+    text6: "2021-02-28 10:30:50",
+    text7: "",
   },
 ])
 

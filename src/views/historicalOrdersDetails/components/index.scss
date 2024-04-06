@@ -764,4 +764,21 @@
 }
   
 
+:deep(.field .el-input__wrapper) {
+    height: 28px;
+    line-height: 28px;
+}
 
+.custom_cell{
+    display: flex;
+    align-items: center; 
+}
+
+.custom_cell::before{
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #767676;
+    border-radius: 3px;
+    margin-right: 6px;
+}

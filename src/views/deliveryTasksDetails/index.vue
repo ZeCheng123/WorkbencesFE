@@ -236,7 +236,7 @@
           >一键确认提货</el-button
         >
         <el-button
-          v-if="currentStep == 3"
+          v-if="currentStep == 4"
           type="primary"
           @click="createDeliveryOrder"
           class="primary_btn"
@@ -949,7 +949,7 @@ const finishDeliveryOrder = () => {
   deliveryOrderDialog.value = false
   proxy.$message.success("派工单创建完成!")
   currentDeliveryOrderStep.value = 1
-  currentStep.value = 4
+  currentStep.value = 5
 }
 
 const OpenProblemReportingDialog = () => {

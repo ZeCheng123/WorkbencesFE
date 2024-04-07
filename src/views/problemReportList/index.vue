@@ -80,11 +80,11 @@
     <span class="table">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
         <el-table-column prop="text1" label="问题编号" />
-        <el-table-column prop="text2" label="专卖店名称" />
-        <el-table-column prop="text3" label="生产单号" />
-        <el-table-column prop="text4" label="客户名称" />
-        <el-table-column prop="text5" label="处理方式" />
-        <el-table-column prop="text6" label="创建时间" />
+        <el-table-column prop="text2" label="客户姓名" />
+        <el-table-column prop="text3" label="问题描述" />
+        <el-table-column prop="text4" label="来源" />
+        <el-table-column prop="text5" label="提报人" />
+        <el-table-column prop="text5" label="创建时间" />
         <el-table-column prop="text7" label="问题状态" />
         <el-table-column prop="text8" label="操作" width="80px">
           <template #default="scope">
@@ -418,73 +418,73 @@ const problemReportingRule = reactive({
 
 const tableData = ref([
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "终端客户",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "终端客户",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "终端客户",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "终端客户",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "终端客户",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "终端客户",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
   {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
+    text1: "SER-06665-01",
+    text2: "XXX",
+    text3: "示例字段",
+    text4: "终端客户",
+    text5: "XXX",
     text6: "2021-02-28 10:30",
-    text7: "已提报",
+    text7: "处理中",
     text8: "",
   },
 ])

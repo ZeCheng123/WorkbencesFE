@@ -27,7 +27,7 @@
       <span class="main_field">
         <span class="row_field">
           <span class="field">
-            <span class="label">工单编号：</span>
+            <span class="label">问题编号：</span>
             <span class="value">SH202460007</span>
             <span v-if="false" class="view">查看</span>
           </span>
@@ -36,67 +36,81 @@
             <span class="value">梦天慈溪专卖店A</span>
           </span>
           <span class="field">
-            <span class="label">售后状态：</span>
-            <span class="value">已追责</span>
+            <span class="label">问题类别：</span>
+            <span class="value">售后报修</span>
           </span>
         </span>
         <span class="row_field">
-          <span class="field">
-            <span class="label">信息来源：</span>
-            <span class="value">经销商提报</span>
-          </span>
           <span class="field">
             <span class="label">订单编号：</span>
-            <span class="status1">SH202260007</span>
+            <span class="value">XXXXXXXXXXX</span>
           </span>
           <span class="field">
-            <span class="label">客户姓名：</span>
-            <span class="value">李女士</span>
+            <span class="label">负责人：</span>
+            <span class="value">XXX</span>
+          </span>
+          <span class="field">
+            <span class="label">创建时间：</span>
+            <span class="value">2021-02-28 10:30:50</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
-            <span class="label">供应基地：</span>
+            <span class="label">问题描述：</span>
             <span class="value">嘉善基地</span>
           </span>
-          <span class="field">
-            <span class="label">订单类型：</span>
-            <span class="value">子单</span>
+          <!-- <span class="field">
+            <span class="label"></span>
+            <span class="value"></span>
           </span>
           <span class="field">
-            <span class="label">客户电话：</span>
-            <span class="value">13566778899</span>
-          </span>
+            <span class="label"></span>
+            <span class="value"></span>
+          </span> -->
         </span>
       </span>
       <span class="title">其他字段</span>
       <span class="other_field">
         <span class="row_field">
           <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+            <span class="label">客户姓名：</span>
+            <span class="value">XXX</span>
           </span>
           <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+            <span class="label">客户手机号：</span>
+            <span class="value">18568689595</span>
           </span>
           <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+            <span class="label">来源：</span>
+            <span class="value">终端客户</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+            <span class="label">省份：</span>
+            <span class="value">江苏省</span>
           </span>
           <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+            <span class="label">城市：</span>
+            <span class="value">南京市</span>
           </span>
           <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
+            <span class="label">提报人电话：</span>
+            <span class="value">16822822288</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">经销商内部提报：</span>
+            <span class="value">复选框</span>
+          </span>
+          <span class="field">
+            <span class="label">提报人：</span>
+            <span class="value">王工</span>
+          </span>
+          <span class="field">
+            <span class="label">提报人电话：</span>
+            <span class="value">16822822288</span>
           </span>
         </span>
       </span>

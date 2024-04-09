@@ -63,7 +63,7 @@
           </span>
           <span class="field">
             <span class="label">经销商负责人：</span>
-            <span class="value">{{ taskDetails.follower_name }}</span>
+            <span class="value">{{ taskDetails.followerName }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -768,7 +768,7 @@ const taskid = route.query.id
 const serviceCaseNeoId = route.query.serviceCaseId
 const orderId = route.query.orderId
 // const fieldJobNeoId = route.query.fieldJobNeoId
-const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0):0
+const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0)+1:1
 const taskType = route.query.taskType
 
 const taskDetails=ref({
@@ -994,8 +994,8 @@ const finishDeliveryOrder =  () => {
 				
 			}
       Object.keys(deliveryOrderForm).forEach(key => {
-        if(key!="type"||key!="haveInstallConditions"||key!="field_job_order_id"||key!="fieldJobType__c"||key!="stage__c"||key!="name") deliveryOrderForm[key] = '';
-        if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
+        if(!key.includes("type")&&!key.includes("haveInstallConditions")&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
+        if(key==="haveInstallConditions") deliveryOrderForm[key] =false;
       });
 		}).catch((error: any) => {
 			// 显示请求失败的提示框
@@ -1004,7 +1004,7 @@ const finishDeliveryOrder =  () => {
 				type: 'error'
 			});
       Object.keys(deliveryOrderForm).forEach(key => {
-        if(key!="type"||key!="haveInstallConditions"||key!="field_job_order_id"||key!="fieldJobType__c"||key!="stage__c"||key!="name") deliveryOrderForm[key] = '';
+        if(key!=="type"&&key!=="haveInstallConditions"&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
         if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
       });
 			console.error('请求新增派工单失败:', error);

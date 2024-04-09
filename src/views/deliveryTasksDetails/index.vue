@@ -63,7 +63,7 @@
           </span>
           <span class="field">
             <span class="label">经销商负责人：</span>
-            <span class="value">{{ taskDetails.follower_name }}</span>
+            <span class="value">{{ taskDetails.followerName }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -189,11 +189,11 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="text2" label="XX编号" />
+          <el-table-column prop="text2" label="发货单编号" />
           <el-table-column prop="text3" label="发货单状态" />
-          <el-table-column prop="text4" label="其它字段" />
-          <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="其它字段" />
+          <el-table-column prop="text4" label="出库方式" />
+          <el-table-column prop="text5" label="供应基地" />
+          <el-table-column prop="text6" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -217,10 +217,10 @@
             </template>
           </el-table-column>
           <el-table-column prop="text2" label="派工单编号" />
-          <el-table-column prop="text3" label="派工单状态" />
-          <el-table-column prop="text4" label="评价状态" />
-          <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="计划完成时间" />
+          <el-table-column prop="text3" label="状态" />
+          <el-table-column prop="text4" label="计划开始时间" />
+          <el-table-column prop="text5" label="计划结束时间" />
+          <el-table-column prop="text6" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -768,7 +768,7 @@ const taskid = route.query.id
 const serviceCaseNeoId = route.query.serviceCaseId
 const orderId = route.query.orderId
 // const fieldJobNeoId = route.query.fieldJobNeoId
-const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0):0
+const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0)+1:1
 const taskType = route.query.taskType
 
 const taskDetails=ref({
@@ -798,7 +798,7 @@ let deliveryOrderForm = reactive({
   field_job_order_id:route.query.orderId,
   fieldJobType__c:0,
   stage__c:0,
-  name:taskDetails.value.accountName+"的配送派工"
+  name:taskDetails.value.accountName+"的配送派工单"
 })
 
 const deliveryOrderRule = reactive({
@@ -994,8 +994,8 @@ const finishDeliveryOrder =  () => {
 				
 			}
       Object.keys(deliveryOrderForm).forEach(key => {
-        if(key!="type"||key!="haveInstallConditions"||key!="field_job_order_id"||key!="fieldJobType__c"||key!="stage__c"||key!="name") deliveryOrderForm[key] = '';
-        if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
+        if(!key.includes("type")&&!key.includes("haveInstallConditions")&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
+        if(key==="haveInstallConditions") deliveryOrderForm[key] =false;
       });
 		}).catch((error: any) => {
 			// 显示请求失败的提示框
@@ -1004,7 +1004,7 @@ const finishDeliveryOrder =  () => {
 				type: 'error'
 			});
       Object.keys(deliveryOrderForm).forEach(key => {
-        if(key!="type"||key!="haveInstallConditions"||key!="field_job_order_id"||key!="fieldJobType__c"||key!="stage__c"||key!="name") deliveryOrderForm[key] = '';
+        if(key!=="type"&&key!=="haveInstallConditions"&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
         if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
       });
 			console.error('请求新增派工单失败:', error);

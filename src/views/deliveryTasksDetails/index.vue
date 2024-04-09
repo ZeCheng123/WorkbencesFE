@@ -11,7 +11,7 @@
         </span>
         <span class="item">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">提货</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">-</span>
         </span>
         <span class="item">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
@@ -54,45 +54,48 @@
         <span class="row_field">
           <span class="field">
             <span class="label">任务编号：</span>
-            <span class="value">CS0011-06665-01</span>
+            <span class="value">{{ taskDetails.taskid }}</span>
             <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
+            <span class="label">经销商：</span>
+            <span class="value">{{ taskDetails.distributorName }}</span>
+          </span>
+          <span class="field">
             <span class="label">经销商负责人：</span>
-            <span class="value">零售</span>
-          </span>
-          <span class="field">
-            <span class="label">任务开始时间：</span>
-            <span class="value">示例</span>
+            <span class="value">{{ taskDetails.follower_name }}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
-            <span class="label">任务类型：</span>
-            <span class="value">交付</span>
+            <span class="label">客户名称：</span>
+            <span class="value">{{taskDetails.accountName}}</span>
+            <!-- <span v-if="taskType === 'ServiceCase'" class="value">服务工单</span>
+            <span v-else-if="taskType === 'DispatchNote'" class="value">发货单</span>
+            <span v-else class="value">派工单</span> -->
           </span>
           <span class="field">
-            <span class="label">提货司机：</span>
-            <span class="value">默认</span>
+            <span class="label">当前负责人：</span>
+            <span class="value">XXX</span>
           </span>
           <span class="field">
-            <span class="label">预计结束时间：</span>
-            <span class="value">示例</span>
+            <span class="label">创建时间：</span>
+            <span class="value">XXX</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-          <span class="field">
-            <span class="label">剩余时间：</span>
+            <span class="label">客户电话：</span>
             <span class="value">XX</span>
           </span>
+          <span class="field">
+            <span class="label">客户地址：</span>
+            <span class="value">XXX</span>
+          </span>
+          <!-- <span class="field">
+            <span class="label">客户地址：</span>
+            <span class="value">XX</span>
+          </span> -->
         </span>
       </span>
     </span>
@@ -159,10 +162,11 @@
             </template>
           </el-table-column>
           <el-table-column prop="text2" label="订单编号" />
-          <el-table-column prop="text3" label="其他字段" />
-          <el-table-column prop="text4" label="其他字段" />
-          <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="其他字段" />
+          <el-table-column prop="text3" label="订单流程" />
+          <el-table-column prop="text4" label="交期天数" />
+          <el-table-column prop="text5" label="订货日期" />
+          <el-table-column prop="text6" label="计划交货日期" />
+          <el-table-column prop="text7" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -185,11 +189,11 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="text2" label="XX编号" />
+          <el-table-column prop="text2" label="发货单编号" />
           <el-table-column prop="text3" label="发货单状态" />
-          <el-table-column prop="text4" label="其它字段" />
-          <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="其它字段" />
+          <el-table-column prop="text4" label="出库方式" />
+          <el-table-column prop="text5" label="供应基地" />
+          <el-table-column prop="text6" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -213,10 +217,10 @@
             </template>
           </el-table-column>
           <el-table-column prop="text2" label="派工单编号" />
-          <el-table-column prop="text3" label="派工单状态" />
-          <el-table-column prop="text4" label="评价状态" />
-          <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="计划完成时间" />
+          <el-table-column prop="text3" label="状态" />
+          <el-table-column prop="text4" label="计划开始时间" />
+          <el-table-column prop="text5" label="计划结束时间" />
+          <el-table-column prop="text6" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -228,13 +232,13 @@
         >
       </div>
       <div class="right">
-        <el-button
+        <!-- <el-button
           v-if="currentStep == 2"
           type="primary"
           @click="takeGoods"
           class="primary_btn"
           >一键确认提货</el-button
-        >
+        > -->
         <el-button
           v-if="currentStep == 4"
           type="primary"
@@ -324,18 +328,19 @@
             v-if="currentDeliveryOrderStep == 1"
             :model="deliveryOrderForm"
             :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef"
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="联系方式" prop="phone">
+            <el-form-item label="联系方式" prop="contact_telephone">
               <el-input
-                v-model="deliveryOrderForm.phone"
+                v-model="deliveryOrderForm.contact_telephone"
                 placeholder="查找或输入配送司机手机号码"
               />
             </el-form-item>
-            <el-form-item label="人员名称" prop="username">
+            <el-form-item label="人员名称" prop="field_job_contact_name">
               <el-input
-                v-model="deliveryOrderForm.username"
+                v-model="deliveryOrderForm.field_job_contact_name"
                 placeholder="查找或输入服务人员姓名"
               />
             </el-form-item>
@@ -344,6 +349,7 @@
                 v-model="deliveryOrderForm.appointmentStartTime"
                 type="datetime"
                 placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
               />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
@@ -351,6 +357,7 @@
                 v-model="deliveryOrderForm.appointmentEndTime"
                 type="datetime"
                 placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
               />
             </el-form-item>
             <el-form-item label="是否具备安装条件" class="check_item">
@@ -365,12 +372,13 @@
             v-if="currentDeliveryOrderStep == 2"
             :model="deliveryOrderForm"
             :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef"
             label-width="90px"
             label-position="left"
           >
             <el-form-item label="优先级" prop="priority">
               <el-input
-                placeholder="高/中/低"
+                placeholder="1-最高 2-高 3-中 4-低"
                 v-model="deliveryOrderForm.priority"
               />
             </el-form-item>
@@ -741,45 +749,63 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive } from "vue"
+import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
-import { ElMessage, ElMessageBox } from "element-plus"
+import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
+import { addFieldJob, getFieldJob } from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
-const currentStep = ref(2)
+
 
 const currentStep2 = ref(4)
 
 const commentList = ref<any>([])
 
 const route = useRoute()
-const id = route.query.id
-const serviceCaseNeoId = route.query.serviceCaseNeoId
-const dispatchNoteNeoId = route.query.dispatchNoteNeoId
-const fieldJobNeoId = route.query.fieldJobNeoId
+const taskid = route.query.id
+const serviceCaseNeoId = route.query.serviceCaseId
+const orderId = route.query.orderId
+// const fieldJobNeoId = route.query.fieldJobNeoId
+const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0):0
+const taskType = route.query.taskType
 
+const taskDetails=ref({
+  taskid:route.query.id,
+  serviceCaseNeoId:route.query.serviceCaseId,
+  orderId:route.query.orderId,
+  taskStatus:taskStatus,
+  accountName:route.query.accountName,
+  distributorName:route.query.distributorName,
+  followerName:route.query.follower_name
+})
+
+const currentStep = ref(taskStatus)
 const currentDeliveryOrderStep = ref(1)
 const currentInstallationOrderStep = ref(1)
 const currentProblemReportingStep = ref(1)
-const deliveryOrderForm = reactive({
-  username: "",
-  phone: "",
+const deliveryOrderFormRef = ref<FormInstance>();
+let deliveryOrderForm = reactive({
+  field_job_contact_name: "",
+  contact_telephone: "",
   priority: "",
-  type: "",
+  type: "配送派工",
   remark: "",
-  userRemark: "",
   appointmentStartTime: "",
   appointmentEndTime: "",
   haveInstallConditions: false,
+  field_job_order_id:route.query.orderId,
+  fieldJobType__c:0,
+  stage__c:0,
+  name:taskDetails.value.accountName+"的配送派工单"
 })
 
 const deliveryOrderRule = reactive({
-  username: [
+  field_job_contact_name: [
     { required: true, message: "Please input username", trigger: "blur" },
   ],
-  phone: [{ required: true, message: "Please input phone", trigger: "blur" }],
+  contact_telephone: [{ required: true, message: "Please input phone", trigger: "blur" }],
   priority: [
     { required: true, message: "Please input priority", trigger: "blur" },
   ],
@@ -873,14 +899,16 @@ const installationOrderDialog = ref(false)
 
 const showProblemReportingDialog = ref(false)
 
+
 const tableDataOrder = ref([
   {
     text1: "",
     text2: "XXX",
-    text3: "示例字段...",
-    text4: "XXXX",
-    text5: "2021-02-28 10:30:50",
+    text3: "渠道",
+    text4: "35",
+    text5: "XXXX",
     text6: "xxxx",
+    text7: "2024-02-21 10:30:50"
   },
 ])
 
@@ -938,16 +966,51 @@ const installationOrderNextStep = () => {
   currentInstallationOrderStep.value = 2
 }
 
-const finishInstallationOrder = () => {
+const finishInstallationOrder = async () => {
   installationOrderDialog.value = false
   proxy.$message.success("安装派工单创建完成!")
   currentInstallationOrderStep.value = 1
   currentStep.value = 6
 }
 
-const finishDeliveryOrder = () => {
+const finishDeliveryOrder =  () => {
+  // if(deliveryOrderFormRef!=undefined && deliveryOrderFormRef.value!=undefined){
+  //   let validateResult1 =await deliveryOrderFormRef.value.validate();
+  // }
+  console.log(deliveryOrderForm)
+  addFieldJob(deliveryOrderForm).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+					ElMessage({
+						message: '新增派工单成功',
+						type: 'success'
+					})
+
+			} else {
+          ElMessage({
+            message: '新增派工单失败',
+            type: 'error'
+  				})
+				
+			}
+      Object.keys(deliveryOrderForm).forEach(key => {
+        if(key!="type"||key!="haveInstallConditions"||key!="field_job_order_id"||key!="fieldJobType__c"||key!="stage__c"||key!="name") deliveryOrderForm[key] = '';
+        if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
+      });
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求新增派工单失败，请重试',
+				type: 'error'
+			});
+      Object.keys(deliveryOrderForm).forEach(key => {
+        if(key!="type"||key!="haveInstallConditions"||key!="field_job_order_id"||key!="fieldJobType__c"||key!="stage__c"||key!="name") deliveryOrderForm[key] = '';
+        if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
+      });
+			console.error('请求新增派工单失败:', error);
+		});
   deliveryOrderDialog.value = false
-  proxy.$message.success("派工单创建完成!")
+  // proxy.$message.success("派工单创建完成!")
   currentDeliveryOrderStep.value = 1
   currentStep.value = 5
 }
@@ -981,6 +1044,39 @@ const initiateComments = () => {
       })
     })
     .catch(() => {})
+}
+onMounted(()=>{
+  // getFieldJobByGet(true,fieldJobNeoId)
+})
+const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
+  getFieldJob(fieldJobId).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined&&data.length > 0) {
+				if(showMsg)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+        if(showMsg){
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+  				})
+        }
+				
+			}
+
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
 }
 </script>
 

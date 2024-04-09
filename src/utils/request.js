@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const request = axios.create({
-  baseURL: 'http://sh.mengtian.com.cn:9595'
+  baseURL: 'https://sh.mengtian.com.cn:9595'
 })
 
 // 请求拦截器

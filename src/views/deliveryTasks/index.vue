@@ -56,12 +56,14 @@
 		<span class="table">
 			<el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
 				<el-table-column prop="id" label="任务编号" />
-				<el-table-column prop="taskType" label="经销商负责人" />
-				<el-table-column prop="status" label="客户姓名" />
-				<el-table-column prop="serviceCaseNeoId" label="剩余时间" />
-				<el-table-column prop="dispatchNoteNeoId" label="任务开始时间" />
-				<el-table-column prop="fieldJobNeoId" label="任务结束时间" />
-				<el-table-column prop="description" label="状态" />
+				<el-table-column prop="distributorName" label="经销商" />
+				<el-table-column prop="follower_name" label="经销商负责人" />
+				<el-table-column prop="accountName" label="关联客户" />
+				<!-- <el-table-column prop="serviceCaseNeoId" label="剩余时间" /> -->
+				<!-- <el-table-column prop="serviceCaseId" label="关联的服务工单id" :visible="true"/> -->
+				<!-- <el-table-column prop="fieldJobNeoId" label="任务结束时间" />  -->
+				<el-table-column prop="taskType" label="任务类型" />
+				<el-table-column prop="status" label="状态" />
 				<el-table-column prop="url" label="操作" width="80px">
 					<template #default="scope">
 						<div style="
@@ -123,9 +125,14 @@
 		// proxy.$router.push("/delivery_tasks_details?id="+id)
 		proxy.$router.push({ path: "/delivery_tasks_details", query: {
 			id:row.id,
-			serviceCaseNeoId:row.serviceCaseNeoId,
-			dispatchNoteNeoId:row.dispatchNoteNeoId,
-			fieldJobNeoId:row.fieldJobNeoId,
+			serviceCaseNeoId:row.serviceCaseId,
+			orderId:row.orderId,
+			taskType:row.taskType,
+			status:row.status,
+			distributorName:row.distributorName,
+			follower_name:row.follower_name,
+			accountName:row.accountName,
+			createdTime:row.created_time
 			} ,
 		});
 	}

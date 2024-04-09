@@ -8,17 +8,17 @@
         ></span
       >
       <span class="step">
-        <span class="item" @click="changeStep(1)">
-          <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">待处理</span>
+        <span class="item">
+          <span :class="currentItem['clientCaseStatusC'] == 1 ? 'num_selected' : 'num'">1</span>
+          <span :class="currentItem['clientCaseStatusC'] >= 1 ? 'name_selected' : 'name'">待处理</span>
         </span>
-        <span class="item" @click="changeStep(2)">
-          <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">处理中</span>
+        <span class="item">
+          <span :class="currentItem['clientCaseStatusC'] == 2 ? 'num_selected' : 'num'">2</span>
+          <span :class="currentItem['clientCaseStatusC'] >= 2 ? 'name_selected' : 'name'">处理中</span>
         </span>
-        <span class="item" @click="changeStep(3)">
-          <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已完成</span>
+        <span class="item">
+          <span :class="currentItem['clientCaseStatusC'] == 3 ? 'num_selected' : 'num'">3</span>
+          <span :class="currentItem['clientCaseStatusC'] >= 3 ? 'name_selected' : 'name'">已完成</span>
         </span>
       </span>
     </span>
@@ -28,36 +28,36 @@
         <span class="row_field">
           <span class="field">
             <span class="label">问题编号：</span>
-            <span class="value">SH202460007</span>
+            <span class="value">{{currentItem["caseNo	"]}}</span>
             <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
             <span class="label">专卖店名称：</span>
-            <span class="value">梦天慈溪专卖店A</span>
+            <span class="value">{{currentItem["storeName"]}}</span>
           </span>
           <span class="field">
             <span class="label">问题类别：</span>
-            <span class="value">售后报修</span>
+            <span class="value">{{currentItem["questionType"] == "1" ? "售后保修" : "投诉建议"}}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">订单编号：</span>
-            <span class="value">XXXXXXXXXXX</span>
+            <span class="value">{{currentItem["orderNeoId"]}}</span>
           </span>
           <span class="field">
             <span class="label">负责人：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{currentItem["responsibleSubject"]}}</span>
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
-            <span class="value">2021-02-28 10:30:50</span>
+            <span class="value">{{currentItem["estimatedResolutionDate"]}}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">问题描述：</span>
-            <span class="value">嘉善基地</span>
+            <span class="value">{{currentItem["problemDescription"]}}</span>
           </span>
           <!-- <span class="field">
             <span class="label"></span>
@@ -74,29 +74,29 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户姓名：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{currentItem["caseAccountId"]}}</span>
           </span>
           <span class="field">
             <span class="label">客户手机号：</span>
-            <span class="value">18568689595</span>
+            <span class="value">{{currentItem["phone"]}}</span>
           </span>
           <span class="field">
             <span class="label">来源：</span>
-            <span class="value">终端客户</span>
+            <span class="value">{{currentItem["complaintSourceC"] ? (complaintSource.find(val => val["code"] == currentItem["complaintSourceC"])?.name) : "" }}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">省份：</span>
-            <span class="value">江苏省</span>
+            <span class="value">{{currentItem["province"]}}</span>
           </span>
           <span class="field">
             <span class="label">城市：</span>
-            <span class="value">南京市</span>
+            <span class="value">{{currentItem["city"]}}</span>
           </span>
           <span class="field">
-            <span class="label">提报人电话：</span>
-            <span class="value">16822822288</span>
+            <span class="label">区：</span>
+            <span class="value">{{currentItem["district"]}}</span>
           </span>
         </span>
         <span class="row_field">
@@ -124,7 +124,7 @@
     <span class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span class="initiate_comments" @click="initiateComments">发起任务评论</span>
+        <span class="initiate_comments" @click="initiateComments">发起评论</span>
       </div>
       <div class="right">
         <el-button type="primary" @click="initiateComments" class="primary_btn">编辑</el-button>
@@ -429,33 +429,6 @@
         :show-close="false"
       >
         <div class="content">
-          <!-- <span class="tableItem">
-            <span class="tableTitle"> 1. 问题提报 </span>
-            <span class="tableContent">
-              <el-table :data="relatedDocumentsProblemReportingList" :stripe="false" style="width: 100%">
-                <el-table-column prop="text1" label="问题提报编号" />
-                <el-table-column prop="text2" label="类别" />
-                <el-table-column prop="text3" label="负责人" />
-                <el-table-column prop="text4" label="状态" />
-                <el-table-column prop="text5" label="修改时间" />
-                <el-table-column prop="text6" label="操作" width="80px">
-                  <template #default="scope">
-                    <div
-                      style="
-                        display: flex;
-                        align-items: center;
-                        color: #165dff;
-                        cursor: pointer;
-                      "
-                      @click="console.log(scope)"
-                    >
-                      查看
-                    </div>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </span>
-          </span> -->
           <span class="tableItem">
             <span class="tableTitle"> 1. 售后工单 </span>
             <span class="tableContent">
@@ -536,15 +509,19 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive } from "vue"
+import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
+import { useRoute } from "vue-router"
+import { getServiceCaseItem } from '../../api/common.js'
 
 const { proxy }: any = getCurrentInstance()
 
-const currentStep = ref(2)
-
 const commentList = ref<any>([
 ])
+
+const route = useRoute()
+const id = ref(route.query.id)
+const neoid = ref(route.query.neoid)
 
 const showRelatedDocumentsDialog = ref(false)
 
@@ -696,11 +673,32 @@ const relatedDocumentsDispatchList = ref([
   }
 ])
 
+const complaintSource = ref([
+  {code: "1", name: "配送技工"},
+  {code: "2", name: "安装技工"},
+  {code: "3", name: "终端用户"},
+  {code: "4", name: "经销商"},
+])
 
+const currentItem = ref<any>({});
 
-const changeStep = (step) => {
-  currentStep.value = step
+onMounted(() =>{
+  getDetailsData();
+})
+
+const getDetailsData = () =>{
+  getServiceCaseItem({id: id.value, neoid: neoid.value }).then(res =>{
+    let rtData = res.data;
+    if(rtData.code == "success"){
+      currentItem.value = rtData.data;
+      formDialog.value["orderNo"] = currentItem.value["orderNeoId"]
+    }
+    else{
+      proxy.$message.error(rtData?.message);
+    }
+  })
 }
+
 
 const upgradeToHeadquarters = () => {
   showMainDialog.value = true

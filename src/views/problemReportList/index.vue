@@ -318,9 +318,6 @@ const problemReportingForm = ref({
 })
 
 const problemReportingRule = ref({
-  // orderNo: [
-  //   { required: true, message: "Please input order no", trigger: "blur" },
-  // ],
   customerName: [
     { required: true, message: "Please input customer name", trigger: "blur" },
   ],

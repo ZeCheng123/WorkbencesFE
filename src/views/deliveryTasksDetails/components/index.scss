@@ -959,6 +959,58 @@
     top: 2px;
 }
 
+///
+
+:deep(.installationOrderDialog .el-upload-list--picture-card){
+    flex-wrap: nowrap;
+}
+
+:deep(.deliveryOrderDialog .el-upload-list--picture-card){
+    flex-wrap: nowrap;
+}
+
+
+:deep(.problemReportingDialog .el-upload-list--picture-card){
+    flex-wrap: nowrap;
+}
+
+
+//
+
+:deep(.problemReportingDialog .el-upload--picture-card){
+    width: 80px !important;
+    height: 80px !important;
+}
+
+:deep(.problemReportingDialog .el-upload-list__item){
+    width: 80px !important;
+    height: 80px !important;
+}
+
+
+:deep(.deliveryOrderDialog .el-upload--picture-card){
+    width: 80px !important;
+    height: 80px !important;
+}
+
+:deep(.deliveryOrderDialog .el-upload-list__item){
+    width: 80px !important;
+    height: 80px !important;
+}
+
+
+:deep(.installationOrderDialog .el-upload--picture-card){
+    width: 80px !important;
+    height: 80px !important;
+}
+
+:deep(.installationOrderDialog .el-upload-list__item){
+    width: 80px !important;
+    height: 80px !important;
+}
+
+
+
 .cancel_btn{
     width: 148px;
     background: #F0F0F0;
@@ -980,16 +1032,13 @@
 
 .custom_upload{
   width: 390px;
-  height: 50px;
+  height: 100px;
 }
 
 .avatar-uploader{
-    width: 50px;
-    height: 50px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    background: #F3F3F3;
 }
 
 .primary_blue_btn{

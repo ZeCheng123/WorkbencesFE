@@ -92,10 +92,10 @@
             <span class="label">客户地址：</span>
             <span class="value">XXX</span>
           </span>
-          <!-- <span class="field">
-            <span class="label">客户地址：</span>
-            <span class="value">XX</span>
-          </span> -->
+          <span class="field">
+            <span class="label"></span>
+            <span class="value"></span>
+          </span>
         </span>
       </span>
     </span>
@@ -401,9 +401,17 @@
             </el-form-item>
             <el-form-item label="上传图片" class="custom_upload">
               <el-upload
+                :on-success="handleSuccessDelivery"
+                :on-remove="handleDeleteDelivery"
+                :auto-upload="true"
+                :data="uploadData"
+                :headers="headers"
+                :before-upload="beforeUploadDelivery"
+                v-model:file-list="deliveryOrderForm.fileList"
                 class="avatar-uploader"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                :show-file-list="false"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :show-file-list="true"
+                list-type="picture-card"
               >
                 <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
               </el-upload>
@@ -659,72 +667,13 @@
              <el-form-item label="上传图片" class="custom_upload">
               <el-upload
                 class="avatar-uploader"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
                 :show-file-list="false"
                 v-model:file-list="problemReportingForm.fileList"
               >
                 <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
               </el-upload>
             </el-form-item>
-            <!-- <el-form-item label="姓名" prop="userName">
-              <el-input
-                placeholder="请输入姓名"
-                v-model="problemReportingForm.userName"
-              />
-            </el-form-item>
-            <el-form-item label="省" prop="province">
-              <el-input
-                placeholder="请输入省"
-                v-model="problemReportingForm.province"
-              />
-            </el-form-item>
-            <el-form-item label="市" prop="city">
-              <el-input
-                placeholder="请输入市"
-                v-model="problemReportingForm.city"
-              />
-            </el-form-item>
-            <el-form-item label="详细地址" prop="address">
-              <el-input
-                placeholder="请输入详细地址"
-                v-model="problemReportingForm.address"
-              />
-            </el-form-item>
-            <el-form-item label="问题类别" prop="type">
-              <el-radio-group
-                style="width: 300px"
-                v-model="problemReportingForm.type"
-              >
-                <el-radio value="1">售后报修</el-radio>
-                <el-radio value="2">投诉建议</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="选择订单" prop="orderNo">
-              <el-input
-                placeholder="请输入订单"
-                v-model="problemReportingForm.orderNo"
-              />
-            </el-form-item>
-            <el-form-item label="问题描述" class="customLayout">
-              <el-input
-                v-model="problemReportingForm.desc"
-                :rows="5"
-                type="textarea"
-                maxlength="500"
-                placeholder="请输入问题描述"
-                show-word-limit
-              />
-            </el-form-item>
-            <el-form-item label="上传图片" class="custom_upload">
-              <el-upload
-                class="avatar-uploader"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                :show-file-list="false"
-                v-model:file-list="problemReportingForm.fileList"
-              >
-                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
-              </el-upload>
-            </el-form-item> -->
           </el-form>
         </div>
         <template #footer>
@@ -786,6 +735,7 @@ const currentDeliveryOrderStep = ref(1)
 const currentInstallationOrderStep = ref(1)
 const currentProblemReportingStep = ref(1)
 const deliveryOrderFormRef = ref<FormInstance>();
+
 let deliveryOrderForm = reactive({
   field_job_contact_name: "",
   contact_telephone: "",
@@ -798,7 +748,9 @@ let deliveryOrderForm = reactive({
   field_job_order_id:route.query.orderId,
   fieldJobType__c:0,
   stage__c:0,
-  name:taskDetails.value.accountName+"的配送派工单"
+  name:taskDetails.value.accountName+"的配送派工单",
+  fileList: [],
+  filePath:[]
 })
 
 const deliveryOrderRule = reactive({
@@ -846,14 +798,6 @@ const installationOrderRule = reactive({
 })
 
 const problemReportingForm = reactive({
-  // userName: "",
-  // province: "",
-  // city: "",
-  // address: "",
-  // type: "1",
-  // desc: "",
-  // orderNo: "",
-  // fileList: "",
   orderNo: "",
   customerName: "",
   customerPhone: "",
@@ -862,26 +806,6 @@ const problemReportingForm = reactive({
 })
 
 const problemReportingRule = reactive({
-  // userName: [
-  //   { required: true, message: "Please input userName", trigger: "blur" },
-  // ],
-  // province: [
-  //   { required: true, message: "Please input province", trigger: "blur" },
-  // ],
-  // city: [{ required: true, message: "Please input city", trigger: "blur" }],
-  // address: [
-  //   { required: true, message: "Please input address", trigger: "blur" },
-  // ],
-  // type: [
-  //   { required: true, message: "Please input problem type", trigger: "blur" },
-  // ],
-  // orderNo: [
-  //   {
-  //     required: true,
-  //     message: "Please input problem order no",
-  //     trigger: "blur",
-  //   },
-  // ],
   customerName: [
     { required: true, message: "Please input customer name", trigger: "blur" },
   ],
@@ -934,6 +858,22 @@ const tableDataDispatch = ref([
   },
 ])
 
+
+const headers = ref({
+    Content: "application/json",
+    Authorization: ``, // Here you can add your token
+    isImage: "true",
+    needFileId: "true",
+    "Trace-Id": "",
+})
+
+const uploadData = ref({
+    files: [],
+    name: "files"
+})
+
+
+
 const changeStep = (step) => {
   currentStep.value = step
 }
@@ -974,11 +914,10 @@ const finishInstallationOrder = async () => {
 }
 
 const finishDeliveryOrder =  () => {
-  // if(deliveryOrderFormRef!=undefined && deliveryOrderFormRef.value!=undefined){
-  //   let validateResult1 =await deliveryOrderFormRef.value.validate();
-  // }
-  console.log(deliveryOrderForm)
-  addFieldJob(deliveryOrderForm).then((res : any) => {
+  let params = deliveryOrderForm;
+  params["picture"] = params.filePath.join(",");
+  console.log(params)
+  addFieldJob(params).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
 					ElMessage({
@@ -1078,6 +1017,25 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
 			console.error('请求数据失败:', error);
 		});
 }
+
+///delivery
+const handleSuccessDelivery = (res) => {
+  console.log(res);
+  if(res.code == "success"){
+    let path = res.data.map(val => val["fileUrl"]);
+    deliveryOrderForm["filePath"] = deliveryOrderForm["filePath"].concat(path)
+  }
+}
+    
+const handleDeleteDelivery = (res) => {
+  var resopnse = res["response"];
+}
+
+const beforeUploadDelivery = (file) => {
+  uploadData.value["files"].push(file)
+}
+
+
 </script>
 
 <style lang="scss" scoped>

@@ -19,9 +19,9 @@
             <el-select v-model="form.technicianType" placeholder="请选择派工种类">
               <el-option
                 v-for="item in technicianTypeOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
               />
             </el-select>
           </el-form-item>
@@ -65,8 +65,8 @@
         </el-form>
       </span>
       <span class="right">
-        <el-button type="primary" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
-        <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
+        <el-button @click="getList(true)" type="primary" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
+        <el-button @click="resetting()" type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
       </span>
     </span>
     <span class="table_header">
@@ -86,12 +86,18 @@
         <el-table-column prop="appointmentStartTime" label="计划开始时间" />
         <el-table-column prop="appointmentEndTime" label="计划结束时间" />
         <el-table-column prop="follower__c" label="技工名称" />
-        <el-table-column prop="fieldJobType__c" label="派工种类" />
+        <el-table-column prop="fieldJobType__c" label="派工种类" >
+        <template #default="scope">
+				  		<div style="display:flex;align-items:center;">
+						{{scope.row.fieldJobType__c?(technicianTypeOption.find(val=>val["code"]==scope.row.fieldJobType__c)?.name):"配送派工单"}}
+						</div>
+					</template>
+        </el-table-column>
         <el-table-column prop="createdTime" label="创建时间" />
         <el-table-column prop="stage__c" label="派工状态" >
           <template #default="scope">
 				  		<div style="display:flex;align-items:center;">
-						{{scope.row.status?(dispatchWorkerStatusOption.find(val=>val["code"]==scope.row.status)?.name):"待开始"}}
+						{{scope.row.stage__c?(dispatchWorkerStatusOption.find(val=>val["code"]==scope.row.stage__c)?.name):"待开始"}}
 						</div>
 					</template>
         </el-table-column>
@@ -127,6 +133,7 @@
 import { ref, computed, getCurrentInstance, reactive,onMounted } from "vue"
 import { getFieldJobByPage } from "../../api/common";
 import { ElMessage } from "element-plus";
+import { Row } from "element-plus/es/components/table-v2/src/components";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -147,14 +154,26 @@ const filterMethodOptions = ref([
 ])
 
 const technicianTypeOption = ref([
-  {
-    value: "all",
-    label: "全部",
-  },
+    {
+			code: "all",
+			name: "全部",
+		},
+		{
+			code: "0",
+			name: "配送派工单",
+		},
+		{
+			code: "1",
+			name: "安装派工单",
+		},
+		{
+			code: "2",
+			name: "维修派工单",
+		},
 ])
 
 const dispatchWorkerStatusOption = ref([
-{
+    {
 			code: "all",
 			name: "全部",
 		},
@@ -245,14 +264,16 @@ const tableData = ref([
   },
 ])
 
-const viewDetails = (scope) =>{
-  proxy.$router.push("/dispatch_details");
+const viewDetails = (row) =>{
+  proxy.$router.push({path:"/dispatch_details", query:{
+    id:row.id
+  }});
 }
 
 onMounted(() => {
 		getList(false);
 	});
-	const getList = (isTure: boolean) => {
+const getList = (isTure: boolean) => {
 
 		let param = {"fieldJobType__c": "",  "appointmentEndTime": "",  "createdTime": "",  "status": "",  "caseNo": "",  "artisanName": "",  "pageNo": 0,  "pageSize": 20}
 		getFieldJobByPage(param).then((res : any) => {
@@ -281,6 +302,16 @@ onMounted(() => {
 			});
 			console.error('请求数据失败:', error);
 		});
+}
+
+//重置按钮
+const resetting = () => {
+		form.dispatchWorkerNo = ''
+		form.technicianName = ''
+		form.technicianType = ''
+		form.filterMethod = ''
+		form.createDate = []
+		form.dispatchWorkerStatus = ''
 	}
 </script>
 

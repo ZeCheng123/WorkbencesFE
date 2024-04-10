@@ -41,40 +41,43 @@
         <span class="row_field">
           <span class="field">
             <span class="label">派工编号：</span>
-            <span class="value">PG202460007</span>
+            <span class="value">{{ fieldJobData.caseNo }}</span>
             <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
             <span class="label">派工类型：</span>
-            <span class="value">安装派工</span>
+            <!-- <span v-if="fieldJobData.fieldJobType__c === '0'" class="value">配送派工单</span>
+            <span v-else-if="fieldJobData.fieldJobType__c === '1'" class="value">安装派工单</span>
+            <span v-else class="value">{{ fieldJobData.fieldJobType__c }}</span> -->
+            <span class="value">{{fieldJobData.fieldJobType__c?(technicianTypeOption.find(val=>val["code"]==fieldJobData.fieldJobType__c)?.name):"配送派工单"}}</span>            
           </span>
           <span class="field">
             <span class="label">派工状态：</span>
-            <span class="value">进行中</span>
+            <span class="value">{{fieldJobData.stage__c?(dispatchWorkerStatusOption.find(val=>val["code"]==fieldJobData.stage__c)?.name):"待开始"}}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">服务技工：</span>
-            <span class="value">李工</span>
+            <span class="value">{{fieldJobData.fieldJobContactName}}</span>
           </span>
           <span class="field">
             <span class="label">服务技工电话：</span>
-            <span class="value">18563234123</span>
+            <span class="value">{{fieldJobData.contactTelephone}}</span>
           </span>
           <span class="field">
             <span class="label">客户地址：</span>
-            <span class="value">xxx</span>
+            <span class="value">{{fieldJobData.address}}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">客户姓名：</span>
-            <span class="value">李女士</span>
+            <span class="value"></span>
           </span>
           <span class="field">
             <span class="label">客户电话：</span>
-            <span class="value">185632326688</span>
+            <span class="value"></span>
           </span>
         </span>
       </span>
@@ -83,21 +86,21 @@
         <span class="row_field">
           <span class="field">
             <span class="label">计划开始：</span>
-            <span class="value">日期/时间</span>
+            <span class="value">{{  fieldJobData.appointmentStartTime }}</span>
           </span>
           <span class="field">
-            <span class="label">计划开始：</span>
-            <span class="value">日期/时间</span>
+            <span class="label">计划结束：</span>
+            <span class="value">{{  fieldJobData.appointmentEndTime }}</span>
           </span>
           <span class="field">
             <span class="label">优先级：</span>
-            <span class="value">高/中/低</span>
+            <span class="value">{{fieldJobData.priority?(priorityOption.find(val=>val["code"]==fieldJobData.priority)?.name):""}}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">是否具备安装条件：</span>
-            <span class="value">是</span>
+            <span class="value">{{ fieldJobData.whetherEvaluation===false?"否":"是" }}</span>
           </span>
           <!-- <span class="field">
             <span class="label">示例字段：</span>
@@ -198,14 +201,79 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive } from "vue"
+import { ref, computed, getCurrentInstance, reactive,onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
+import { useRoute } from "vue-router";
+import { getFieldJob } from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
 const currentStep = ref(3)
 
 const commentList = ref<any>([])
+
+const route = useRoute()
+
+let fieldJobData=ref<any>({})
+
+
+
+const priorityOption = ref([
+    {
+			code: "1",
+			name: "最高",
+		},
+		{
+			code: "2",
+			name: "高",
+		},
+		{
+			code: "3",
+			name: "中",
+		},
+		{
+			code: "4",
+			name: "低",
+		},
+])
+
+const technicianTypeOption = ref([
+    {
+			code: "all",
+			name: "全部",
+		},
+		{
+			code: "0",
+			name: "配送派工单",
+		},
+		{
+			code: "1",
+			name: "安装派工单",
+		},
+		{
+			code: "2",
+			name: "维修派工单",
+		},
+])
+
+const dispatchWorkerStatusOption = ref([
+    {
+			code: "all",
+			name: "全部",
+		},
+		{
+			code: "0",
+			name: "待开始",
+		},
+		{
+			code: "1",
+			name: "进行中",
+		},
+		{
+			code: "2",
+			name: "已完成",
+		},
+])
 
 const tableDataOrderDetials = ref([
   {
@@ -274,6 +342,42 @@ const initiateComments = () => {
       })
     })
     .catch(() => {})
+}
+onMounted(()=>{
+  getFieldJobByGet(true,route.query.id)
+})
+
+const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
+  getFieldJob(fieldJobId).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+        fieldJobData.value=data
+        changeStep(data["status"])
+				if(showMsg)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+        if(showMsg){
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+  				})
+        }
+				
+			}
+
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
 }
 </script>
 

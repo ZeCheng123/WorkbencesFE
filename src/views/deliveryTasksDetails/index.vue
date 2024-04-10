@@ -86,11 +86,11 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户电话：</span>
-            <span class="value">XX</span>
+            <span class="value">{{ orderData.contactTel }}</span>
           </span>
           <span class="field">
             <span class="label">客户地址：</span>
-            <span class="value">XXX</span>
+            <span class="value"></span>
           </span>
           <span class="field">
             <span class="label"></span>
@@ -334,11 +334,15 @@
                 placeholder="查找或输入配送司机手机号码"
               />
             </el-form-item>
-            <el-form-item label="人员名称" prop="field_job_contact_name">
-              <el-input
-                v-model="deliveryOrderForm.field_job_contact_name"
-                placeholder="查找或输入服务人员姓名"
-              />
+            <el-form-item label="人员名称" prop="followerId">              
+              <el-select v-model="deliveryOrderForm.followerId" placeholder="查找或输入服务人员姓名">
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="预约开始" prop="appointmentStartTime">
               <el-date-picker
@@ -715,7 +719,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getFieldJob ,getOrderListById} from "../../api/common";
+import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById} from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -765,7 +769,8 @@ let deliveryOrderForm = reactive({
   stage__c:0,
   name:taskDetails.value.accountName+"的配送派工单",
   fileList: [],
-  filePath:[]
+  filePath:[],
+  followerId:1
 })
 
 const deliveryOrderRule = reactive({
@@ -846,27 +851,28 @@ const installationOrderDialog = ref(false)
 
 const showProblemReportingDialog = ref(false)
 
+const orderData=ref<any>({})
 
 const tableDataOrder = ref([
   {
     text1: "",
-    text2: "XXX",
+    text2: "GZ0111-03528-01",
     text3: "渠道",
     text4: "35",
-    text5: "XXXX",
-    text6: "xxxx",
-    text7: "2024-02-21 10:30:50"
+    text5: "2024-02-01",
+    text6: "2024-03-15",
+    text7: "2024-02-01 10:30:50"
   },
 ])
 
 const tableDataInvoice = ref([
   {
     text1: "",
-    text2: "XXX",
-    text3: "示例字段...",
-    text4: "XXXX",
-    text5: "2024-02-21 10:30:50",
-    text6: "XXX",
+    text2: "FH0111-03010-01",
+    text3: "待发货",
+    text4: "快递",
+    text5: "",
+    text6: "2024-02-21 10:30:50",
   },
 ])
 
@@ -919,6 +925,8 @@ const deliveryOrderNextStep = () => {
 const installationOrderNextStep = () => {
   currentInstallationOrderStep.value = 2
 }
+
+const extralUserData=ref<any>([])
 
 const finishInstallationOrder = async () => {
   console.log(installationOrderForm);
@@ -1054,12 +1062,15 @@ const initiateComments = () => {
 }
 onMounted(()=>{
   // getFieldJobByGet(true,fieldJobNeoId)
+  getOrderByOne(false,orderId)
+  getExtralUserData(false)
 })
 
 const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
   getFieldJob(fieldJobId).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined&&data.length > 0) {
+
 				if(showMsg)
 				{
 					ElMessage({
@@ -1108,7 +1119,34 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
   
   getOrderListById(orderId).then((res : any) => {
 			let data = res.data.data
-			if (data!=undefined&&data.length > 0) {
+			if (data!=undefined) {
+        orderData.value = data
+				if(showMsg)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+        if(showMsg){
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+  				})
+        }
+				
+			}
+  })
+}
+
+const getExtralUserData = (showMsg: boolean)=>{
+
+  let params={"userType": 1,"name": "","phone": ""};
+  getExternalUser(params).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined&&data.length>0) {
+        extralUserData.value = data
 				if(showMsg)
 				{
 					ElMessage({

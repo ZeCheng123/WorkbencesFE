@@ -345,7 +345,11 @@ onMounted(() =>{
 const viewDetails = (row) =>{
   let id = row["id"];
   let neoid = row["neoid"];
-  proxy.$router.push(`/problem_report_details?id=${id}&neoid=${neoid}`);
+  let getParams="id="+id
+  if(neoid!=undefined){
+    getParams=getParams+"&neoid="+neoid
+  }
+  proxy.$router.push(`/problem_report_details?${getParams}`);
 }
 
 const OpenProblemReportingDialog = () => {
@@ -354,7 +358,7 @@ const OpenProblemReportingDialog = () => {
 
 const submitProblemReporting = () => {
   for(let key in problemReportingForm.value){
-    if(key != "fileList" && key != "orderNo" && problemReportingForm.value[key] == ""){
+    if(key != "fileList" && key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm.value[key] == ""){
       proxy.$message.error("必填字段不能为空!");
       return;
     }

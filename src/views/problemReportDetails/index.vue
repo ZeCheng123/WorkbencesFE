@@ -687,7 +687,7 @@ onMounted(() =>{
 })
 
 const getDetailsData = () =>{
-  getServiceCaseItem({id: id.value, neoid: neoid.value }).then(res =>{
+  getServiceCaseItem({id: id.value, neoid: neoid.value==undefined?"":neoid.value }).then(res =>{
     let rtData = res.data;
     if(rtData.code == "success"){
       currentItem.value = rtData.data;

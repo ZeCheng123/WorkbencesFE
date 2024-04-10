@@ -9,28 +9,28 @@
             >待处理</span
           >
         </span>
-        <span class="item">
+        <!-- <span class="item">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
           <span :class="currentStep >= 2 ? 'name_selected' : 'name'">-</span>
-        </span>
+        </span> -->
         <span class="item">
-          <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
+          <span :class="currentStep == 3 ? 'num_selected' : 'num'">2</span>
           <span :class="currentStep >= 3 ? 'name_selected' : 'name'">入库</span>
         </span>
         <span class="item">
           <span
             @click="currentStep = 4"
             :class="currentStep == 4 ? 'num_selected' : 'num'"
-            >4</span
+            >3</span
           >
           <span :class="currentStep >= 4 ? 'name_selected' : 'name'">配送</span>
         </span>
         <span class="item">
-          <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
+          <span :class="currentStep == 5 ? 'num_selected' : 'num'">4</span>
           <span :class="currentStep >= 5 ? 'name_selected' : 'name'">安装</span>
         </span>
         <span class="item">
-          <span :class="currentStep == 6 ? 'num_selected' : 'num'">6</span>
+          <span :class="currentStep == 6 ? 'num_selected' : 'num'">5</span>
           <span :class="currentStep >= 6 ? 'name_selected' : 'name'">完成</span>
         </span>
       </span>
@@ -76,11 +76,11 @@
           </span>
           <span class="field">
             <span class="label">当前负责人：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{taskDetails.createdBy}}</span>
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{taskDetails.createdTime}}</span>
           </span>
         </span>
         <span class="row_field">
@@ -702,7 +702,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getFieldJob } from "../../api/common";
+import { addFieldJob, getFieldJob ,getOrderListById} from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -727,7 +727,9 @@ const taskDetails=ref({
   taskStatus:taskStatus,
   accountName:route.query.accountName,
   distributorName:route.query.distributorName,
-  followerName:route.query.follower_name
+  followerName:route.query.followerName,
+  createdTime:route.query.createdTime,
+  createdBy:route.query.createdBy
 })
 
 const currentStep = ref(taskStatus)
@@ -1034,7 +1036,37 @@ const handleDeleteDelivery = (res) => {
 const beforeUploadDelivery = (file) => {
   uploadData.value["files"].push(file)
 }
+const getOrderByOne = (showMsg: boolean,orderId:any)=>{
+  
+  getOrderListById(orderId).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined&&data.length > 0) {
+				if(showMsg)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+        if(showMsg){
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+  				})
+        }
+				
+			}
 
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
+}
 
 </script>
 

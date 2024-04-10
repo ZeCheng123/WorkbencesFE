@@ -55,9 +55,9 @@
             <el-select v-model="form.dispatchWorkerStatus" placeholder="请选择派工状态">
               <el-option
                 v-for="item in dispatchWorkerStatusOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
               />
             </el-select>
           </el-form-item>
@@ -82,13 +82,19 @@
     </span>
     <span class="table">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
-        <el-table-column prop="text1" label="派工编号" />
-        <el-table-column prop="text2" label="专卖店名称" />
-        <el-table-column prop="text3" label="生产单号" />
-        <el-table-column prop="text4" label="技工名称" />
-        <el-table-column prop="text5" label="派工种类" />
-        <el-table-column prop="text6" label="创建时间" />
-        <el-table-column prop="text7" label="派工状态" />
+        <el-table-column prop="case_no" label="派工编号" />
+        <el-table-column prop="appointmentStartTime" label="计划开始时间" />
+        <el-table-column prop="appointmentEndTime" label="计划结束时间" />
+        <el-table-column prop="follower__c" label="技工名称" />
+        <el-table-column prop="fieldJobType__c" label="派工种类" />
+        <el-table-column prop="createdTime" label="创建时间" />
+        <el-table-column prop="stage__c" label="派工状态" >
+          <template #default="scope">
+				  		<div style="display:flex;align-items:center;">
+						{{scope.row.status?(dispatchWorkerStatusOption.find(val=>val["code"]==scope.row.status)?.name):"待开始"}}
+						</div>
+					</template>
+        </el-table-column>
         <el-table-column prop="text8" label="操作" width="80px">
           <template #default="scope">
             <div
@@ -98,7 +104,7 @@
                 color: #165dff;
                 cursor: pointer;
               "
-              @click="viewDetails(scope)"
+              @click="viewDetails(scope.row)"
             >
               查看
             </div>
@@ -118,7 +124,9 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive } from "vue"
+import { ref, computed, getCurrentInstance, reactive,onMounted } from "vue"
+import { getFieldJobByPage } from "../../api/common";
+import { ElMessage } from "element-plus";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -146,10 +154,22 @@ const technicianTypeOption = ref([
 ])
 
 const dispatchWorkerStatusOption = ref([
-  {
-    value: "all",
-    label: "全部",
-  },
+{
+			code: "all",
+			name: "全部",
+		},
+		{
+			code: "0",
+			name: "待开始",
+		},
+		{
+			code: "1",
+			name: "进行中",
+		},
+		{
+			code: "2",
+			name: "已完成",
+		},
 ])
 
 const tableData = ref([
@@ -225,10 +245,43 @@ const tableData = ref([
   },
 ])
 
-const viewDetails = () =>{
+const viewDetails = (scope) =>{
   proxy.$router.push("/dispatch_details");
 }
 
+onMounted(() => {
+		getList(false);
+	});
+	const getList = (isTure: boolean) => {
+
+		let param = {"fieldJobType__c": "",  "appointmentEndTime": "",  "createdTime": "",  "status": "",  "caseNo": "",  "artisanName": "",  "pageNo": 0,  "pageSize": 20}
+		getFieldJobByPage(param).then((res : any) => {
+			let data = res.data.data
+			if (data.length > 0) {
+				tableData.value = data
+				if(isTure)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+				ElMessage({
+					message: '获取数据失败',
+					type: 'error'
+				})
+			}
+
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
+	}
 </script>
 
 <style lang="scss" scoped>

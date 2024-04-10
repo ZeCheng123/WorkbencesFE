@@ -75,3 +75,19 @@ export const getOrderList = (data) => {
   })
 }
 
+export const getFieldJobByPage = (data) => {
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/field-job/page'
+  })
+}
+
+
+export const getOrderListById = (data)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/order?id='+data
+  })
+}
+

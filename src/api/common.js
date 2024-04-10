@@ -91,3 +91,18 @@ export const getOrderListById = (data)=>{
   })
 }
 
+export const getServiceticketPage = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/service-ticket/page'
+  })
+}
+
+export const getExternalUser = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/admin/external-user/list'
+  })
+}

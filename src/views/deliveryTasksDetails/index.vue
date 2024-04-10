@@ -550,7 +550,7 @@
             <el-form-item label="优先级" prop="priority">
               <el-input
                 v-model="installationOrderForm.priority"
-                placeholder="高/中/低"
+                placeholder="1-最高 2-高 3-中 4-低"
               />
             </el-form-item>
             <el-form-item label="派工单备注" class="customLayout">
@@ -565,10 +565,17 @@
             </el-form-item>
             <el-form-item label="上传图片" class="custom_upload">
               <el-upload
-                class="avatar-uploader"
+                :on-success="handleSuccessInstall"
+                :on-remove="handleDeleteInstall"
+                :auto-upload="true"
+                :data="uploadData"
+                :headers="headers"
+                :before-upload="beforeUploadInstall"
                 :file-list="installationOrderForm.fileList"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                :show-file-list="false"
+                list-type="picture-card"
+                class="avatar-uploader"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :show-file-list="true"
               >
                 <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
               </el-upload>
@@ -785,6 +792,7 @@ const installationOrderForm = reactive({
   installationTeam: false,
   priority: "",
   fileList: [],
+  filePath: []
 })
 
 const installationOrderRule = reactive({
@@ -907,16 +915,51 @@ const installationOrderNextStep = () => {
 }
 
 const finishInstallationOrder = async () => {
-  installationOrderDialog.value = false
-  proxy.$message.success("安装派工单创建完成!")
-  currentInstallationOrderStep.value = 1
-  currentStep.value = 6
+  console.log(installationOrderForm);
+  let params = {
+    field_job_contact_name: installationOrderForm.username,
+    contact_telephone: installationOrderForm.phone,
+    priority: installationOrderForm.priority,
+    remark: installationOrderForm.remark,
+    haveInstallConditions: false,
+    field_job_order_id: route.query.orderId,
+    name:taskDetails.value.accountName+"的安装派工单",
+    type: "安装派工",
+    fieldJobType__c:1,
+    stage__c:0,
+    picture: installationOrderForm.filePath.join(";")
+  }
+    addFieldJob(params).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+					ElMessage({
+						message: '新增派工单成功',
+						type: 'success'
+					})
+          installationOrderDialog.value = false;
+          currentInstallationOrderStep.value = 1
+          currentStep.value = 5
+
+			} else {
+          ElMessage({
+            message: '新增派工单失败',
+            type: 'error'
+  				})
+				
+			}
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求新增派工单失败，请重试',
+				type: 'error'
+			});
+		});
+
 }
 
 const finishDeliveryOrder =  () => {
   let params = deliveryOrderForm;
   params["picture"] = params.filePath.join(",");
-  console.log(params)
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
@@ -1032,6 +1075,23 @@ const handleDeleteDelivery = (res) => {
 }
 
 const beforeUploadDelivery = (file) => {
+  uploadData.value["files"].push(file)
+}
+
+///install
+const handleSuccessInstall = (res) => {
+  console.log(res);
+  if(res.code == "success"){
+    let path = res.data.map(val => val["fileUrl"]);
+    installationOrderForm["filePath"] = installationOrderForm["filePath"].concat(path)
+  }
+}
+    
+const handleDeleteInstall = (res) => {
+  var resopnse = res["response"];
+}
+
+const beforeUploadInstall = (file) => {
   uploadData.value["files"].push(file)
 }
 

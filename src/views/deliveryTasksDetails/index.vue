@@ -9,28 +9,28 @@
             >待处理</span
           >
         </span>
-        <span class="item">
+        <!-- <span class="item">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
           <span :class="currentStep >= 2 ? 'name_selected' : 'name'">-</span>
-        </span>
+        </span> -->
         <span class="item">
-          <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
+          <span :class="currentStep == 3 ? 'num_selected' : 'num'">2</span>
           <span :class="currentStep >= 3 ? 'name_selected' : 'name'">入库</span>
         </span>
         <span class="item">
           <span
             @click="currentStep = 4"
             :class="currentStep == 4 ? 'num_selected' : 'num'"
-            >4</span
+            >3</span
           >
           <span :class="currentStep >= 4 ? 'name_selected' : 'name'">配送</span>
         </span>
         <span class="item">
-          <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
+          <span :class="currentStep == 5 ? 'num_selected' : 'num'">4</span>
           <span :class="currentStep >= 5 ? 'name_selected' : 'name'">安装</span>
         </span>
         <span class="item">
-          <span :class="currentStep == 6 ? 'num_selected' : 'num'">6</span>
+          <span :class="currentStep == 6 ? 'num_selected' : 'num'">5</span>
           <span :class="currentStep >= 6 ? 'name_selected' : 'name'">完成</span>
         </span>
       </span>
@@ -76,11 +76,11 @@
           </span>
           <span class="field">
             <span class="label">当前负责人：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{taskDetails.createdBy}}</span>
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{taskDetails.createdTime}}</span>
           </span>
         </span>
         <span class="row_field">
@@ -201,26 +201,22 @@
       <span class="table_title">相关项>派工单</span>
       <span class="table_content">
         <el-table :data="tableDataDispatch" :stripe="false" style="width: 100%">
-          <el-table-column prop="text1" label="操作" width="160px">
+          <el-table-column prop="view" label="操作" width="160px">
             <template #default="scope">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  color: #165dff;
-                  cursor: pointer;
-                "
-                @click="console.log(scope)"
-              >
-                <span>查看</span>
+              <div style="display: flex; align-items: center; color: #165dff; cursor: pointer;">
+                <span @click="viewDispatchDetails(scope.row)">查看</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="text2" label="派工单编号" />
-          <el-table-column prop="text3" label="状态" />
-          <el-table-column prop="text4" label="计划开始时间" />
-          <el-table-column prop="text5" label="计划结束时间" />
-          <el-table-column prop="text6" label="创建时间" />
+          <el-table-column prop="id" label="派工单编号" />
+          <el-table-column prop="stage__c" label="状态">
+             <template #default="scope">
+               <span>{{scope.row["stage__c"] == "0" ? "待开始" : scope.row["stage__c"] == "1" ? "进行中" : "已完成"}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="appointmentStartTime" label="计划开始时间" />
+          <el-table-column prop="appointmentEndTime" label="计划结束时间" />
+          <el-table-column prop="createTime" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -228,7 +224,7 @@
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
         <span class="initiate_comments" @click="initiateComments"
-          >发起任务评论</span
+          >发起评论</span
         >
       </div>
       <div class="right">
@@ -506,22 +502,32 @@
             label-width="80px"
             label-position="left"
           >
-            <el-form-item label="人员名称" prop="username">
-              <el-input
-                placeholder="查找或输入服务人员姓名"
-                v-model="installationOrderForm.username"
-              />
-            </el-form-item>
             <el-form-item label="联系方式" prop="phone">
               <el-input
                 placeholder="输入联系方式"
                 v-model="installationOrderForm.phone"
               />
             </el-form-item>
-            <el-form-item label="人员备注">
+            <el-form-item label="人员名称" prop="username">
               <el-input
-                placeholder="若该人员不存在，则显示该字段进行新增备注"
-                v-model="installationOrderForm.userRemark"
+                placeholder="查找或输入服务人员姓名"
+                v-model="installationOrderForm.username"
+              />
+            </el-form-item>
+            <el-form-item label="预约开始" prop="appointmentStartTime">
+              <el-date-picker
+                v-model="installationOrderForm.appointmentStartTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+              />
+            </el-form-item>
+            <el-form-item label="预约结束" prop="appointmentEndTime">
+              <el-date-picker
+                v-model="installationOrderForm.appointmentEndTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
               />
             </el-form-item>
             <el-form-item label="安装小组">
@@ -709,7 +715,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getFieldJob } from "../../api/common";
+import { addFieldJob, getFieldJob ,getOrderListById} from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -734,7 +740,9 @@ const taskDetails=ref({
   taskStatus:taskStatus,
   accountName:route.query.accountName,
   distributorName:route.query.distributorName,
-  followerName:route.query.follower_name
+  followerName:route.query.followerName,
+  createdTime:route.query.createdTime,
+  createdBy:route.query.createdBy
 })
 
 const currentStep = ref(taskStatus)
@@ -784,13 +792,14 @@ const deliveryOrderRule = reactive({
   ],
 })
 
-const installationOrderForm = reactive({
+const installationOrderForm = reactive<any>({
   username: "",
   phone: "",
   remark: "",
-  userRemark: "",
   installationTeam: false,
   priority: "",
+  appointmentStartTime: "",
+  appointmentEndTime: "",
   fileList: [],
   filePath: []
 })
@@ -803,6 +812,12 @@ const installationOrderRule = reactive({
   priority: [
     { required: true, message: "Please input priority", trigger: "blur" },
   ],
+  appointmentStartTime: [
+    { required: true, message: "Please input appointment start time", trigger: "blur" },
+  ],
+  appointmentEndTime: [
+    { required: true, message: "Please input appointment end time", trigger: "blur" },
+  ]
 })
 
 const problemReportingForm = reactive({
@@ -855,16 +870,7 @@ const tableDataInvoice = ref([
   },
 ])
 
-const tableDataDispatch = ref([
-  {
-    text1: "",
-    text2: "PG0001",
-    text3: "已完成",
-    text4: "已评价",
-    text5: "2024-02-21 10:30:50",
-    text6: "2024-02-21 10:30:50",
-  },
-])
+const tableDataDispatch = ref([])
 
 
 const headers = ref({
@@ -927,10 +933,13 @@ const finishInstallationOrder = async () => {
     type: "安装派工",
     fieldJobType__c:1,
     stage__c:0,
-    picture: installationOrderForm.filePath.join(";")
+    picture: installationOrderForm.filePath.join(";"),
+    appointmentStartTime: installationOrderForm.appointmentStartTime,
+    appointmentEndTime: installationOrderForm.appointmentEndTime
   }
     addFieldJob(params).then((res : any) => {
-			let data = res.data.data
+			let data = res.data.data;
+      tableDataDispatch.value.push(data);
 			if (data!=undefined) {
 					ElMessage({
 						message: '新增派工单成功',
@@ -939,7 +948,14 @@ const finishInstallationOrder = async () => {
           installationOrderDialog.value = false;
           currentInstallationOrderStep.value = 1
           currentStep.value = 5
-
+          installationOrderForm.username = "";
+          installationOrderForm.phone = "";
+          installationOrderForm.remark = "";
+          installationOrderForm.priority = "";
+          installationOrderForm.appointmentStartTime = "";
+          installationOrderForm.appointmentEndTime = "";
+          installationOrderForm.fileList = [];
+          installationOrderForm.filePath = [];
 			} else {
           ElMessage({
             message: '新增派工单失败',
@@ -957,11 +973,20 @@ const finishInstallationOrder = async () => {
 
 }
 
+
+const viewDispatchDetails = (row:any) =>{
+    proxy.$router.push({ path: "/dispatch_details", 
+      query: {id:row.id} 
+		});
+}
+
 const finishDeliveryOrder =  () => {
   let params = deliveryOrderForm;
   params["picture"] = params.filePath.join(",");
+  params["goods_picture__c"] = params.filePath.join(",");
   addFieldJob(params).then((res : any) => {
-			let data = res.data.data
+			let data = res.data.data;
+      tableDataDispatch.value.push(data);
 			if (data!=undefined) {
 					ElMessage({
 						message: '新增派工单成功',
@@ -1030,6 +1055,7 @@ const initiateComments = () => {
 onMounted(()=>{
   // getFieldJobByGet(true,fieldJobNeoId)
 })
+
 const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
   getFieldJob(fieldJobId).then((res : any) => {
 			let data = res.data.data
@@ -1076,6 +1102,30 @@ const handleDeleteDelivery = (res) => {
 
 const beforeUploadDelivery = (file) => {
   uploadData.value["files"].push(file)
+}
+
+const getOrderByOne = (showMsg: boolean,orderId:any)=>{
+  
+  getOrderListById(orderId).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined&&data.length > 0) {
+				if(showMsg)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+        if(showMsg){
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+  				})
+        }
+				
+			}
+  })
 }
 
 ///install

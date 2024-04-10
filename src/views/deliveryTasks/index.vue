@@ -3,7 +3,7 @@
 		<span class="header"> 交付任务 </span>
 		<span class="search">
 			<span class="left">
-				<el-form :model="form" :rules="rule" label-width="80px" label-position="left">
+				<el-form :model="form"  label-width="80px" label-position="left">
 					<el-form-item label="任务编号">
 						<el-input placeholder="请输入任务编号" v-model="form.orderNo" />
 					</el-form-item>
@@ -14,7 +14,7 @@
 						<el-input placeholder="请输入客户电话" v-model="form.customerPhone" />
 					</el-form-item>
 				</el-form>
-				<el-form :model="form" :rules="rule" label-width="80px" label-position="left">
+				<el-form :model="form"  label-width="80px" label-position="left">
 					<!-- <el-form-item label="筛选方式">
 						<el-select v-model="form.filterMethod" placeholder="请选择筛选方式">
 							<el-option v-for="item in filterMethodPtions" :key="item.value" :label="item.label"
@@ -27,8 +27,8 @@
 					</el-form-item>
 					<el-form-item label="订单状态">
 						<el-select v-model="form.orderStatus" placeholder="请选择订单状态">
-							<el-option v-for="item in orderStatusPtions" :key="item.value" :label="item.label"
-								:value="item.value" />
+							<el-option v-for="item in orderStatusPtions" :key="item.code" :label="item.name"
+								:value="item.code" />
 						</el-select>
 					</el-form-item>
 					<span style="width:336px;height:32px"></span>
@@ -57,13 +57,36 @@
 			<el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
 				<el-table-column prop="id" label="任务编号" />
 				<el-table-column prop="distributorName" label="经销商" />
-				<el-table-column prop="follower_name" label="经销商负责人" />
+				<el-table-column prop="followerName" label="经销商负责人" />
 				<el-table-column prop="accountName" label="关联客户" />
 				<!-- <el-table-column prop="serviceCaseNeoId" label="剩余时间" /> -->
 				<!-- <el-table-column prop="serviceCaseId" label="关联的服务工单id" :visible="true"/> -->
 				<!-- <el-table-column prop="fieldJobNeoId" label="任务结束时间" />  -->
-				<el-table-column prop="taskType" label="任务类型" />
-				<el-table-column prop="status" label="状态" />
+				<el-table-column prop="taskType" label="任务类型" >
+				<!-- <template #default="{ row }">
+				    <el-select v-model="row.taskType" disabled  placeholder="请选择">
+				      <el-option
+				        v-for="item in taskTypeOptions"
+				        :key="item.value"
+				        :label="item.label"
+				        :value="item.value">
+				      </el-option>
+				    </el-select>
+				  </template> -->
+				  	<template #default="scope">
+				  		<div style="display:flex;align-items:center;">
+						{{scope.row.taskType?(taskTypeOptions.find(val=>val["code"]==scope.row.taskType)?.name):""}}
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column prop="createdTime" label="创建时间" />
+				<el-table-column prop="status" label="状态" >
+					<template #default="scope">
+				  		<div style="display:flex;align-items:center;">
+						{{scope.row.status?(orderStatusPtions.find(val=>val["code"]==scope.row.status)?.name):"待开始"}}
+						</div>
+					</template>
+				</el-table-column>
 				<el-table-column prop="url" label="操作" width="80px">
 					<template #default="scope">
 						<div style="
@@ -106,18 +129,54 @@
 		getList(false);
 	});
 
-	const filterMethodPtions = ref([
+	const taskTypeOptions = ref([
 		{
-			value: "all",
-			label: "全部",
+			code: "all",
+			name: "全部",
+		},
+		{
+			code: "ServiceCase",
+			name: "服务工单",
+		},
+		{
+			code: "DispatchNote",
+			name: "发货单",
+		},
+		{
+			code: "FieldJob",
+			name: "派工单",
 		},
 	])
 
 	const orderStatusPtions = ref([
 		{
-			value: "all",
-			label: "全部",
+			code: "all",
+			name: "全部",
 		},
+		{
+			code: "0",
+			name: "待开始",
+		},
+		{
+			code: "1",
+			name: "提货",
+		},
+		{
+			code: "2",
+			name: "入库",
+		},
+		{
+			code: "3",
+			name: "配送",
+		},
+		{
+			code: "4",
+			name: "安装",
+		},
+		{
+			code: "5",
+			name: "完成",
+		}
 	])
 
 	const viewDetails = (row: any) => {
@@ -130,9 +189,10 @@
 			taskType:row.taskType,
 			status:row.status,
 			distributorName:row.distributorName,
-			follower_name:row.follower_name,
+			followerName:row.followerName,
 			accountName:row.accountName,
-			createdTime:row.created_time
+			createdTime:row.createdTime,
+			createdBy:row.createdBy
 			} ,
 		});
 	}
@@ -174,12 +234,12 @@
 
 	//重置按钮
 	const resetting = () => {
-		form.orderNo = null
-		form.customerName = null
-		form.customerPhone = null
-		form.filterMethod = null
+		form.orderNo = ''
+		form.customerName = ''
+		form.customerPhone = ''
+		form.filterMethod = ''
 		form.createDate = []
-		form.orderStatus = null
+		form.orderStatus = ''
 	}
 </script>
 

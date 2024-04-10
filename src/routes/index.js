@@ -67,12 +67,12 @@ const routes = [
   },
   {
     path: '/service_workorder',
-    name: '服务工单',
+    name: '服务评价',
     component: () => import('../views/serviceWorkorder/index.vue')
   },
   {
     path: '/service_workorder_details',
-    name: '服务工单详情',
+    name: '服务评价详情',
     component: () => import('../views/serviceWorkorderDetails/index.vue')
   },
   {

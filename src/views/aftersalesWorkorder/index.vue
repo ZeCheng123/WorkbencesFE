@@ -50,10 +50,10 @@
           <el-form-item label="订单状态">
             <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
               <el-option
-                v-for="item in orderStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in seviceTicketStatusOptions"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
               />
             </el-select>
           </el-form-item>
@@ -61,7 +61,7 @@
         </el-form>
       </span>
       <span class="right">
-        <el-button type="primary" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
+        <el-button type="primary" @click="getList(true)" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
         <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
       </span>
     </span>
@@ -78,13 +78,19 @@
     </span>
     <span class="table">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
-        <el-table-column prop="text1" label="售后工单编号" />
-        <el-table-column prop="text2" label="专卖店名称" />
-        <el-table-column prop="text3" label="生产单号" />
-        <el-table-column prop="text4" label="客户名称" />
+        <el-table-column prop="ticketNo__c" label="售后工单编号" />
+        <el-table-column prop="storeName" label="专卖店名称" />
+        <el-table-column prop="productionOrderNo__c" label="生产单号" />
+        <el-table-column prop="accountName" label="客户名称" />
         <el-table-column prop="text5" label="处理方式" />
-        <el-table-column prop="text6" label="创建时间" />
-        <el-table-column prop="text7" label="售后状态" />
+        <el-table-column prop="createdTime" label="创建时间" />
+        <el-table-column prop="status__c" label="售后状态" >
+          <template #default="scope">
+				  		<div style="display:flex;align-items:center;">
+						{{scope.row.status__c?(seviceTicketStatusOptions.find(val=>val["code"]==scope.row.status__c)?.name):""}}
+						</div>
+					</template>
+				</el-table-column>
         <el-table-column prop="text8" label="操作" width="80px">
           <template #default="scope">
             <div
@@ -94,7 +100,7 @@
                 color: #165dff;
                 cursor: pointer;
               "
-              @click="viewDetails(scope)"
+              @click="viewDetails(scope.row)"
             >
               查看
             </div>
@@ -103,10 +109,10 @@
       </el-table>
       <el-pagination
         class="table_pagination"
-        :page-size="20"
-        :pager-count="11"
+        :page-size="100"
+        :pager-count="1"
         layout="total, prev, pager, next"
-        :total="1000"
+        :total="100"
       />
     </span>
   </div>
@@ -114,8 +120,10 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive } from "vue"
-
+import { ref, computed, getCurrentInstance, reactive,onMounted } from "vue"
+import { ElMessage } from "element-plus";
+import { getServiceticketPage } from "../../api/common";
+import path from "path";
 const { proxy }: any = getCurrentInstance()
 
 const form = reactive({
@@ -134,12 +142,56 @@ const filterMethodOptions = ref([
   },
 ])
 
-const orderStatusOptions = ref([
+
+const seviceTicketStatusOptions = ref([
   {
-    value: "all",
-    label: "全部",
+    code: "",
+    name: "全部",
   },
+  {
+    code: "1",
+    name: "已提报问题",
+  },
+  {
+    code: "2",
+    name: "已定损",
+  },
+  {
+    code: "3",
+    name: "核实/维护问题产品中",
+  },
+  {
+    code: "4",
+    name: "定责发起",
+  },
+  {
+    code: "5",
+    name: "已提交OA审批",
+  },
+  {
+    code: "6",
+    name: "已定责",
+  },
+  {
+    code: "7",
+    name: "已追责",
+  },
+  {
+    code: "8",
+    name: "已财务审核",
+  },
+  {
+    code: "9",
+    name: "已经销商审核",
+  },
+  {
+    code: "10",
+    name: "已结案",
+  }
 ])
+
+
+
 
 const tableData = ref([
   {
@@ -213,9 +265,43 @@ const tableData = ref([
     text8: "",
   },
 ])
+onMounted(() => {
+		getList(false);
+	});
+const getList = (isTure: boolean) => {
+  console.log(form)
+		let param = {"customerName": form.customerName,  "customerPhone": form.customerPhone,  "status": form.orderStatus,  "createdTime": "",   "pageNo": 0,  "pageSize": 100}
+		getServiceticketPage(param).then((res : any) => {
+			let data = res.data.data
+			if (data.length > 0) {
+				tableData.value = data
+				if(isTure)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+				ElMessage({
+					message: '获取数据失败',
+					type: 'error'
+				})
+			}
 
-const viewDetails = () =>{
-  proxy.$router.push("/aftersales_workorder_details");
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
+}
+const viewDetails = (rowData) =>{
+  proxy.$router.push({path:"/aftersales_workorder_details",query:{
+    id:rowData.id
+  }});
 }
 
 </script>

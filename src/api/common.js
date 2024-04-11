@@ -105,4 +105,3 @@ export const getExternalUser = (data)=>{
     url: '/md/api/admin/external-user/list'
   })
 }
-

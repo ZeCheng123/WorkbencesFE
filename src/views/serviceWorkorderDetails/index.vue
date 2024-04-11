@@ -653,9 +653,9 @@ const relatedDocumentsProblemReportingList = ref([
 
 const relatedDocumentsAftersalesWorkorderList = ref([
   {
-    text1: "XXX",
+    text1: "111",
     text2: "交付任务",
-    text3: "XXX",
+    text3: "222",
     text4: "进行中",
     text5: "2021-02-28 10:30:50",
     text6: "",
@@ -664,9 +664,9 @@ const relatedDocumentsAftersalesWorkorderList = ref([
 
 const relatedDocumentsDispatchList = ref([
   {
-    text1: "XXX",
+    text1: "111",
     text2: "交付任务",
-    text3: "XXX",
+    text3: "222",
     text4: "进行中",
     text5: "2021-02-28 10:30:50",
     text6: "",

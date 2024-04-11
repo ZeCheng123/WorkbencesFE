@@ -91,3 +91,18 @@ export const getOrderListById = (data)=>{
   })
 }
 
+export const getPickList = (apiName)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/common/pick-list?apiName='+apiName
+  })
+}
+
+export const getExternalUser = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/admin/external-user/list'
+  })
+}
+

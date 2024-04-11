@@ -28,7 +28,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">问题编号：</span>
-            <span class="value">{{currentItem["caseNo	"]}}</span>
+            <span class="value">{{currentItem["caseNo"]}}</span>
             <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
@@ -88,15 +88,15 @@
         <span class="row_field">
           <span class="field">
             <span class="label">省份：</span>
-            <span class="value">{{currentItem["province"]}}</span>
+            <span class="value">{{convertProvince(currentItem["province"])}}</span>
           </span>
           <span class="field">
             <span class="label">城市：</span>
-            <span class="value">{{currentItem["city"]}}</span>
+            <span class="value">{{convertCity(currentItem["city"])}}</span>
           </span>
           <span class="field">
             <span class="label">区：</span>
-            <span class="value">{{currentItem["district"]}}</span>
+            <span class="value">{{convertDistrict(currentItem["district"])}}</span>
           </span>
         </span>
         <span class="row_field">
@@ -512,7 +512,7 @@
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
-import { getServiceCaseItem } from '../../api/common.js'
+import { getServiceCaseItem, getPickList } from '../../api/common.js'
 
 const { proxy }: any = getCurrentInstance()
 
@@ -639,7 +639,7 @@ const tableDataServiceEvaluation = ref([
   {
     text1: "SU2024030101",
     text2: "已评价",
-    text3: "示例字段...",
+    text3: "其他",
     text4: "满意",
     text5: "2021-02-28 10:30:50",
     text6: "",
@@ -653,9 +653,9 @@ const relatedDocumentsProblemReportingList = ref([
 
 const relatedDocumentsAftersalesWorkorderList = ref([
   {
-    text1: "XXX",
+    text1: "456",
     text2: "交付任务",
-    text3: "XXX",
+    text3: "2222",
     text4: "进行中",
     text5: "2021-02-28 10:30:50",
     text6: "",
@@ -664,9 +664,9 @@ const relatedDocumentsAftersalesWorkorderList = ref([
 
 const relatedDocumentsDispatchList = ref([
   {
-    text1: "XXX",
+    text1: "123",
     text2: "交付任务",
-    text3: "XXX",
+    text3: "1111",
     text4: "进行中",
     text5: "2021-02-28 10:30:50",
     text6: "",
@@ -682,8 +682,15 @@ const complaintSource = ref([
 
 const currentItem = ref<any>({});
 
+const provinceList = ref([]);
+const cityList = ref([]);
+const districtList = ref([]);
+
 onMounted(() =>{
   getDetailsData();
+  getProvinceList();
+  getCityList();
+  getDistrictList();
 })
 
 const getDetailsData = () =>{
@@ -737,6 +744,64 @@ const initiateComments = () => {
       })
     })
     .catch(() => {})
+}
+
+
+const getProvinceList = () =>{
+  getPickList("province").then(res=>{
+    let rtData = res.data;
+    if(rtData.code == "success"){
+      provinceList.value = rtData.data;
+    }
+  })
+}
+
+const getCityList = () =>{
+  getPickList("city").then(res=>{
+    let rtData = res.data;
+    if(rtData.code == "success"){
+      cityList.value = rtData.data;
+    }
+  })
+}
+
+const getDistrictList = () =>{
+  getPickList("district").then(res=>{
+    let rtData = res.data;
+    if(rtData.code == "success"){
+      districtList.value = rtData.data;
+    }
+  })
+}
+
+const convertProvince = (code) =>{
+  if(code){
+    return provinceList.value.find(val => val["optionCode"]== code)["optionLabel"];
+  }
+  else
+  {
+    return "";
+  }
+}
+
+const convertCity = (code) =>{
+  if(code){
+    return cityList.value.find(val => val["optionCode"]== code)["optionLabel"];
+  }
+  else
+  {
+    return "";
+  }
+}
+
+const convertDistrict = (code) =>{
+  if(code){
+    return districtList.value.find(val => val["optionCode"]== code)["optionLabel"];
+  }
+  else
+  {
+    return "";
+  }
 }
 
 

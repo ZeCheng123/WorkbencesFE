@@ -70,7 +70,7 @@
     <span class="table">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
         <el-table-column prop="caseNo" label="问题编号" />
-        <el-table-column prop="caseAccountId" label="客户姓名" />
+        <el-table-column prop="name" label="客户姓名" />
         <el-table-column prop="problemDescription" label="问题描述" />
         <el-table-column prop="sourceOfProblem" label="来源">
            <template #default="scope">
@@ -358,7 +358,7 @@ const OpenProblemReportingDialog = () => {
 
 const submitProblemReporting = () => {
   for(let key in problemReportingForm.value){
-    if(key != "fileList" && key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm.value[key] == ""){
+    if(key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm.value[key] == ""){
       proxy.$message.error("必填字段不能为空!");
       return;
     }
@@ -366,7 +366,8 @@ const submitProblemReporting = () => {
   let params = {
     caseNo: problemReportingForm.value["orderNo"],
     // orderNeoId: problemReportingForm.value["orderNo"],
-    caseAccountId: problemReportingForm.value["customerName"],
+    name: problemReportingForm.value["customerName"],
+    // caseAccountId: problemReportingForm.value["customerName"],
     phone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],
     picture: problemReportingForm.value["filePath"].join(";"),

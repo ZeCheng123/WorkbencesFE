@@ -362,7 +362,8 @@ const submitProblemReporting = () => {
   let params = {
     caseNo: problemReportingForm.value["orderNo"],
     // orderNeoId: problemReportingForm.value["orderNo"],
-    caseAccountId: problemReportingForm.value["customerName"],
+    // caseAccountId: problemReportingForm.value["customerName"],
+    name: problemReportingForm.value["customerName"],
     phone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],
     picture: problemReportingForm.value["filePath"].join(";"),

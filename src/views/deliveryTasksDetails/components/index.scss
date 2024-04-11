@@ -853,6 +853,23 @@
     width: auto !important;
 }
 
+:deep(.deliveryOrderDialog .el-select__wrapper){
+    background: #F2F3F5;
+    width: 300px;
+}
+
+:deep(.installationOrderDialog .el-select__wrapper){
+    background: #F2F3F5;
+    width: 300px;
+}
+
+:deep(.problemReportingDialog .el-select__wrapper){
+    background: #F2F3F5;
+    width: 300px;
+}
+
+
+
 
 
 //////////////////

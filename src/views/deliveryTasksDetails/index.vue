@@ -513,10 +513,18 @@
               />
             </el-form-item>
             <el-form-item label="人员名称" prop="username">
-              <el-input
+              <!-- <el-input
                 placeholder="查找或输入服务人员姓名"
                 v-model="installationOrderForm.username"
-              />
+              /> -->
+              <el-select v-model="deliveryOrderForm.username" placeholder="查找或输入服务人员姓名">
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="预约开始" prop="appointmentStartTime">
               <el-date-picker
@@ -774,6 +782,9 @@ let deliveryOrderForm = reactive({
 })
 
 const deliveryOrderRule = reactive({
+  followerId: [
+    { required: true, message: "Please input username", trigger: "blur" },
+  ],
   field_job_contact_name: [
     { required: true, message: "Please input username", trigger: "blur" },
   ],
@@ -1011,6 +1022,7 @@ const finishDeliveryOrder =  () => {
       Object.keys(deliveryOrderForm).forEach(key => {
         if(!key.includes("type")&&!key.includes("haveInstallConditions")&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
         if(key==="haveInstallConditions") deliveryOrderForm[key] =false;
+        if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
       });
 		}).catch((error: any) => {
 			// 显示请求失败的提示框
@@ -1021,6 +1033,7 @@ const finishDeliveryOrder =  () => {
       Object.keys(deliveryOrderForm).forEach(key => {
         if(key!=="type"&&key!=="haveInstallConditions"&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
         if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
+        if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
       });
 			console.error('请求新增派工单失败:', error);
 		});

@@ -105,3 +105,12 @@ export const getExternalUser = (data)=>{
     url: '/md/api/admin/external-user/list'
   })
 }
+
+export const getServiceticketPage = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/service-ticket/page'
+  })
+}
+

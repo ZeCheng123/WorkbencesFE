@@ -328,14 +328,14 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="联系方式" prop="contact_telephone">
+            <el-form-item label="联系方式" prop="contactTelephone">
               <el-input
-                v-model="deliveryOrderForm.contact_telephone"
+                v-model="deliveryOrderForm.contactTelephone"
                 placeholder="查找或输入配送司机手机号码"
               />
             </el-form-item>
             <el-form-item label="人员名称" prop="followerId">              
-              <el-select v-model="deliveryOrderForm.followerId" placeholder="查找或输入服务人员姓名">
+              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
                 <el-option
                   v-for="item in extralUserData"
                   :key="item.name"
@@ -517,7 +517,7 @@
                 placeholder="查找或输入服务人员姓名"
                 v-model="installationOrderForm.username"
               /> -->
-              <el-select v-model="deliveryOrderForm.username" placeholder="查找或输入服务人员姓名">
+              <el-select v-model="installationOrderForm.username" @change="onCahngeUserSelectForInstallion" placeholder="查找或输入服务人员姓名">
                 <el-option
                   v-for="item in extralUserData"
                   :key="item.name"
@@ -764,8 +764,8 @@ const currentProblemReportingStep = ref(1)
 const deliveryOrderFormRef = ref<FormInstance>();
 
 let deliveryOrderForm = reactive({
-  field_job_contact_name: "",
-  contact_telephone: "",
+  fieldJobContactName: "",
+  contactTelephone: "",
   priority: "",
   type: "配送派工",
   remark: "",
@@ -785,10 +785,10 @@ const deliveryOrderRule = reactive({
   followerId: [
     { required: true, message: "Please input username", trigger: "blur" },
   ],
-  field_job_contact_name: [
+  fieldJobContactName: [
     { required: true, message: "Please input username", trigger: "blur" },
   ],
-  contact_telephone: [{ required: true, message: "Please input phone", trigger: "blur" }],
+  contactTelephone: [{ required: true, message: "Please input phone", trigger: "blur" }],
   priority: [
     { required: true, message: "Please input priority", trigger: "blur" },
   ],
@@ -817,7 +817,8 @@ const installationOrderForm = reactive<any>({
   appointmentStartTime: "",
   appointmentEndTime: "",
   fileList: [],
-  filePath: []
+  filePath: [],
+  fieldJobContactName:""
 })
 
 const installationOrderRule = reactive({
@@ -942,8 +943,8 @@ const extralUserData=ref<any>([])
 const finishInstallationOrder = async () => {
   console.log(installationOrderForm);
   let params = {
-    field_job_contact_name: installationOrderForm.username,
-    contact_telephone: installationOrderForm.phone,
+    fieldJobContactName: installationOrderForm.fieldJobContactName,
+    contactTelephone: installationOrderForm.phone,
     priority: installationOrderForm.priority,
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
@@ -954,7 +955,8 @@ const finishInstallationOrder = async () => {
     stage__c:0,
     picture: installationOrderForm.filePath.join(";"),
     appointmentStartTime: installationOrderForm.appointmentStartTime,
-    appointmentEndTime: installationOrderForm.appointmentEndTime
+    appointmentEndTime: installationOrderForm.appointmentEndTime,
+    followerId:installationOrderForm.username
   }
     addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
@@ -975,6 +977,8 @@ const finishInstallationOrder = async () => {
           installationOrderForm.appointmentEndTime = "";
           installationOrderForm.fileList = [];
           installationOrderForm.filePath = [];
+          installationOrderForm.fieldJobContactName="";
+          installationOrderForm.contactTelephone="";
 			} else {
           ElMessage({
             message: '新增派工单失败',
@@ -1194,6 +1198,22 @@ const handleDeleteInstall = (res) => {
 
 const beforeUploadInstall = (file) => {
   uploadData.value["files"].push(file)
+}
+
+const onCahngeUserSelectForInstallion = (event) => {
+  let item = extralUserData.value.find(val => val["id"] == event);
+  if(item){
+    installationOrderForm["fieldJobContactName"] = item["name"];
+    //installationOrderForm.value["customerPhone"] = item["phone"];
+  }
+}
+
+const onCahngeUserSelectForDelivery = (event) => {
+  let item = extralUserData.value.find(val => val["id"] == event);
+  if(item){
+    deliveryOrderForm["fieldJobContactName"] = item["name"];
+    //installationOrderForm.value["customerPhone"] = item["phone"];
+  }
 }
 
 

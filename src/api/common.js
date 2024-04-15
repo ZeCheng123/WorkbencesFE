@@ -114,3 +114,10 @@ export const getServiceticketPage = (data)=>{
   })
 }
 
+export const getServiceticketById = (data)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/service-ticket?id='+data
+  })
+}
+

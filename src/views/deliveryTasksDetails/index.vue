@@ -328,13 +328,7 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="联系方式" prop="contactTelephone">
-              <el-input
-                v-model="deliveryOrderForm.contactTelephone"
-                placeholder="查找或输入配送司机手机号码"
-              />
-            </el-form-item>
-            <el-form-item label="人员名称" prop="followerId">              
+          <el-form-item label="人员名称" prop="followerId">              
               <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
                 <el-option
                   v-for="item in extralUserData"
@@ -343,7 +337,15 @@
                   :value="item.id"
                 />
               </el-select>
+              <span class="custom_item"><img src="@/assets/images/add.png" alt="" /></span>
             </el-form-item>
+            <el-form-item label="联系方式" prop="contactTelephone">
+              <el-input
+                v-model="deliveryOrderForm.contactTelephone"
+                placeholder="查找或输入配送司机手机号码"
+              />
+            </el-form-item>
+            
             <el-form-item label="预约开始" prop="appointmentStartTime">
               <el-date-picker
                 v-model="deliveryOrderForm.appointmentStartTime"
@@ -505,13 +507,7 @@
             :rules="installationOrderRule"
             label-width="80px"
             label-position="left"
-          >
-            <el-form-item label="联系方式" prop="phone">
-              <el-input
-                placeholder="输入联系方式"
-                v-model="installationOrderForm.phone"
-              />
-            </el-form-item>
+          >            
             <el-form-item label="人员名称" prop="username">
               <!-- <el-input
                 placeholder="查找或输入服务人员姓名"
@@ -525,6 +521,15 @@
                   :value="item.id"
                 />
               </el-select>
+              <span class="custom_item1">
+                <img src="@/assets/images/add.png" alt="" />
+              </span>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="phone">
+              <el-input
+                placeholder="输入联系方式"
+                v-model="installationOrderForm.phone"
+              />
             </el-form-item>
             <el-form-item label="预约开始" prop="appointmentStartTime">
               <el-date-picker
@@ -772,13 +777,13 @@ let deliveryOrderForm = reactive({
   appointmentStartTime: "",
   appointmentEndTime: "",
   haveInstallConditions: false,
-  field_job_order_id:route.query.orderId,
+  fieldJobOrderId:route.query.orderId,
   fieldJobType__c:0,
   stage__c:0,
   name:taskDetails.value.accountName+"的配送派工单",
   fileList: [],
   filePath:[],
-  followerId:1
+  followerId:null
 })
 
 const deliveryOrderRule = reactive({
@@ -948,12 +953,12 @@ const finishInstallationOrder = async () => {
     priority: installationOrderForm.priority,
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
-    field_job_order_id: route.query.orderId,
+    fieldJobOrderId: route.query.orderId,
     name:taskDetails.value.accountName+"的安装派工单",
     type: "安装派工",
     fieldJobType__c:1,
     stage__c:0,
-    picture: installationOrderForm.filePath.join(";"),
+    docPicture: installationOrderForm.filePath.join(";"),
     appointmentStartTime: installationOrderForm.appointmentStartTime,
     appointmentEndTime: installationOrderForm.appointmentEndTime,
     followerId:installationOrderForm.username
@@ -1006,7 +1011,7 @@ const viewDispatchDetails = (row:any) =>{
 const finishDeliveryOrder =  () => {
   let params = deliveryOrderForm;
   params["picture"] = params.filePath.join(",");
-  params["goods_picture__c"] = params.filePath.join(",");
+  params["goodsPicture"] = params.filePath.join(",");
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
       tableDataDispatch.value.push(data);
@@ -1024,7 +1029,7 @@ const finishDeliveryOrder =  () => {
 				
 			}
       Object.keys(deliveryOrderForm).forEach(key => {
-        if(!key.includes("type")&&!key.includes("haveInstallConditions")&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
+        if(!key.includes("type")&&!key.includes("haveInstallConditions")&&key!=="fieldJobOrderId"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
         if(key==="haveInstallConditions") deliveryOrderForm[key] =false;
         if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
       });
@@ -1035,7 +1040,7 @@ const finishDeliveryOrder =  () => {
 				type: 'error'
 			});
       Object.keys(deliveryOrderForm).forEach(key => {
-        if(key!=="type"&&key!=="haveInstallConditions"&&key!=="field_job_order_id"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
+        if(key!=="type"&&key!=="haveInstallConditions"&&key!=="fieldJobOrderId"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
         if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
         if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
       });
@@ -1204,6 +1209,7 @@ const onCahngeUserSelectForInstallion = (event) => {
   let item = extralUserData.value.find(val => val["id"] == event);
   if(item){
     installationOrderForm["fieldJobContactName"] = item["name"];
+    installationOrderForm["phone"]=item["phone"];
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
 }
@@ -1212,6 +1218,7 @@ const onCahngeUserSelectForDelivery = (event) => {
   let item = extralUserData.value.find(val => val["id"] == event);
   if(item){
     deliveryOrderForm["fieldJobContactName"] = item["name"];
+    deliveryOrderForm["contactTelephone"] = item["phone"];    
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
 }

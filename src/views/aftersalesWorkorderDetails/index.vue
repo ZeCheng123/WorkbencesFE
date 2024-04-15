@@ -9,23 +9,23 @@
         </span>
         <span class="item" @click="changeStep(2)">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已包装</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已定损</span>
         </span>
         <span class="item" @click="changeStep(3)">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已定损</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">核实/维护问题产品中</span>
         </span>
         <span class="item" @click="changeStep(4)">
           <span :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>
-          <span :class="currentStep >= 4 ? 'name_selected' : 'name'">已追责</span>
+          <span :class="currentStep >= 4 ? 'name_selected' : 'name'">定责发起</span>
         </span>
         <span class="item" @click="changeStep(5)">
           <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
-          <span :class="currentStep >= 5 ? 'name_selected' : 'name'">已财务审核</span>
+          <span :class="currentStep >= 5 ? 'name_selected' : 'name'">已提交OA审批</span>
         </span>
         <span class="item" @click="changeStep(6)">
           <span :class="currentStep == 6 ? 'num_selected' : 'num'">6</span>
-          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">已经销商审核</span>
+          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">已定责</span>
         </span>
         <span class="item" @click="changeStep(7)">
           <span :class="currentStep == 7 ? 'num_selected' : 'num'">7</span>
@@ -176,9 +176,9 @@
     <div class="showMainDialog2">
       <el-dialog v-model="showMainDialog2" width="25%" :show-close="false">
         <span class="title">{{
-          dialogType == "1" ? "完善问题描述" : "定义处理方式"
+          dialogType == 1 ? "完善问题描述" : "定义处理方式"
         }}</span>
-        <span class="content" v-if="dialogType == '1'">
+        <span class="content" v-if="dialogType == 1">
           <span class="item">
             <span class="label">问题大类</span>
             <el-select v-model="dialog2Form.problemType" placeholder="">
@@ -227,7 +227,7 @@
             </el-upload>
           </span>
         </span>
-        <span class="content" v-if="dialogType == '2'">
+        <span class="content" v-if="dialogType == 2">
           <span class="item">
             <span class="label">产品分类</span>
             <el-select v-model="dialog2Form.poductType" placeholder="">
@@ -308,7 +308,7 @@
               @click="confirmDialog"
               type="primary"
               class="primary_btn"
-              style="margin-left：50px !important"
+              style="margin-left:50px !important"
               >保存</el-button
             >
           </div>

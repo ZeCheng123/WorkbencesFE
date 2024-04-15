@@ -39,7 +39,8 @@
     </span>
     <span class="order_info">
       <span class="title"
-        >售后工单详情 <el-button class="submit_btn">已提交</el-button>
+        >售后工单详情 
+        <!-- <el-button class="submit_btn">已提交</el-button> -->
         <!-- <el-button class="return_btn">总部已退回</el-button> -->
       </span>
       <span class="main_field">
@@ -128,11 +129,13 @@
           style="width: 100%"
         >
           <el-table-column prop="text1" label="售后处理记录编号" />
-          <el-table-column prop="text2" label="生成单号" />
+          <el-table-column prop="text2" label="生产单号" />
           <el-table-column prop="text3" label="售后审核员" />
-          <el-table-column prop="text4" label="处理进度" />
-          <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="操作">
+          <el-table-column prop="text4" label="处理方式" />
+          <el-table-column prop="text5" label="状态" />
+          <el-table-column prop="text6" label="退回原因" />
+          <el-table-column prop="text7" label="创建时间" />
+          <el-table-column prop="text8" label="操作">
             <template #default="scope">
               <div
                 style="

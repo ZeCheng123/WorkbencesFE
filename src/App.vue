@@ -66,7 +66,7 @@ onMounted(() =>{
     {
       const standardScale = (("100%") as any) / (("100%") as any);
       window.addEventListener("resize", _.debounce(function (){
-        if(proxy.$route.path!="/main"){
+        if(proxy.$route.path!="/login"){
           const docHeight = document.body.clientHeight;
           const docWidth = document.body.clientWidth;
           if(docWidth < 1680)

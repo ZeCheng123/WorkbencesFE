@@ -151,10 +151,12 @@
                 flex-direction: row;
                 justify-content: space-between;
                 .field{
-                    width: 150px;
+                    width: 250px;
                     height: 36px;
                     line-height: 36px;
                     white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     .label{
                         font-family: Alibaba PuHuiTi;
                         font-size: 14px;
@@ -198,10 +200,12 @@
                 flex-direction: row;
                 justify-content: space-between;
                 .field{
-                    width: 150px;
+                    width: 250px;
                     height: 36px;
                     line-height: 36px;
                     white-space: nowrap; /* 文本不换行 */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     .label{
                         font-family: Alibaba PuHuiTi;
                         font-size: 14px;
@@ -507,6 +511,138 @@
 
 
 :deep(.showMainDialog2 .content .el-icon--upload){
+    display: none;
+ }
+
+
+ /////////////////////////////
+ .showMainDialog3{
+    .title{
+       width: 100%;
+       height: 30px;
+       line-height: 30px;
+       display: flex;
+       align-items: center;
+       font-feature-settings: "kern" on;
+       color: #3D3D3D;
+       box-sizing: border-box;
+       margin-top: 10px;
+       padding-left: 10px;
+       font-family: Alibaba PuHuiTi 2.0;
+       font-size: 20px;
+       font-weight: normal;
+       letter-spacing: 0px;
+       color: #1D2129;
+    }
+    .content{
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0px 10px;
+        box-sizing: border-box;
+        .base_field{
+            height: 72;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            padding: 0px 20px;
+            box-sizing: border-box;
+            justify-content: space-around;
+            .row_field{
+                height: 36px;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                .field{
+                    width: 300px;
+                    height: 36px;
+                    line-height: 36px;
+                    white-space: nowrap; /* 文本不换行 */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    .label{
+                        font-family: Alibaba PuHuiTi;
+                        font-size: 14px;
+                        font-weight: normal;
+                        letter-spacing: 0px;
+                        color: #4E5969;
+                    }
+                    .value{
+                        font-family: Alibaba PuHuiTi;
+                        font-size: 14px;
+                        font-weight: normal;
+                        letter-spacing: 0px;
+                        color: #1D2129;
+                    }
+                    .status1{
+                        font-family: Alibaba PuHuiTi;
+                        font-size: 14px;
+                        font-weight: normal;
+                        letter-spacing: 0px;
+                        color: #EA0000;
+                    }
+                }
+            }
+        }
+        .table_dialog3{
+            width: 100%;
+            margin-top: 10px;
+            height: 200px;
+            overflow-y: auto;
+        }
+    }
+}
+
+:deep(.showMainDialog3 .el-dialog){
+    margin: 10px auto;
+    height: 600px;
+    padding: 1px 1px;
+}
+
+:deep(.showMainDialog3 .el-dialog__header){
+    display: none;
+}
+
+
+:deep(.showMainDialog3 .el-input__wrapper){
+    background: #F2F3F5;
+}
+
+:deep(.showMainDialog3 .el-dialog__footer){
+    text-align: center !important;
+    width: 100%;
+    position: absolute;
+    bottom: 30px;
+}
+
+:deep(.showMainDialog3 .content .el-select__wrapper){
+    height: 40px;
+    line-height: 40px;
+}
+
+:deep(.showMainDialog3 .content .el-input){
+    height: 40px;
+    line-height: 40px;
+    background-color: #ffffff;
+}
+
+:deep(.showMainDialog3 .content .el-input__wrapper){
+    height: 40px;
+    line-height: 40px;
+    background-color: #ffffff;
+}
+
+:deep(.showMainDialog3 .content .el-upload-dragger){
+   padding: 0px !important;
+   height: 80px;
+   line-height: 80px;
+}
+
+
+:deep(.showMainDialog3 .content .el-icon--upload){
     display: none;
  }
 

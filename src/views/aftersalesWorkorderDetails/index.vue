@@ -3,35 +3,35 @@
     <span class="header">
       <span class="title">售后工单状态</span>
       <span class="step">
-        <span class="item" @click="changeStep(1)">
+        <span class="item" >
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
           <span :class="currentStep >= 1 ? 'name_selected' : 'name'">开始</span>
         </span>
-        <span class="item" @click="changeStep(2)">
+        <span class="item">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
           <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已提报问题</span>
         </span>
-        <span class="item" @click="changeStep(3)">
+        <span class="item">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
           <span :class="currentStep >= 3 ? 'name_selected' : 'name'">售后审核</span>
         </span>
-        <span class="item" @click="changeStep(4)">
+        <span class="item">
           <span :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>
           <span :class="currentStep >= 4 ? 'name_selected' : 'name'">已定损</span>
         </span>
-        <span class="item" @click="changeStep(5)">
+        <span class="item">
           <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
           <span :class="currentStep >= 5 ? 'name_selected' : 'name'">定责发起</span>
         </span>
-        <span class="item" @click="changeStep(6)">
+        <span class="item">
           <span :class="currentStep == 6 ? 'num_selected' : 'num'">6</span>
           <span :class="currentStep >= 6 ? 'name_selected' : 'name'">已提交OA审批</span>
         </span>
-        <span class="item" @click="changeStep(7)">
+        <span class="item">
           <span :class="currentStep == 7 ? 'num_selected' : 'num'">7</span>
           <span :class="currentStep >= 7 ? 'name_selected' : 'name'">已追责</span>
         </span>
-        <span class="item" @click="changeStep(8)">
+        <span class="item" >
           <span :class="currentStep == 8 ? 'num_selected' : 'num'">8</span>
           <span :class="currentStep >= 8 ? 'name_selected' : 'name'">结束</span>
         </span>
@@ -109,14 +109,6 @@
             <span class="label">客户地址：</span>
             <span class="value">{{ aftersalesHeaderDetails.customerAddress__c }}</span>
           </span>
-          <!-- <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span>
-          <span class="field">
-            <span class="label">示例字段：</span>
-            <span class="value">示例</span>
-          </span> -->
         </span>
       </span>
     </span>
@@ -124,7 +116,7 @@
       <span class="table_title">售后工单处理记录</span>
       <span class="table_content">
         <el-table
-          :data="tableDataOrderDetials"
+          :data="ticketSolutionTable"
           :stripe="false"
           style="width: 100%"
         >
@@ -137,15 +129,7 @@
           <el-table-column prop="text7" label="创建时间" />
           <el-table-column prop="text8" label="操作">
             <template #default="scope">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  color: #165dff;
-                  cursor: pointer;
-                "
-                @click="console.log(scope)"
-              >
+              <div style="display: flex; align-items: center; color: #165dff; cursor: pointer;"  @click="viewDetails(scope.row)">
                 查看
               </div>
             </template>
@@ -163,7 +147,7 @@
     <span class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span class="initiate_comments" @click="initiateComments">发起任务评论</span>
+        <span class="initiate_comments" @click="initiateComments">发起评论</span>
       </div>
       <div class="right">
         <el-button type="primary" class="primary_btn" @click="openDialog2(1)">完善问题描述</el-button>
@@ -322,6 +306,142 @@
         </template>
       </el-dialog>
     </div>
+    <div class="showMainDialog3">
+      <el-dialog v-model="showMainDialog3" width="100%" :show-close="false">
+        <span class="title">售后处理记录详情</span>
+        <span class="content">
+          <span class="base_field">
+            <span class="row_field">
+              <span class="field">
+                <span class="label">售后处理记录编号：</span>
+                <span class="value">{{ticketSolutionDetials.name}}</span>
+              </span>
+              <span class="field">
+                <span class="label">经销商名称：</span>
+                <span class="value">{{ ticketSolutionDetials.distributor }}</span>
+              </span>
+              <span class="field">
+                <span class="label">经销商电话：</span>
+                <span class="value">{{ ticketSolutionDetials.distributorPhone }}</span>
+              </span>
+            </span>
+            <span class="row_field">
+              <span class="field">
+                <span class="label">专卖店名称：</span>
+                <span class="value">{{ ticketSolutionDetials.store }}</span>
+              </span>
+              <span class="field">
+                <span class="label">专卖店电话：</span>
+                <span class="value">{{ ticketSolutionDetials.storePhone }}</span>
+              </span>
+              <span class="field">
+                <span class="label">订单编号：</span>
+                <span class="value">{{ ticketSolutionDetials.orderId }}</span>
+              </span>
+            </span>
+            <span class="row_field">
+              <span class="field">
+                <span class="label">生产单号：</span>
+                <span class="value">{{ ticketSolutionDetials.productionOrderNo }}</span>
+              </span>
+              <span class="field">
+                <span class="label">订单类型：</span>
+                <span class="value">{{ ticketSolutionDetials.orderType }}</span>
+              </span>
+              <span class="field">
+                <span class="label">处理进度：</span>
+                <span class="value">{{ ticketSolutionDetials.status }}</span>
+              </span>
+            </span>
+            <span class="row_field">
+              <span class="field">
+                <span class="label">客户姓名：</span>
+                <span class="value">{{ ticketSolutionDetials.accountName }}</span>
+              </span>
+              <span class="field">
+                <span class="label">客户电话：</span>
+                <span class="value">{{ ticketSolutionDetials.customerPhone }}</span>
+              </span>
+              <span class="field">
+                <span class="label">客户地址：</span>
+                <span class="value">{{ ticketSolutionDetials.customerAddress }}</span>
+              </span>
+            </span>
+            <span class="row_field">
+              <span class="field">
+                <span class="label">生产分厂：</span>
+                <span class="value">{{ ticketSolutionDetials.productionBranch }}</span>
+              </span>
+              <span class="field">
+                <span class="label">供应基地：</span>
+                <span class="value">{{ ticketSolutionDetials.supplyBase }}</span>
+              </span>
+              <span class="field">
+                <span class="label">冲款金额小计：</span>
+                <span class="value">{{ ticketSolutionDetials.subtotalOfChargebackAmount }}</span>
+              </span>
+            </span>
+            <span class="row_field">
+              <span class="field">
+                <span class="label">售后审核员：</span>
+                <span class="value">{{ ticketSolutionDetials.auditor }}</span>
+              </span>
+              <span class="field">
+                <span class="label">提报人：</span>
+                <span class="value">{{ ticketSolutionDetials.reporter }}</span>
+              </span>
+              <span class="field">
+                <span class="label">提报人电话：</span>
+                <span class="value">{{ ticketSolutionDetials.reporterPhone }}</span>
+              </span>
+            </span>
+            <span class="row_field">
+              <span class="field">
+                <span class="label">消费者需求描述：</span>
+                <span class="value">{{ ticketSolutionDetials.customerDemands }}</span>
+              </span>
+              <span class="field">
+                <span class="label">经销商需求描述：</span>
+                <span class="value">{{ ticketSolutionDetials.distributorDemands }}</span>
+              </span>
+              <span class="field">
+                <span class="label">原因调查情况：</span>
+                <span class="value">{{ ticketSolutionDetials.investigationOfCause }}</span>
+              </span>
+            </span>
+          </span>
+          <el-table
+            class="table_dialog3"
+            :data="ticketSolutionDetials['details']"
+            :stripe="false"
+          >
+            <el-table-column prop="ticketSolutionId" width="150px" label="售后处理记录编号" />
+            <el-table-column prop="solution" width="150px" label="处理方式" />
+            <el-table-column prop="plannedOrderId" width="150px" label="预订单" />
+            <el-table-column prop="supplementaryOrderId" width="150px" label="售后订单" />
+            <el-table-column prop="orderedDate" width="150px" label="下单时间" />
+            <el-table-column prop="dateOfApproval" width="150px" label="审核日期" />
+            <el-table-column prop="deliveryDate" width="150px" label="交货日期" />
+            <el-table-column prop="accountabilityUnit" width="150px" label="责任部门" />
+            <el-table-column prop="orderId" width="150px" label="订单编号" />
+            <el-table-column prop="" width="150px" label="订单明细" />
+            <el-table-column prop="sku" width="150px" label="详单编号" />
+            <el-table-column prop="barcode" width="150px" label="详单条码" />
+            <el-table-column prop="treeSpecies" width="150px" label="树种" />
+            <el-table-column prop="" label="尺寸" width="150px" />
+            <el-table-column prop="productClassificationSummary" width="150px" label="大类汇总" />
+            <el-table-column prop="model" label="产品型号" width="150px" />
+            <el-table-column prop="productCount" label="数量" width="150px" />
+            <el-table-column prop="suggestion" label="分析纠正及处理建议" width="150px" />
+        </el-table>
+        </span>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button class="cancel_btn"  @click="showMainDialog3 = false">返回</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -330,7 +450,7 @@
 import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
-import { getServiceticketById } from "../../api/common";
+import { getServiceticketById,getTicketSolutionById } from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -491,8 +611,9 @@ const handleWayList = ref<any>([{
   value: "1"
 }])
 
-
 const showMainDialog2 = ref(false)
+
+const showMainDialog3 = ref(false)
 
 const dialogType = ref(1)
 
@@ -551,32 +672,9 @@ const filterList5 = ref([{ label: "油漆颜色", value: "1" }])
 const filterList6 = ref([{ label: "尺寸", value: "1" }])
 
 
-const tableDataOrderDetials = ref([
-  // {
-  //   text1: "CS0011-06665-01",
-  //   text2: "XX",
-  //   text3: "示例字段...",
-  //   text4: "示例字段...",
-  //   text5: "2021-02-28 10:30:50",
-  //   text6: "",
-  // },
-  // {
-  //   text1: "CS0011-06665-01",
-  //   text2: "XX",
-  //   text3: "示例字段...",
-  //   text4: "示例字段...",
-  //   text5: "2021-02-28 10:30:50",
-  //   text6: "",
-  // },
-  // {
-  //   text1: "CS0011-06665-01",
-  //   text2: "XX",
-  //   text3: "示例字段...",
-  //   text4: "示例字段...",
-  //   text5: "2021-02-28 10:30:50",
-  //   text6: "",
-  // },
-])
+const ticketSolutionTable = ref<any>([]);
+const ticketSolutionDetials = ref<any>({});
+
 
 const changeStep = (step) => {
   currentStep.value = step
@@ -642,6 +740,34 @@ const getDetail = (isTure: boolean) => {
 			console.error('请求数据失败:', error);
 		});
 }
+
+const getTicketSolutionData = () =>{
+   getTicketSolutionById(route.query.id).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+				let tableData = data;
+        delete tableData["details"];
+        ticketSolutionTable.value = [tableData];
+        ticketSolutionDetials.value = data;
+			} else {
+			   console.log("获取数据失败!");
+			}
+
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
+}
+
+const viewDetails = (row) =>{
+  showMainDialog3.value = true
+}
+
+
 </script>
 
 <style lang="scss" scoped>

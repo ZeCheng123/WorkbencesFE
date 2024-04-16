@@ -121,3 +121,12 @@ export const getServiceticketById = (data)=>{
   })
 }
 
+// 查询售后记录处理详情
+export const getTicketSolutionById = (data)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/ticket-solution?id='+data
+  })
+}
+
+

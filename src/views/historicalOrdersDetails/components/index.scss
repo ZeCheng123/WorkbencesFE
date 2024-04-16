@@ -108,14 +108,6 @@
             letter-spacing: 0px;
             color: #1D2129;
         }
-        .but{
-            color: #165DFF;
-            font-size: 14px;
-            font-family: Alibaba PuHuiTi;
-            font-weight: normal;
-            margin-left: 25px;
-            cursor: pointer;
-        }
         .main_field{
             height: 108px;
             width: 100%;
@@ -541,11 +533,6 @@
     }
 }
 
-.relatedDocumentsDialog{
-    padding: 0px;
-    margin: 0px;
-}
-
 ////////////////////////////
 :deep(.problemReportingDialog .el-dialog){
     margin: 10px auto;
@@ -564,12 +551,6 @@
 :deep(.problemReportingDialog .el-input){
    width: 300px;
 }
-
-:deep(.problemReportingDialog .el-select__wrapper){
-    width: 300px;
-    background: #F2F3F5;
- }
-
 
 :deep(.problemReportingDialog .el-input__wrapper){
     background: #F2F3F5;
@@ -611,25 +592,13 @@
     top: 2px;
 }
 
-:deep(.problemReportingDialog .el-upload-list--picture-card){
-    flex-wrap: nowrap;
-}
 
-:deep(.problemReportingDialog .el-upload--picture-card){
-    width: 80px !important;
-    height: 80px !important;
-}
-
-:deep(.problemReportingDialog .el-upload-list__item){
-    width: 80px !important;
-    height: 80px !important;
-}
 ////////////////////////////////
 
 
 :deep(.relatedDocumentsDialog .el-dialog){
     margin: 10px auto;
-    height: calc(100% - 50px);
+    height: 650px;
 }
 
 
@@ -812,12 +781,4 @@
     background: #767676;
     border-radius: 3px;
     margin-right: 6px;
-}
-
-
-.avatar-uploader{
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
 }

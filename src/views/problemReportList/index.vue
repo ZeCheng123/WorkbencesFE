@@ -319,13 +319,13 @@ const problemReportingForm = ref({
 
 const problemReportingRule = ref({
   customerName: [
-    { required: true, message: "客户姓名不能为空！", trigger: "blur" },
+    { required: true, message: "Please input customer name", trigger: "blur" },
   ],
   customerPhone: [
-    { required: true, message: "客户电话不能为空！", trigger: "blur" },
+    { required: true, message: "Please input customer phone", trigger: "blur" },
   ],
   desc: [
-     { required: true, message: "问题描述不能为空！", trigger: "blur" },
+     { required: true, message: "Please input problem description", trigger: "blur" },
   ]
 })
 

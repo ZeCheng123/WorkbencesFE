@@ -42,9 +42,10 @@
               <label class="name">派工单</label>
               <span class="tips">1</span>
             </div>
-            <div class="menu" @click="clickMenu('service_workorder')">
-              <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
-              <label class="name">服务评价</label>
+            <div class="menu">
+              <!-- @click="clickMenu('service_workorder')" -->
+              <!-- <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
+              <label class="name">服务评价</label> -->
             </div>
             <div class="line"></div>
           </div>

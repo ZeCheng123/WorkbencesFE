@@ -104,9 +104,9 @@
       <span class="step">
         <span class="item">
           <span :class="currentStep2 == 1 ? 'num_selected' : 'num'">1</span>
-          <span :class="currentStep2 >= 1 ? 'name_selected' : 'name'">...</span>
+          <span :class="currentStep2 >= 1 ? 'name_selected' : 'name'">{{orderData.status__c}}</span>
         </span>
-        <span class="item">
+        <!-- <span class="item">
           <span :class="currentStep2 == 2 ? 'num_selected' : 'num'">2</span>
           <span :class="currentStep2 >= 2 ? 'name_selected' : 'name'"
             >已包装</span
@@ -139,7 +139,7 @@
         <span class="item">
           <span :class="currentStep2 == 7 ? 'num_selected' : 'num'">7</span>
           <span :class="currentStep >= 7 ? 'name_selected' : 'name'">...</span>
-        </span>
+        </span> -->
       </span>
     </span>
     <span class="related_item_order">
@@ -734,6 +734,7 @@ import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
 import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet} from "../../api/common";
+import { AnyARecord } from "dns";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -782,8 +783,8 @@ let deliveryOrderForm = reactive({
   fieldJobType__c:0,
   stage__c:0,
   name:taskDetails.value.accountName+"的配送派工单",
-  fileList: [],
-  filePath:[],
+  fileList: [] as any,
+  filePath:[] as any,
   followerId:null,
   address:""
 })
@@ -882,7 +883,7 @@ const tableDataOrder = ref([
   //   text6: "2024-03-15",
   //   text7: "2024-02-01 10:30:50"
   // },
-])
+] as any)
 
 const tableDataInvoice = ref([
   // {
@@ -893,9 +894,9 @@ const tableDataInvoice = ref([
   //   text5: "",
   //   text6: "2024-02-21 10:30:50",
   // },
-])
+] as any)
 
-const tableDataDispatch = ref([])
+const tableDataDispatch = ref([] as any)
 
 
 const headers = ref({
@@ -960,7 +961,7 @@ const finishInstallationOrder = async () => {
     type: "安装派工",
     fieldJobType__c:1,
     stage__c:0,
-    docPicture: installationOrderForm.filePath.join(";"),
+    docPicture: installationOrderForm.filePath,
     appointmentStartTime: installationOrderForm.appointmentStartTime,
     appointmentEndTime: installationOrderForm.appointmentEndTime,
     followerId:installationOrderForm.username,
@@ -1016,8 +1017,8 @@ const finishDeliveryOrder =  () => {
   params["fieldJobContactName"]=taskDetails.value.accountName==undefined?"":taskDetails.value.accountName.toString();
   params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
-  params["picture"] = params.filePath.join(",");
-  params["goodsPicture"] = params.filePath.join(",");
+  params["picture"] = params.filePath;
+  params["goodsPicture"] = params.filePath;
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
       tableDataDispatch.value.push(data);
@@ -1132,7 +1133,9 @@ const handleSuccessDelivery = (res) => {
   console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileId"]);
-    deliveryOrderForm["filePath"] = deliveryOrderForm["filePath"].concat(path)
+    if(path[0]){
+      deliveryOrderForm["filePath"].push(path[0])
+    }    
   }
 }
     
@@ -1257,7 +1260,10 @@ const handleSuccessInstall = (res) => {
   console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileId"]);
-    installationOrderForm["filePath"] = installationOrderForm["filePath"].concat(path)
+    if(path[0]){
+      installationOrderForm["filePath"].push(path[0])
+    }
+    // installationOrderForm["filePath"] = installationOrderForm["filePath"].concat(path)
   }
 }
     

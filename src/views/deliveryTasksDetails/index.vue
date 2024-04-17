@@ -407,7 +407,7 @@
                 :on-success="handleSuccessDelivery"
                 :on-remove="handleDeleteDelivery"
                 :auto-upload="true"
-                :data="uploadData"
+                :data="uploadDataDelivery"
                 :headers="headers"
                 :before-upload="beforeUploadDelivery"
                 v-model:file-list="deliveryOrderForm.fileList"
@@ -592,7 +592,7 @@
                 :on-success="handleSuccessInstall"
                 :on-remove="handleDeleteInstall"
                 :auto-upload="true"
-                :data="uploadData"
+                :data="uploadDataInstall"
                 :headers="headers"
                 :before-upload="beforeUploadInstall"
                 :file-list="installationOrderForm.fileList"
@@ -907,7 +907,12 @@ const headers = ref({
     "Trace-Id": "",
 })
 
-const uploadData = ref({
+const uploadDataDelivery = ref({
+    files: [],
+    name: "files"
+})
+
+const uploadDataInstall = ref({
     files: [],
     name: "files"
 })
@@ -1144,7 +1149,7 @@ const handleDeleteDelivery = (res) => {
 }
 
 const beforeUploadDelivery = (file) => {
-  uploadData.value["files"].push(file)
+  uploadDataDelivery.value["files"] = [file]
 }
 
 const getOrderByOne = (showMsg: boolean,orderId:any)=>{
@@ -1272,7 +1277,7 @@ const handleDeleteInstall = (res) => {
 }
 
 const beforeUploadInstall = (file) => {
-  uploadData.value["files"].push(file)
+  uploadDataInstall.value["files"] = [file];
 }
 
 const onCahngeUserSelectForInstallion = (event) => {

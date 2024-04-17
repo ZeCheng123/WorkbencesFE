@@ -1131,7 +1131,7 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
 const handleSuccessDelivery = (res) => {
   console.log(res);
   if(res.code == "success"){
-    let path = res.data.map(val => val["fileUrl"]);
+    let path = res.data.map(val => val["fileId"]);
     deliveryOrderForm["filePath"] = deliveryOrderForm["filePath"].concat(path)
   }
 }
@@ -1256,7 +1256,7 @@ const getExtralUserData = (showMsg: boolean)=>{
 const handleSuccessInstall = (res) => {
   console.log(res);
   if(res.code == "success"){
-    let path = res.data.map(val => val["fileUrl"]);
+    let path = res.data.map(val => val["fileId"]);
     installationOrderForm["filePath"] = installationOrderForm["filePath"].concat(path)
   }
 }

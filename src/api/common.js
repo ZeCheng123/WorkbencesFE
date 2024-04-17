@@ -153,6 +153,7 @@ export const getDispatchNoteByGet = (data)=>{
     url: '/md/api/service-ticket?'+data
   })
 }
+
 export const getticketsolution = (data)=>{
   return request({
     method: 'POST',
@@ -160,3 +161,20 @@ export const getticketsolution = (data)=>{
     url: '/md/api/ticket-solution'
   })
 }
+
+export const getExternalUserList = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/admin/external-user/list'
+  })
+}
+
+export const addExternalUser = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/admin/external-user'
+  })
+}
+

@@ -3,33 +3,33 @@
     <span class="header">
       <span class="title">派工单状态</span>
       <span class="step">
-        <span class="item" @click="changeStep(1)">
+        <!-- <span class="item" @click="changeStep(1)">
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
           <span :class="currentStep >= 1 ? 'name_selected' : 'name'"
             >已新建</span
           >
-        </span>
-        <span class="item" @click="changeStep(2)">
-          <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span :class="currentStep >= 2 ? 'name_selected' : 'name'"
+        </span> -->
+        <span class="item" @click="changeStep(0)">
+          <span :class="currentStep == 0 ? 'num_selected' : 'num'">1</span>
+          <span :class="currentStep >= 0 ? 'name_selected' : 'name'"
             >待开始</span
           >
         </span>
-        <span class="item" @click="changeStep(3)">
-          <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span :class="currentStep >= 3 ? 'name_selected' : 'name'"
+        <span class="item" @click="changeStep(1)">
+          <span :class="currentStep == 1 ? 'num_selected' : 'num'">2</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'"
             >进行中</span
           >
         </span>
-        <span class="item" @click="changeStep(4)">
-          <span :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>
-          <span :class="currentStep >= 4 ? 'name_selected' : 'name'"
+        <span class="item" @click="changeStep(2)">
+          <span :class="currentStep == 2 ? 'num_selected' : 'num'">3</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'"
             >已完成</span
           >
         </span>
-        <span class="item" @click="changeStep(5)">
-          <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
-          <span :class="currentStep >= 5 ? 'name_selected' : 'name'"
+        <span class="item" @click="changeStep(3)">
+          <span :class="currentStep == 3 ? 'num_selected' : 'num'">4</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'"
             >已评价</span
           >
         </span>
@@ -352,7 +352,7 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
 			let data = res.data.data
 			if (data!=undefined) {
         fieldJobData.value=data
-        changeStep(data["status"])
+        changeStep(data["stage__c"])
 				if(showMsg)
 				{
 					ElMessage({

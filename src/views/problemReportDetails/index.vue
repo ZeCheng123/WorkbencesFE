@@ -1,12 +1,8 @@
 <template>
   <div class="main">
     <span class="header">
-      <span class="title"
-        ><span>问题提报状态</span
-        ><el-button class="btn" @click="upgradeToHeadquarters"
-          >升级到总部 (售后)</el-button
-        ></span
-      >
+      <span class="title"><span>问题提报状态</span><el-button class="btn" @click="upgradeToHeadquarters">升级到总部
+          (售后)</el-button></span>
       <span class="step">
         <span class="item">
           <span :class="currentItem['clientCaseStatusC'] == 1 ? 'num_selected' : 'num'">1</span>
@@ -28,45 +24,37 @@
         <span class="row_field">
           <span class="field">
             <span class="label">问题编号：</span>
-            <span class="value">{{currentItem["caseNo"]}}</span>
+            <span class="value">{{ currentItem["caseNo"] }}</span>
             <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
             <span class="label">专卖店名称：</span>
-            <span class="value">{{currentItem["storeName"]}}</span>
+            <span class="value">{{ currentItem["storeName"] }}</span>
           </span>
           <span class="field">
             <span class="label">问题类别：</span>
-            <span class="value">{{currentItem["questionType"] == "1" ? "售后保修" : "投诉建议"}}</span>
+            <span class="value">{{ currentItem["questionType"] == "1" ? "售后保修" : "投诉建议" }}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">订单编号：</span>
-            <span class="value">{{currentItem["orderNeoId"]}}</span>
+            <span class="value">{{ currentItem["orderNeoId"] }}</span>
           </span>
           <span class="field">
             <span class="label">负责人：</span>
-            <span class="value">{{currentItem["responsibleSubject"]}}</span>
+            <span class="value">{{ currentItem["responsibleSubject"] }}</span>
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
-            <span class="value">{{currentItem["estimatedResolutionDate"]}}</span>
+            <span class="value">{{ currentItem["estimatedResolutionDate"] }}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">问题描述：</span>
-            <span class="value">{{currentItem["problemDescription"]}}</span>
+            <span class="value">{{ currentItem["problemDescription"] }}</span>
           </span>
-          <!-- <span class="field">
-            <span class="label"></span>
-            <span class="value"></span>
-          </span>
-          <span class="field">
-            <span class="label"></span>
-            <span class="value"></span>
-          </span> -->
         </span>
       </span>
       <span class="title">其他字段</span>
@@ -74,29 +62,30 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户姓名：</span>
-            <span class="value">{{currentItem["caseAccountId"]}}</span>
+            <span class="value">{{ currentItem["caseAccountId"] }}</span>
           </span>
           <span class="field">
             <span class="label">客户手机号：</span>
-            <span class="value">{{currentItem["phone"]}}</span>
+            <span class="value">{{ currentItem["phone"] }}</span>
           </span>
           <span class="field">
             <span class="label">来源：</span>
-            <span class="value">{{currentItem["complaintSourceC"] ? (complaintSource.find(val => val["code"] == currentItem["complaintSourceC"])?.name) : "" }}</span>
+            <span class="value">{{ currentItem["complaintSourceC"] ? (complaintSource.find(val => val["code"] ==
+              currentItem["complaintSourceC"])?.name) : "" }}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">省份：</span>
-            <span class="value">{{convertProvince(currentItem["province"])}}</span>
+            <span class="value">{{ convertProvince(currentItem["province"]) }}</span>
           </span>
           <span class="field">
             <span class="label">城市：</span>
-            <span class="value">{{convertCity(currentItem["city"])}}</span>
+            <span class="value">{{ convertCity(currentItem["city"]) }}</span>
           </span>
           <span class="field">
             <span class="label">区：</span>
-            <span class="value">{{convertDistrict(currentItem["district"])}}</span>
+            <span class="value">{{ convertDistrict(currentItem["district"]) }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -128,306 +117,332 @@
       </div>
       <div class="right">
         <el-button type="primary" @click="initiateComments" class="primary_btn">编辑</el-button>
-        <el-button type="primary" class="primary_btn">创建派工单</el-button>
+        <el-button type="primary" @click="createDeliveryOrder" class="primary_btn">创建派工单</el-button>
       </div>
     </span>
     <div class="comment" v-for="item in commentList" :key="item.date">
       <div class="userinfo">
         <img src="@/assets/images/userinfo.png" alt="" />
-        <span class="username">{{item["userName"]}}</span>
+        <span class="username">{{ item["userName"] }}</span>
       </div>
-      <div class="content">{{item["text"]}}</div>
-      <div class="date">{{item["date"]}}</div>
+      <div class="content">{{ item["text"] }}</div>
+      <div class="date">{{ item["date"] }}</div>
       <span class="reply">回复</span>
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
     <div class="showMainDialog">
+      <el-dialog v-model="showMainDialog" title="升级到总部 (售后)" width="80%" :show-close="false">
+        <div class="step">
+          <span class="item">
+            <span @click="changeDialogStep(1)" :class="currentDialogStep == 1 ? 'num_selected' : 'num'">1</span>
+            <span class="name">确认问题订单
+              <span class="remark">选择或确认问题订单</span>
+            </span>
+          </span>
+          <span class="item">
+            <span @click="changeDialogStep(2)" :class="currentDialogStep == 2 ? 'num_selected' : 'num'">2</span>
+            <span class="name">完善必填信息
+              <span class="remark">完善问题描述与处理方式</span>
+            </span>
+          </span>
+          <span class="item">
+            <span @click="changeDialogStep(3)" :class="currentDialogStep == 3 ? 'num_selected' : 'num'">3</span>
+            <span class="name">提交升级
+              <span class="remark">提交售后至总部</span>
+            </span>
+          </span>
+        </div>
+        <template v-if="currentDialogStep == 1">
+          <span class="form_row">
+            <span class="label required">订单编号</span>
+            <!-- <el-input v-model="formDialog.orderNo" placeholder="订单编号"></el-input> -->
+            <el-select style="width:368px ;" v-model="formDialog.orderNo" filterable @change="" placeholder="请选择订单编号">
+              <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.po" />
+            </el-select>
+          </span>
+          <span class="form_row">
+            <span class="label">升级备注</span>
+            <el-input v-model="formDialog.remark" placeholder="输入自定义备注"></el-input>
+          </span>
+        </template>
+        <template v-if="currentDialogStep == 2">
+          <div class="desc_action">
+            <span class="desc">搜索和选择/批量编辑问题产品</span>
+            <span class="action">
+              <el-button style="display:none;" class="btn" @click="openDialog2(1)">完善问题描述</el-button>
+              <el-button style="display:none;" class="btn" @click="openDialog2(2)">定义处理方式</el-button>
+            </span>
+          </div>
+          <div class="search">
+            <el-input v-model="formDialog.searchValue"  placeholder="搜索"></el-input>
+          </div>
+          <div class="filter_list">
+            <el-select v-model="formDialog.orderType">
+              <el-option v-for="item in filterList1" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.productType">
+              <el-option v-for="item in filterList2" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.productModel">
+              <el-option v-for="item in filterList3" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.treeSpecies">
+              <el-option v-for="item in filterList4" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.paintColor">
+              <el-option v-for="item in filterList5" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.size">
+              <el-option v-for="item in filterList6" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </div>
+          <div class="table">
+            <el-table  :data="tableData" :stripe="false" style="width: 100%;max-height: 300px;overflow: auto;">
+              <el-table-column prop="text1" label="全选" width="80px">
+                <template #default="scope">
+                  <el-checkbox v-model="scope.text1" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="orderId" label="订单编号" />
+              <el-table-column prop="orderNeoId" label="详单编号" />
+              <el-table-column prop="fscProductModel" label="详单条码" />
+              <el-table-column prop="category1" label="产品大类" />
+              <el-table-column prop="fscProductModel" label="产品型号" />
+              <el-table-column prop="treeSpecies__c" label="树种" />
+              <el-table-column prop="paintColor__c" label="油漆颜色 " />
+              <el-table-column prop="fscProductSpec" label="尺寸 " />
+              <el-table-column prop="treeSpecies__c" label="问题大类" />
+              <el-table-column prop="color__c" label="售后问题 " />
+              <el-table-column prop="text9" label="责任人 " />
+              <el-table-column prop="text9" label="问题描述 " />
+            </el-table>
+          </div>
+          <div class="responsibilityPerson">
+            <span class="label required">问题大类</span>
+            <el-select v-model="dialog2Form.problemType" placeholder="">
+              <el-option
+                v-for="item in problemTypeList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              />
+            </el-select>
+            <span class="label required">售后问题</span>
+            <el-select v-model="dialog2Form.afterSalesIssues" placeholder="">
+              <el-option
+                v-for="item in afterSalesIssuesList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              />
+            </el-select>
+            <span class="label required">责任人</span>
+            <el-input v-model="dialog2Form.responsiblePerson" style="width: 240px" placeholder="请输入责任人" />
+          </div>
+          <div class="responsibilityPerson">
+            <span class="label required">问题描述</span>
+            <el-input v-model="dialog2Form.problemDesc" style="width: 440px" :rows="2" type="textarea" placeholder="请输入问题描述" />
+          </div>
+          <div class="responsibilityPerson">
+            <span class="label">上传文件</span>
+          </div>
+          <div class="containerUpload">
+            <span class="item">
+              <el-upload class="upload" drag action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                multiple>
+                <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+                <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
+                <template #tip>
+                  <div class="el-upload__tip">
+                    jpg/png files with a size less than 500kb
+                  </div>
+                </template>
+              </el-upload>
+            </span>
+          </div>
+        </template>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button class="cancel_btn" @click="showMainDialog = false">取消</el-button>
+            <el-button v-if="currentDialogStep == 1" @click="currentDialogStepBut" type="primary" class="primary_btn"
+              style="margin-left：50px !important">下一步</el-button>
+            <el-button v-if="currentDialogStep == 2" @click="submitDialog" type="primary" class="primary_btn"
+              style="margin-left：50px !important">提交</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </div>
+    <div class="deliveryOrderDialog">
       <el-dialog
-        v-model="showMainDialog"
-        title="升级到总部 (售后)"
+        v-model="deliveryOrderDialog"
+        title="新建配送派工单"
         width="80%"
         :show-close="false"
       >
         <div class="step">
           <span class="item">
             <span
-              @click="changeDialogStep(1)"
-              :class="currentDialogStep == 1 ? 'num_selected' : 'num'"
+              @click="changeDeliveryOrderStep(1)"
+              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'"
               >1</span
             >
-            <span class="name"
-              >确认问题订单
-              <span class="remark">选择或确认问题订单</span>
+            <span
+              :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
+              >选择配送司机
+              <span class="remark">选择配送货品的司机</span>
             </span>
           </span>
           <span class="item">
             <span
-              @click="changeDialogStep(2)"
-              :class="currentDialogStep == 2 ? 'num_selected' : 'num'"
+              @click="changeDeliveryOrderStep(2)"
+              :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'"
               >2</span
             >
-            <span class="name"
-              >完善必填信息
-              <span class="remark">完善问题描述与处理方式</span>
+            <span
+              :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'"
+              >输入派工单注意事项
+              <span class="remark">如有,请填写关键备注</span>
             </span>
           </span>
           <span class="item">
             <span
-              @click="changeDialogStep(3)"
-              :class="currentDialogStep == 3 ? 'num_selected' : 'num'"
+              @click="changeDeliveryOrderStep(3)"
+              :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'"
               >3</span
             >
-            <span class="name"
-              >提交升级
-              <span class="remark">提交售后至总部</span>
+            <span
+              :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'"
+              >完成创建
+              <span class="remark">等待司机配送</span>
             </span>
           </span>
         </div>
-        <template v-if="currentDialogStep == 1">
-            <span class="form_row">
-              <span class="label required">订单编号</span>
-              <el-input v-model="formDialog.orderNo" placeholder="订单编号"></el-input>
-            </span>
-            <span class="form_row">
-              <span class="label">升级备注</span>
-              <el-input v-model="formDialog.remark" placeholder="输入自定义备注"></el-input>
-            </span>
-        </template>
-        <template v-if="currentDialogStep == 2">
-          <div class="desc_action">
-            <span class="desc">搜索和选择/批量编辑问题产品</span>
-            <span class="action">
-              <el-button class="btn" @click="openDialog2(1)"
-                >完善问题描述</el-button
+        <div class="content">
+          <el-form
+            v-if="currentDeliveryOrderStep == 1"
+            :model="deliveryOrderForm"
+            :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef"
+            label-width="90px"
+            label-position="left"
+          >
+          <el-form-item label="人员名称" prop="followerId">              
+              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+              <span class="custom_item"><img src="@/assets/images/add.png" alt="" /></span>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="contactTelephone">
+              <el-input
+                v-model="deliveryOrderForm.contactTelephone"
+                placeholder="查找或输入配送司机手机号码"
+              />
+            </el-form-item>
+            
+            <el-form-item label="预约开始" prop="appointmentStartTime">
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentStartTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+              />
+            </el-form-item>
+            <el-form-item label="预约结束" prop="appointmentEndTime">
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentEndTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+              />
+            </el-form-item>
+            <el-form-item label="是否具备安装条件" class="check_item">
+              <span>
+                <el-checkbox
+                  v-model="deliveryOrderForm.haveInstallConditions"
+                ></el-checkbox>
+              </span>
+            </el-form-item>
+          </el-form>
+          <el-form
+            v-if="currentDeliveryOrderStep == 2"
+            :model="deliveryOrderForm"
+            :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef"
+            label-width="90px"
+            label-position="left"
+          >
+            <el-form-item label="优先级" prop="priority">
+              <el-input
+                placeholder="1-最高 2-高 3-中 4-低"
+                v-model="deliveryOrderForm.priority"
+              />
+            </el-form-item>
+            <el-form-item label="派工类型" prop="type">
+              <el-input
+                disabled
+                placeholder="配送派工"
+                v-model="deliveryOrderForm.type"
+              />
+            </el-form-item>
+            <el-form-item label="派工单备注" class="customLayout">
+              <el-input
+                v-model="deliveryOrderForm.remark"
+                :rows="5"
+                type="textarea"
+                maxlength="500"
+                placeholder="请填写派工单备注"
+                show-word-limit
+              />
+            </el-form-item>
+            <el-form-item label="上传图片" class="custom_upload">
+              <el-upload
+                :on-success="handleSuccessDelivery"
+                :on-remove="handleDeleteDelivery"
+                :auto-upload="true"
+                :data="uploadData"
+                :headers="headers"
+                :before-upload="beforeUploadDelivery"
+                v-model:file-list="deliveryOrderForm.fileList"
+                class="avatar-uploader"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :show-file-list="true"
+                list-type="picture-card"
               >
-              <el-button class="btn" @click="openDialog2(2)"
-                >定义处理方式</el-button
-              >
-            </span>
-          </div>
-          <div class="search">
-            <el-input v-model="formDialog.searchValue" :prefix-icon="Search"  placeholder="搜索"></el-input>
-          </div>
-          <div class="filter_list">
-            <el-select v-model="formDialog.orderType">
-              <el-option
-                v-for="item in filterList1"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-select v-model="formDialog.productType">
-              <el-option
-                v-for="item in filterList2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-select v-model="formDialog.productModel">
-              <el-option
-                v-for="item in filterList3"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-select v-model="formDialog.treeSpecies">
-              <el-option
-                v-for="item in filterList4"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-select v-model="formDialog.paintColor">
-              <el-option
-                v-for="item in filterList5"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-select v-model="formDialog.size">
-              <el-option
-                v-for="item in filterList6"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
-          <div class="table">
-            <el-table :data="tableData" :stripe="false" style="width: 100%">
-              <el-table-column prop="text1" label="全选" width="80px">
-                <template #default="scope">
-                  <el-checkbox v-model="scope.text1" />
-                </template>
-              </el-table-column>
-              <el-table-column prop="text2" label="订单明细编号" />
-              <el-table-column prop="text3" label="产品大类" />
-              <el-table-column prop="text4" label="产品型号" />
-              <el-table-column prop="text5" label="树种" />
-              <el-table-column prop="text6" label="油漆颜色" />
-              <el-table-column prop="text7" label="尺寸" />
-              <el-table-column prop="text8" label="修改时间 " />
-            </el-table>
-          </div>
-        </template>
+                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              </el-upload>
+            </el-form-item>
+          </el-form>
+        </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="showMainDialog = false" >取消</el-button>
-            <el-button v-if="currentDialogStep==1" @click="currentDialogStep = 2"  type="primary" class="primary_btn"  style="margin-left：50px !important" >下一步</el-button>
-            <el-button v-if="currentDialogStep==2" @click="submitDialog"  type="primary" class="primary_btn"  style="margin-left：50px !important" >提交</el-button>
-          </div>
-        </template>
-      </el-dialog>
-    </div>
-    <div class="showMainDialog2">
-      <el-dialog v-model="showMainDialog2" width="25%" :show-close="false">
-        <span class="title">{{
-          dialogType == "1" ? "完善问题描述" : "定义处理方式"
-        }}</span>
-        <span class="content" v-if="dialogType == '1'">
-          <span class="item">
-            <span class="label">问题大类</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-          <span class="item">
-            <span class="label">售后问题</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-          <span class="item">
-            <span class="label">责任人</span>
-            <el-input></el-input>
-          </span>
-          <span class="item">
-            <span class="label">问题描述</span>
-            <el-input></el-input>
-          </span>
-          <span class="item">
-            <el-upload
-              class="upload"
-              drag
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-              multiple
-            >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
-              <template #tip>
-                <div class="el-upload__tip">
-                  jpg/png files with a size less than 500kb
-                </div>
-              </template>
-            </el-upload>
-          </span>
-        </span>
-        <span class="content" v-if="dialogType == '2'">
-          <span class="item">
-            <span class="label">产品分类</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-          <span class="item">
-            <span class="label">部件分类</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-          <span class="item">
-            <span class="label">不良分类</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-          <span class="item">
-            <span class="label">质量指标一</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-          <span class="item">
-            <span class="label">质量指标二</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-          <span class="item">
-            <span class="label">处理方式</span>
-            <el-select placeholder="">
-              <el-option
-                v-for="item in []"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </span>
-        </span>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="showMainDialog2 = false;showMainDialog = true"
+            <el-button class="cancel_btn" @click="deliveryOrderDialog = false"
               >取消</el-button
             >
             <el-button
-              @click="showMainDialog2 = false;showMainDialog = true"
+              v-if="currentDeliveryOrderStep == 1"
               type="primary"
               class="primary_btn"
-              style="margin-left：50px !important"
-              >确认</el-button
+              @click="deliveryOrderNextStep"
+              >下一步</el-button
+            >
+            <el-button
+              v-if="currentDeliveryOrderStep == 2"
+              type="primary"
+              class="primary_btn"
+              @click="finishDeliveryOrder"
+              >完成</el-button
             >
           </div>
         </template>
       </el-dialog>
     </div>
     <div class="relatedDocumentsDialog">
-      <el-dialog
-        v-model="showRelatedDocumentsDialog"
-        title="相关单据"
-        width="80%"
-        :show-close="false"
-      >
+      <el-dialog v-model="showRelatedDocumentsDialog" title="相关单据" width="80%" :show-close="false">
         <div class="content">
           <span class="tableItem">
             <span class="tableTitle"> 1. 售后工单 </span>
@@ -441,18 +456,15 @@
                     <el-button class="statusing" @click="console.log(scope)">进行中</el-button>
                   </template>
                 </el-table-column>
-                <el-table-column prop="text5" label="修改时间" />
-                <el-table-column prop="text6" label="操作" width="80px">
+                <el-table-column prop="updatedTime" label="修改时间" />
+                <el-table-column  label="操作" width="80px">
                   <template #default="scope">
-                    <div
-                      style="
+                    <div style="
                         display: flex;
                         align-items: center;
                         color: #165dff;
                         cursor: pointer;
-                      "
-                      @click="console.log(scope)"
-                    >
+                      " @click="handleView(scope.row)">
                       查看
                     </div>
                   </template>
@@ -475,15 +487,12 @@
                 <el-table-column prop="text5" label="修改时间" />
                 <el-table-column prop="text7" label="操作" width="80px">
                   <template #default="scope">
-                    <div
-                      style="
+                    <div style="
                         display: flex;
                         align-items: center;
                         color: #165dff;
                         cursor: pointer;
-                      "
-                      @click="console.log(scope)"
-                    >
+                      " @click="dispatch(scope.row)">
                       查看
                     </div>
                   </template>
@@ -494,12 +503,7 @@
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button
-              type="primary"
-              class="primary_btn"
-              @click="showRelatedDocumentsDialog = false"
-              >返回</el-button
-            >
+            <el-button type="primary" class="primary_btn" @click="showRelatedDocumentsDialog = false">返回</el-button>
           </div>
         </template>
       </el-dialog>
@@ -512,18 +516,22 @@
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
-import { getServiceCaseItem, getPickList } from '../../api/common.js'
+import { getServiceCaseItem, getPickList, getOrderList ,addFieldJob ,getticketsolution} from '../../api/common.js'
 
 const { proxy }: any = getCurrentInstance()
 
-const commentList = ref<any>([
-])
-
+const commentList = ref<any>([])
+const currentDeliveryOrderStep = ref(1)
 const route = useRoute()
 const id = ref(route.query.id)
 const neoid = ref(route.query.neoid)
-
+const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0)+1:1
 const showRelatedDocumentsDialog = ref(false)
+const deliveryOrderDialog = ref(false)
+const orderList = ref([]);
+const extralUserData=ref<any>([])
+const tableDataDispatch = ref([])
+
 
 const formDialog = ref<any>({
   orderNo: "",
@@ -538,6 +546,158 @@ const formDialog = ref<any>({
 })
 
 
+const dialog2Form = ref<any>({
+  serviceTicketId:0,
+  problemType: "",
+  afterSalesIssues: "",
+  responsiblePerson: "",
+  problemDesc: "",
+  fileList: [],
+  poductType: "",
+  componentType: "",
+  badType: "",
+  qualityIndicator1: "", 
+  qualityIndicator2: "", 
+  handleWay: ""
+})
+
+const problemTypeList = ref<any>([
+  {code:"1",name:"经销商问题"},
+  {code:"2",name:"公司问题"},
+  {code:"3",name:"物流问题"}
+])
+
+const afterSalesIssuesList = ref<any>([
+  {code:"1",name:"店面测量师漏单"},
+  {code:"2",name:"店面测量师量错"},
+  {code:"3",name:"店里设计师漏分解"},
+  {code:"4",name:"店里设计师分解错"},
+  {code:"5",name:"店里设计不合理"},
+  {code:"6",name:"店里下单员漏单"},
+  {code:"7",name:"店里下单员下错"},
+  {code:"8",name:"店里安装师问题"},
+  {code:"9",name:"消费者补单"},
+  {code:"10",name:"消费者使用不当"},
+  {code:"11",name:"产品丢失"}
+])
+
+const poductTypeList = ref<any>([
+  {code:"1",  name:"墙板"},
+  {code:"2",  name:"线条"},
+  {code:"3",  name:"五金"},
+  {code:"4",  name:"门套"},
+  {code:"5",  name:"门扇"},
+  {code:"6",  name:"柜体"},
+  {code:"7",  name:"柜门"},
+  {code:"8",  name:"玻璃"},
+  {code:"9",  name:"挂板"},
+  {code:"10",name:"罗马柱"},
+  {code:"11",name:"帽头"},
+  {code:"12",name:"装饰块"},
+  {code:"13",name:"雕花件"},
+  {code:"14",name:"色板"},
+  {code:"15",name:"整单"},
+  {code:"16",name:"入户门"}
+])
+
+const componentTypeList = ref<any>([
+  {code:"1",name:"边梃"},
+  {code:"2",name:"挂线条"},
+  {code:"3",name:"芯板"},
+  {code:"4",name:"金属条"},
+  {code:"5",name:"码头"},
+  {code:"6",name:"封边"},
+  {code:"7",name:"L边"},
+  {code:"8",name:"整体"},
+  {code:"9",name:"面板执手"},
+  {code:"10",name:"锁体"},
+  {code:"11",name:"铰链"},
+  {code:"12",name:"铰链底座"},
+  {code:"13",name:"灯带"},
+  {code:"14",name:"抽屉轨道"},
+  {code:"15",name:"三合一"},
+  {code:"16",name:"其他五金"},
+  {code:"17",name:"档条"},
+  {code:"18",name:"密封条"},
+  {code:"19",name:"套板"},
+  {code:"20",name:"门套"},
+  {code:"21",name:"玻璃"},
+  {code:"22",name:"门标"},
+  {code:"23",name:"门芯板"},
+  {code:"24",name:"配件"},
+  {code:"25",name:"五金配件"},
+  {code:"26",name:"8属边"},
+  {code:"27",name:"背板"},
+  {code:"28",name:"层板"},
+  {code:"29",name:"抽屉板"},
+  {code:"30",name:"底板"},
+  {code:"31",name:"顶板"},
+  {code:"32",name:"台面板"},
+  {code:"33",name:"立板"},
+  {code:"34",name:"侧板"},
+  {code:"35",name:"踢脚板"},
+  {code:"36",name:"五金件"},
+  {code:"37",name:"挂板"},
+  {code:"38",name:"罗马柱"},
+  {code:"39",name:"帽头"},
+  {code:"40",name:"装饰块"},
+  {code:"41",name:"雕花件"},
+  {code:"42",name:"色板"},
+  {code:"43",name:"整单"},
+  {code:"44",name:"修补漆"},
+  {code:"45",name:"入户门扇"}
+])
+
+const badTypeList = ref<any>([
+  {code:"1",name:"消费者"},
+  {code:"2",name:"经销商"},
+  {code:"3",name:"订单分解"},
+  {code:"4",name:"备料"},
+  {code:"5",name:"加工"},
+  {code:"6",name:"免漆加工"},
+  {code:"7",name:"油漆"},
+  {code:"8",name:"少货"},
+  {code:"9",name:"包装问题"},
+  {code:"10",name:"五金问题"},
+  {code:"11",name:"辅料问题"},
+  {code:"12",name:"仓库发货"},
+  {code:"13",name:"物流送达"},
+  {code:"14",name:"系统问题"},
+  {code:"15",name:"新品设计问题"},
+  {code:"16",name:"隔音等级"},
+  {code:"17",name:"受潮"},
+  {code:"18",name:"无法提供证明的少货"},
+  {code:"19",name:"交期延误"},
+  {code:"20",name:"霉变"},
+  {code:"21",name:"气味"},
+  {code:"22",name:"长虫"},
+  {code:"23",name:"过质保期"},
+  {code:"24",name:"变色"},
+  {code:"25",name:"入户门问题"}
+])
+
+const aftersalesHeaderDetails=ref<any>({})
+const qualityIndicator1List = ref<any>([
+  {code:"1",name:"订单分解错"},
+  {code:"2",name:"订单漏分解"},
+  {code:"3",name:"变形"}
+])
+
+const qualityIndicator2List = ref<any>([
+  {code:"1",name:"漏备注"},
+  {code:"2",name:"产品漏分解"},
+  {code:"3",name:"配件漏分解"},
+  {code:"4",name:"五金漏分解"},
+  {code:"5",name:"孔位漏分解"},
+
+])
+
+const handleWayList = ref<any>([{
+  label: "处理方式",
+  value: "1"
+}])
+
+
 const currentDialogStep = ref(1)
 
 const showMainDialog = ref(false)
@@ -545,6 +705,10 @@ const showMainDialog = ref(false)
 const showMainDialog2 = ref(false)
 
 const dialogType = ref(1)
+
+onMounted(() => {
+  getSearchOrderList();
+});
 
 const filterList = ref({
   value1: "1",
@@ -555,38 +719,106 @@ const filterList = ref({
   value6: "1"
 })
 
-const tableData = ref([
-  {
-    text1: "",
-    text2: "CS015-00023-0-1-1",
-    text3: "门套 (自动赋值)",
-    text4: "示例字段...",
-    text5: "示例字段...",
-    text6: "示例字段...",
-    text7: "示例字段...",
-    text8: "2021-02-28 10:30:50"
-  },
-  {
-    text1: "",
-    text2: "CS015-00023-0-1-1",
-    text3: "门套 (自动赋值)",
-    text4: "示例字段...",
-    text5: "示例字段...",
-    text6: "示例字段...",
-    text7: "示例字段...",
-    text8: "2021-02-28 10:30:50"
-  },
-  {
-    text1: "",
-    text2: "CS015-00023-0-1-1",
-    text3: "门套 (自动赋值)",
-    text4: "示例字段...",
-    text5: "示例字段...",
-    text6: "示例字段...",
-    text7: "示例字段...",
-    text8: "2021-02-28 10:30:50"
-  },
-])
+
+const deliveryOrderNextStep = () => {
+  currentDeliveryOrderStep.value = 2
+}
+
+const taskDetails=ref({
+  taskid:route.query.id,
+  serviceCaseNeoId:route.query.serviceCaseId,
+  orderId:route.query.orderId,
+  taskStatus:taskStatus,
+  accountName:route.query.accountName,
+  distributorName:route.query.distributorName,
+  followerName:route.query.followerName,
+  createdTime:route.query.createdTime,
+  createdBy:route.query.createdBy
+})
+
+let deliveryOrderForm = reactive({
+  fieldJobContactName: "",
+  contactTelephone: "",
+  priority: "",
+  type: "配送派工",
+  remark: "",
+  appointmentStartTime: "",
+  appointmentEndTime: "",
+  haveInstallConditions: false,
+  fieldJobOrderId:route.query.orderId,
+  fieldJobType__c:0,
+  stage__c:0,
+  name:taskDetails.value.accountName+"的配送派工单",
+  fileList: [],
+  filePath:[],
+  followerId:null
+})
+
+const deliveryOrderRule = reactive({
+  followerId: [
+    { required: true, message: "Please input username", trigger: "blur" },
+  ],
+  fieldJobContactName: [
+    { required: true, message: "Please input username", trigger: "blur" },
+  ],
+  contactTelephone: [{ required: true, message: "Please input phone", trigger: "blur" }],
+  priority: [
+    { required: true, message: "Please input priority", trigger: "blur" },
+  ],
+  appointmentStartTime: [
+    {
+      required: true,
+      message: "Please input appointment start time",
+      trigger: "blur",
+    },
+  ],
+  appointmentEndTime: [
+    {
+      required: true,
+      message: "Please input appointment end time",
+      trigger: "blur",
+    },
+  ],
+})
+
+const handleDeleteDelivery = (res) => {
+  var resopnse = res["response"];
+}
+
+const handleSuccessDelivery = (res) => {
+  console.log(res);
+  if(res.code == "success"){
+    let path = res.data.map(val => val["fileUrl"]);
+    deliveryOrderForm["filePath"] = deliveryOrderForm["filePath"].concat(path)
+  }
+}
+
+const uploadData = ref({
+    files: [],
+    name: "files"
+})
+
+const headers = ref({
+    Content: "application/json",
+    Authorization: ``, // Here you can add your token
+    isImage: "true",
+    needFileId: "true",
+    "Trace-Id": "",
+})
+
+const onCahngeUserSelectForDelivery = (event) => {
+  let item = extralUserData.value.find(val => val["id"] == event);
+  if(item){
+    deliveryOrderForm["fieldJobContactName"] = item["name"];
+    deliveryOrderForm["contactTelephone"] = item["phone"];    
+    //installationOrderForm.value["customerPhone"] = item["phone"];
+  }
+}
+
+const tableData = ref([])
+
+
+const selectedRows = ref([])
 
 const filterList1 = ref([{ label: "全部订单", value: "1" }])
 
@@ -599,6 +831,7 @@ const filterList4 = ref([{ label: "树种", value: "1" }])
 const filterList5 = ref([{ label: "油漆颜色", value: "1" }])
 
 const filterList6 = ref([{ label: "尺寸", value: "1" }])
+
 
 const tableDataOrderDetials = ref([
   {
@@ -648,7 +881,7 @@ const tableDataServiceEvaluation = ref([
 
 
 const relatedDocumentsProblemReportingList = ref([
-  
+
 ])
 
 const relatedDocumentsAftersalesWorkorderList = ref([
@@ -674,10 +907,10 @@ const relatedDocumentsDispatchList = ref([
 ])
 
 const complaintSource = ref([
-  {code: "1", name: "配送技工"},
-  {code: "2", name: "安装技工"},
-  {code: "3", name: "终端用户"},
-  {code: "4", name: "经销商"},
+  { code: "1", name: "配送技工" },
+  { code: "2", name: "安装技工" },
+  { code: "3", name: "终端用户" },
+  { code: "4", name: "经销商" },
 ])
 
 const currentItem = ref<any>({});
@@ -686,29 +919,55 @@ const provinceList = ref([]);
 const cityList = ref([]);
 const districtList = ref([]);
 
-onMounted(() =>{
+onMounted(() => {
   getDetailsData();
   getProvinceList();
   getCityList();
   getDistrictList();
 })
 
-const getDetailsData = () =>{
-  getServiceCaseItem({id: id.value, neoid: neoid.value==undefined?"":neoid.value }).then(res =>{
+const getDetailsData = () => {
+  getServiceCaseItem({ id: id.value, neoid: neoid.value == undefined ? "" : neoid.value }).then(res => {
     let rtData = res.data;
-    if(rtData.code == "success"){
+    if (rtData.code == "success") {
       currentItem.value = rtData.data;
       formDialog.value["orderNo"] = currentItem.value["orderNeoId"]
     }
-    else{
+    else {
       proxy.$message.error(rtData?.message);
     }
   })
 }
 
+const changeDeliveryOrderStep = (step) => {
+  currentDeliveryOrderStep.value = step
+}
+
+//获取订单列表
+const getSearchOrderList = () => {
+  let params = {
+    "deliveryDate": "",
+    "status__c": "",
+    "orderType__c": "",
+    "transactionDate": "",
+    "po": "",
+    "accountName": "",
+    "accountPhone": ""
+  }
+  getOrderList(params).then(res => {
+    let rtData = res.data;
+    if (rtData.code == "success") {
+      orderList.value = rtData.data;
+    }
+    else {
+      proxy.$message.error(rtData?.message);
+    }
+  })
+}
 
 const upgradeToHeadquarters = () => {
   showMainDialog.value = true
+
 }
 
 const changeDialogStep = (step) => {
@@ -721,13 +980,30 @@ const openDialog2 = (type) => {
   showMainDialog2.value = true
 }
 
-const submitDialog = () =>{
-  proxy.$message.success("提交成功!");
-  setTimeout(() => {
-    showMainDialog.value = false
-    proxy.$router.push("/aftersales_workorder_details")
-  }, 500);
+//升级售后的时候有没有选订单号
+const currentDialogStepBut =()=>{
+  if(!formDialog.value.orderNo){
+    proxy.$message.error("订单号不能为空!");
+  }else{
+    currentDialogStep.value = 2
+    loadingOrderList(formDialog.value.id)
+
+  }
 }
+
+const submitDialog = () => {
+  if(!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues || !dialog2Form.value.responsiblePerson || !dialog2Form.value.problemDesc){
+    proxy.$message.error("必填选项不能为空!");
+  }else{
+    proxy.$message.success("提交成功!");
+    setTimeout(() => {
+    showMainDialog.value = false
+    ticketSolution()
+    // proxy.$router.push("/aftersales_workorder_details")
+  }, 500);
+  }
+}
+
 
 const initiateComments = () => {
   ElMessageBox.prompt("请填写评论内容", "发起评论", {
@@ -743,63 +1019,158 @@ const initiateComments = () => {
         date: new Date().toLocaleString(),
       })
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
+//创建派工单
+const createDeliveryOrder = () => {
+  deliveryOrderDialog.value = true
+}
 
-const getProvinceList = () =>{
-  getPickList("province").then(res=>{
+const getProvinceList = () => {
+  getPickList("province").then(res => {
     let rtData = res.data;
-    if(rtData.code == "success"){
+    if (rtData.code == "success") {
       provinceList.value = rtData.data;
     }
   })
 }
 
-const getCityList = () =>{
-  getPickList("city").then(res=>{
+const getCityList = () => {
+  getPickList("city").then(res => {
     let rtData = res.data;
-    if(rtData.code == "success"){
+    if (rtData.code == "success") {
       cityList.value = rtData.data;
     }
   })
 }
 
-const getDistrictList = () =>{
-  getPickList("district").then(res=>{
+const getDistrictList = () => {
+  getPickList("district").then(res => {
     let rtData = res.data;
-    if(rtData.code == "success"){
+    if (rtData.code == "success") {
       districtList.value = rtData.data;
     }
   })
 }
 
-const convertProvince = (code) =>{
-  if(code){
-    return provinceList.value.find(val => val["optionCode"]== code)["optionLabel"];
+const beforeUploadDelivery = (file) => {
+  uploadData.value["files"].push(file)
+}
+
+//升级到总部售后点击下一步加载订单里面的items数据
+const loadingOrderList =(row)=>{
+  let params = {
+    po:""
   }
-  else
-  {
+  getOrderList(params).then((res:any) =>{
+    console.log(res)
+    if(res.data.code == "success"){
+      tableData.value = res.data.data
+    }else{
+      proxy.$message.error("数据异常!");
+    }
+  })
+}
+
+//ticket-solution更新\保存
+const ticketSolution =() =>{
+  let params = dialog2Form.value
+  getticketsolution(params).then((res:any)=>{
+    console.log(res)
+
+  })
+
+}
+
+const finishDeliveryOrder =  () => {
+  let params = deliveryOrderForm;
+  params["picture"] = params.filePath.join(",");
+  params["goodsPicture"] = params.filePath.join(",");
+  addFieldJob(params).then((res : any) => {
+			let data = res.data.data;
+      tableDataDispatch.value.push(data);
+			if (data!=undefined) {
+					ElMessage({
+						message: '新增派工单成功',
+						type: 'success'
+					})
+
+			} else {
+          ElMessage({
+            message: '新增派工单失败',
+            type: 'error'
+  				})
+				
+			}
+      Object.keys(deliveryOrderForm).forEach(key => {
+        if(!key.includes("type")&&!key.includes("haveInstallConditions")&&key!=="fieldJobOrderId"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
+        if(key==="haveInstallConditions") deliveryOrderForm[key] =false;
+        if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
+      });
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求新增派工单失败，请重试',
+				type: 'error'
+			});
+      Object.keys(deliveryOrderForm).forEach(key => {
+        if(key!=="type"&&key!=="haveInstallConditions"&&key!=="fieldJobOrderId"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
+        if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
+        if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
+      });
+			console.error('请求新增派工单失败:', error);
+		});
+  deliveryOrderDialog.value = false
+  currentDeliveryOrderStep.value = 1
+}
+
+const handleSelectionChange = (selection) =>{
+  selectedRows.value = selection;
+  console.log("selectedRows",selection)
+
+}
+
+
+//跳转售后工单详情
+const handleView = (row) =>{
+    proxy.$router.push({path:"/aftersales_workorder_details",query:{
+    id:1
+  }});
+
+}
+
+//跳转派工单详情
+const dispatch = (row) =>{
+  proxy.$router.push({path:"/dispatch_details", query:{
+    id:69
+  }});
+}
+
+
+const convertProvince = (code) => {
+  if (code) {
+    return provinceList.value.find(val => val["optionCode"] == code)["optionLabel"];
+  }
+  else {
     return "";
   }
 }
 
-const convertCity = (code) =>{
-  if(code){
-    return cityList.value.find(val => val["optionCode"]== code)["optionLabel"];
+const convertCity = (code) => {
+  if (code) {
+    return cityList.value.find(val => val["optionCode"] == code)["optionLabel"];
   }
-  else
-  {
+  else {
     return "";
   }
 }
 
-const convertDistrict = (code) =>{
-  if(code){
-    return districtList.value.find(val => val["optionCode"]== code)["optionLabel"];
+const convertDistrict = (code) => {
+  if (code) {
+    return districtList.value.find(val => val["optionCode"] == code)["optionLabel"];
   }
-  else
-  {
+  else {
     return "";
   }
 }

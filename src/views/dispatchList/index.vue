@@ -133,7 +133,7 @@
 import { ref, computed, getCurrentInstance, reactive,onMounted } from "vue"
 import { getFieldJobByPage } from "../../api/common";
 import { ElMessage } from "element-plus";
-import { Row } from "element-plus/es/components/table-v2/src/components";
+//import { Row } from "element-plus/es/components/table-v2/src/components";
 
 const { proxy }: any = getCurrentInstance()
 

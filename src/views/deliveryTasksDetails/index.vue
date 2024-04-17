@@ -90,7 +90,7 @@
           </span>
           <span class="field">
             <span class="label">客户地址：</span>
-            <span class="value"></span>
+            <span class="value">{{ orderData.customerAddress }}</span>
           </span>
           <span class="field">
             <span class="label"></span>
@@ -146,7 +146,7 @@
       <span class="table_title">相关项>订单</span>
       <span class="table_content">
         <el-table :data="tableDataOrder" :stripe="false" style="width: 100%">
-          <el-table-column prop="text1" label="操作" width="80px">
+          <el-table-column prop="id" label="操作" width="80px">
             <template #default="scope">
               <div
                 style="
@@ -161,12 +161,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="text2" label="订单编号" />
-          <el-table-column prop="text3" label="订单流程" />
-          <el-table-column prop="text4" label="交期天数" />
-          <el-table-column prop="text5" label="订货日期" />
-          <el-table-column prop="text6" label="计划交货日期" />
-          <el-table-column prop="text7" label="创建时间" />
+          <el-table-column prop="po" label="订单编号" />
+          <el-table-column prop="orderFlow" label="订单流程" />
+          <el-table-column prop="estimatedDeliveryDays" label="交期天数" />
+          <el-table-column prop="orderDate" label="订货日期" />
+          <el-table-column prop="planedDeliveryDate" label="计划交货日期" />
+          <el-table-column prop="createdTime" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -174,7 +174,7 @@
       <span class="table_title">相关项>发货单</span>
       <span class="table_content">
         <el-table :data="tableDataInvoice" :stripe="false" style="width: 100%">
-          <el-table-column prop="text1" label="操作" width="160px">
+          <el-table-column prop="id" label="操作" width="160px">
             <template #default="scope">
               <div
                 style="
@@ -185,15 +185,16 @@
                 "
                 @click="console.log(scope)"
               >
-                <span>查看</span>&nbsp;&nbsp;<span>批量提货</span>
+                <span>查看</span>
+                <!-- &nbsp;&nbsp;<span>批量提货</span> -->
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="text2" label="发货单编号" />
-          <el-table-column prop="text3" label="发货单状态" />
-          <el-table-column prop="text4" label="出库方式" />
-          <el-table-column prop="text5" label="供应基地" />
-          <el-table-column prop="text6" label="创建时间" />
+          <el-table-column prop="name" label="发货单编号" />
+          <el-table-column prop="status" label="发货单状态" />
+          <el-table-column prop="shipVia" label="出库方式" />
+          <el-table-column prop="shipCarrier" label="供应基地" />
+          <el-table-column prop="createdTime" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -242,13 +243,13 @@
           class="primary_btn"
           >创建配送派工单</el-button
         >
-        <el-button
+        <!-- <el-button
           v-if="currentStep == 4"
           type="primary"
           @click="currentStep = 5;currentStep2 = 5"
           class="primary_btn"
           >一键跳过配送</el-button
-        >
+        > -->
         <el-button
           v-if="currentStep == 5"
           type="primary"
@@ -732,7 +733,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById} from "../../api/common";
+import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet} from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -783,7 +784,8 @@ let deliveryOrderForm = reactive({
   name:taskDetails.value.accountName+"的配送派工单",
   fileList: [],
   filePath:[],
-  followerId:null
+  followerId:null,
+  address:""
 })
 
 const deliveryOrderRule = reactive({
@@ -871,26 +873,26 @@ const showProblemReportingDialog = ref(false)
 const orderData=ref<any>({})
 
 const tableDataOrder = ref([
-  {
-    text1: "",
-    text2: "GZ0111-03528-01",
-    text3: "渠道",
-    text4: "35",
-    text5: "2024-02-01",
-    text6: "2024-03-15",
-    text7: "2024-02-01 10:30:50"
-  },
+  // {
+  //   text1: "",
+  //   text2: "GZ0111-03528-01",
+  //   text3: "渠道",
+  //   text4: "35",
+  //   text5: "2024-02-01",
+  //   text6: "2024-03-15",
+  //   text7: "2024-02-01 10:30:50"
+  // },
 ])
 
 const tableDataInvoice = ref([
-  {
-    text1: "",
-    text2: "FH0111-03010-01",
-    text3: "待发货",
-    text4: "快递",
-    text5: "",
-    text6: "2024-02-21 10:30:50",
-  },
+  // {
+  //   text1: "",
+  //   text2: "FH0111-03010-01",
+  //   text3: "待发货",
+  //   text4: "快递",
+  //   text5: "",
+  //   text6: "2024-02-21 10:30:50",
+  // },
 ])
 
 const tableDataDispatch = ref([])
@@ -948,8 +950,8 @@ const extralUserData=ref<any>([])
 const finishInstallationOrder = async () => {
   console.log(installationOrderForm);
   let params = {
-    fieldJobContactName: installationOrderForm.fieldJobContactName,
-    contactTelephone: installationOrderForm.phone,
+    fieldJobContactName: taskDetails.value.accountName==undefined?"":taskDetails.value.accountName,
+    contactTelephone: orderData.value.contactTel==undefined?"":orderData.value.contactTel,
     priority: installationOrderForm.priority,
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
@@ -961,7 +963,8 @@ const finishInstallationOrder = async () => {
     docPicture: installationOrderForm.filePath.join(";"),
     appointmentStartTime: installationOrderForm.appointmentStartTime,
     appointmentEndTime: installationOrderForm.appointmentEndTime,
-    followerId:installationOrderForm.username
+    followerId:installationOrderForm.username,
+    address:orderData.value.customerAddress==undefined?"":orderData.value.customerAddress
   }
     addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
@@ -1010,6 +1013,9 @@ const viewDispatchDetails = (row:any) =>{
 
 const finishDeliveryOrder =  () => {
   let params = deliveryOrderForm;
+  params["fieldJobContactName"]=taskDetails.value.accountName==undefined?"":taskDetails.value.accountName.toString();
+  params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
+  params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
   params["picture"] = params.filePath.join(",");
   params["goodsPicture"] = params.filePath.join(",");
   addFieldJob(params).then((res : any) => {
@@ -1086,6 +1092,7 @@ onMounted(()=>{
   // getFieldJobByGet(true,fieldJobNeoId)
   getOrderByOne(false,orderId)
   getExtralUserData(false)
+  getFieldList(false,orderId)
 })
 
 const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
@@ -1143,6 +1150,63 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
 			let data = res.data.data
 			if (data!=undefined) {
         orderData.value = data
+        tableDataOrder.value.push(data)        
+				if(showMsg)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+        if(showMsg){
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+  				})
+        }
+				
+			}
+  })
+}
+
+const getFieldList = (showMsg: boolean,orderId:any)=>{
+  if(orderId==undefined){
+    return;
+  }
+  let params={"fieldJobOrderId":orderId}  
+  getFeildJobList(params).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+        tableDataDispatch.value=data
+				if(showMsg)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+        if(showMsg){
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+  				})
+        }
+				
+			}
+  })
+}
+
+const getDispatchNoteByOrderId = (showMsg: boolean,orderId:any)=>{
+  if(orderId==undefined){
+    return;
+  }
+  let params="fieldJobOrderId="+orderId
+  getDispatchNoteByGet(params).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+        tableDataInvoice.value=data
 				if(showMsg)
 				{
 					ElMessage({

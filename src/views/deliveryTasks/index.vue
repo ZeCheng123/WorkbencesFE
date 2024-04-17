@@ -23,7 +23,7 @@
 					</el-form-item> -->
 					<el-form-item label="创建时间">
 						<el-date-picker v-model="form.createDate" type="daterange" range-separator="~"
-							start-placeholder="开始时间" end-placeholder="结束时间" />
+							start-placeholder="开始时间" end-placeholder="结束时间" value-format="YYYY-MM-DD" />
 					</el-form-item>
 					<el-form-item label="订单状态">
 						<el-select v-model="form.orderStatus" placeholder="请选择订单状态">
@@ -100,8 +100,12 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<el-pagination class="table_pagination" :page-size="20" :pager-count="11" layout="total, prev, pager, next"
-				:total="1000" />
+			<el-pagination class="table_pagination" 
+			:page-size="pageConfig.pageSize"
+			:pager-count="5"
+			layout="total, prev, pager, next"
+			:total="pageConfig.total"
+			@current-change="handleCurrentChange" />
 		</span>
 	</div>
 </template>
@@ -109,10 +113,16 @@
 
 <script setup lang="ts">
 	import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue";
-	import { getLoginInfo } from '../../api/common.js'
+	import { getLoginInfo, getTaskByPage } from '../../api/common.js'
 	import { ElMessage } from "element-plus";
 
 	const { proxy } : any = getCurrentInstance()
+
+	const pageConfig = ref({
+		  pageIndex: 1,
+		  pageSize: 5,
+		  total: 0
+		});
 
 	const form = reactive({
 		orderNo: "",
@@ -150,7 +160,7 @@
 
 	const orderStatusPtions = ref([
 		{
-			code: "all",
+			code: "",
 			name: "全部",
 		},
 		{
@@ -198,12 +208,16 @@
 	}
 
 	const getList = (isTure: boolean) => {
-		const orderNo = form.orderNo;
-		const customerName = form.customerName
-		const customerPhone = form.customerPhone
-		
-		let param = { "status": "", "createdTime": "" }
-		getLoginInfo(param).then((res : any) => {
+		const orderNo = form.orderNo==undefined?"":form.orderNo;
+		const customerName = form.customerName==undefined?"":form.customerName;
+		const customerPhone = form.customerPhone==undefined?"":form.customerPhone;
+		const status = form.orderStatus==undefined?"":form.orderStatus;
+		let param = { "status": status, "createdTimeStart": form.createDate==undefined?"":form.createDate[0],
+		"createdTimeEnd":form.createDate==undefined?"":form.createDate[1],"pageSize":5,"pageNo":pageConfig.value.pageIndex,
+		"accountName":customerName,"accountPhone":customerPhone,"taskNumber":orderNo
+		}
+		console.log(param)
+		getTaskByPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {
 				tableData.value = data
@@ -215,11 +229,13 @@
 					})
 				}
 			} else {
-				ElMessage({
-					message: '获取数据失败',
-					type: 'error'
-				})
+				tableData.value =[];
 			}
+			pageConfig.value = {
+					pageIndex: res.data.current==undefined?1:parseInt(res.data.current),
+					pageSize: res.data.size,
+					total: res.data.total
+				} as any;
 
 		}).catch((error: any) => {
 			// 显示请求失败的提示框
@@ -231,6 +247,10 @@
 		});
 	}
 
+	const handleCurrentChange = (val: number) => {
+		pageConfig.value.pageIndex=val;
+		getList(true);
+	}
 
 	//重置按钮
 	const resetting = () => {

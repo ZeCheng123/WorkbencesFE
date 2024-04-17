@@ -11,6 +11,15 @@ export const getLoginInfo = (data) => {
     url: '/md/api/task/list'
   })
 }
+
+export const getTaskByPage= (data) => {
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/task/page'
+  })
+}
+
 export const getFieldJob = (data) => {
   return request({
     method: 'GET',
@@ -129,4 +138,18 @@ export const getTicketSolutionById = (data)=>{
   })
 }
 
+//获取根据参数派工单列表fieldJobType__c	string派工单类型,appointmentEndTime	string预约结束时间,status	string状态,fieldJobOrderId	integer($int64)订单销售易id
+export const getFeildJobList = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/field-job/list'
+  })
+}
 
+export const getDispatchNoteByGet = (data)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/service-ticket?'+data
+  })
+}

@@ -138,6 +138,15 @@ export const getTicketSolutionById = (data)=>{
   })
 }
 
+
+// 查询售后记录处理详情
+export const getTicketSolutionByneoID = (data)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/ticket-solution?neoid='+data
+  })
+}
+
 //获取根据参数派工单列表fieldJobType__c	string派工单类型,appointmentEndTime	string预约结束时间,status	string状态,fieldJobOrderId	integer($int64)订单销售易id
 export const getFeildJobList = (data)=>{
   return request({

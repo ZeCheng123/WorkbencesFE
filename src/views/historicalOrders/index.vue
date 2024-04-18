@@ -248,6 +248,7 @@ const resetting = () => {
   form.filterMethod = null
   form.createDate = []
   form.orderStatus = null
+  getList(false)
 }
 </script>
 

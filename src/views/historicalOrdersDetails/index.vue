@@ -47,7 +47,7 @@
           </span>
           <span class="field">
             <span class="label">渠道分类：</span>
-            <span class="value">渠道</span>
+            <span class="value">{{ tableData["orderFlow"] }}</span>
           </span>
           <span class="field">
             <span class="label">交期天数：</span>
@@ -61,11 +61,11 @@
           </span>
           <span class="field">
             <span class="label">专卖店编号：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{ tableData["storeNo"] }}</span>
           </span>
           <span class="field">
             <span class="label">计划出货日期：</span>
-            <span class="value">直发出库</span>
+            <span class="value"></span>
           </span>
         </span>
         <span class="row_field">
@@ -75,7 +75,7 @@
           </span>
           <span class="field">
             <span class="label">预订单编号：</span>
-            <span class="value">3CS0011-24012630295</span>
+            <span class="value"></span>
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
@@ -88,22 +88,22 @@
         <span class="row_field" style="justify-content: space-around;">
           <span class="field" style="width: 400px;">
             <span class="label">客户姓名：</span>
-            <span class="value">{{ tableData["account_name__c"] }}</span>
+            <span class="value">{{ tableData["accountName__C"] }}</span>
           </span>
           <span class="field" style="width: 400px;">
             <span class="label">客户电话：</span>
-            <span class="value">{{ tableData["contact_tel"] }}</span>
+            <span class="value">{{ tableData["contactTel"] }}</span>
           </span>
           <span class="field" style="width: 400px;">
             <span class="label">客户地址：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{ tableData["customerAddress"] }}</span>
           </span>
         </span>
         <span class="row_field" style="justify-content: space-around;">
           <span class="field" style="width: 400px;display: flex; align-items: center;">
             <span class="label">是否具备安装条件：</span>
             <span class="value" style="display:flex">
-              <el-checkbox disabled v-model="tableData['if_coninsall__c']"></el-checkbox>
+              <el-checkbox disabled v-model="tableData['ifConinsall__C']"></el-checkbox>
             </span>
           </span>
           <span class="field" style="width: 400px;">
@@ -164,20 +164,14 @@
       <span class="table_title">订单明细</span>
       <span class="table_content">
         <el-table :data="tableDataOrderDetailsList" :stripe="false" style="width: 100%">
-          <el-table-column prop="id" label="订单明细编号" />
-          <el-table-column prop="text2" label="组号" />
-          <el-table-column prop="text3" label="型号" />
-          <el-table-column prop="treeSpecies__c" label="树种">
-            <template #default="scope">
-              <div class="custom_cell">
-                {{ scope.row.text4 }}
-              </div>
-            </template>
-          </el-table-column>
+          <el-table-column prop="productionOrderNo__c" label="订单明细编号" />
+          <el-table-column prop="" label="组号" />
+          <el-table-column prop="fscProductModel" label="型号" />
+          <el-table-column prop="treeSpecies__c" label="树种"/>
           <el-table-column prop="quantity" label="数量" />
-          <el-table-column prop="text9" label="商品编码" />
-          <el-table-column prop="created_time" label="创建时间" />
-          <el-table-column prop="text7" label="操作" width="80px">
+          <el-table-column prop="productionOrderNo__c" label="商品编码" />
+          <el-table-column prop="createdTime" label="创建时间" />
+          <el-table-column label="操作" width="80px">
             <template #default="scope">
               <div style="
                   display: flex;
@@ -714,6 +708,7 @@ const submitProblemReporting = () => {
     caseAccountPhone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],
     picture: problemReportingForm.value["fileId"],
+    name:problemReportingForm.value["customerName"]+"订单",
     caseStatus: "1",
     questionType:"1"
   }

@@ -270,6 +270,9 @@
     height: 650px;
 }
 
+:deep(.problemReportingDialog .el-form-item__label){
+    width: 100px !important;
+}
 
 :deep(.problemReportingDialog .el-dialog__header){
     font-family: Alibaba PuHuiTi;

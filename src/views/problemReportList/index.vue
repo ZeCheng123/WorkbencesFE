@@ -52,7 +52,7 @@
       </span>
       <span class="right">
         <el-button type="primary" @click="getTableDataList" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
-        <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
+        <el-button type="primary" @click="resetting()" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
       </span>
     </span>
     <span class="table_header">
@@ -158,15 +158,15 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="客户姓名" prop="customerName">
+            <el-form-item label="提报人姓名" prop="customerName">
               <el-input
-                placeholder="请输入客户姓名"
+                placeholder="请输入提报人姓名"
                 v-model="problemReportingForm.customerName"
               />
             </el-form-item>
-            <el-form-item label="客户电话" prop="customerPhone">
+            <el-form-item label="提报人电话" prop="customerPhone">
               <el-input
-                placeholder="请输入客户电话"
+                placeholder="请输入提报人电话"
                 v-model="problemReportingForm.customerPhone"
               />
             </el-form-item>
@@ -252,6 +252,7 @@ const form = reactive({
   customerPhone: "",
   filterMethod: "",
   createDate: [],
+  tableData:[],
   orderStatus: "",
 })
 
@@ -357,6 +358,7 @@ const OpenProblemReportingDialog = () => {
 }
 
 const submitProblemReporting = () => {
+  console.log("problemReportingForm",problemReportingForm.value)
   for(let key in problemReportingForm.value){
     if(key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm.value[key] == ""){
       proxy.$message.error("必填字段不能为空!");
@@ -370,8 +372,9 @@ const submitProblemReporting = () => {
     // caseAccountId: problemReportingForm.value["customerName"],
     phone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],
-    picture: problemReportingForm.value["filePath"].join(";"),
-    caseStatus: "1"
+    picture: problemReportingForm.value["filePath"],
+    caseStatus: "1",
+    questionType:1
   }
   createServiceCase(params).then(res =>{
     let rtData = res.data;
@@ -397,8 +400,8 @@ const submitProblemReporting = () => {
 const getTableDataList = () =>{
   let params = {
     caseStatus: "",
-    caseNo: "",
-    name: ""
+    caseNo: form.problemNo,
+    name: form.customerName
   }
   getServiceCaseList(params).then(res =>{
     let rtData = res.data;
@@ -454,8 +457,10 @@ const onCahngeOrderNo = (event) => {
 const handleSuccess = (res) => {
   console.log(res);
   if(res.code == "success"){
-    let path = res.data.map(val => val["fileUrl"]);
+    let path = res.data.map(val => val["fileId"]); 
     problemReportingForm.value["filePath"] = problemReportingForm.value["filePath"].concat(path)
+
+    console.log(problemReportingForm.value["filePath"])
   }
 }
     
@@ -465,10 +470,19 @@ const handleDelete = (res) => {
 }
 
 const beforeUpload = (file) => {
-  uploadData.value["files"].push(file)
+  uploadData.value["files"] = [file]
 }
-
-
+//重置按钮
+const resetting = () => {
+  console.log("aaaa")
+  form.problemNo = null
+  form.customerName = null
+  form.customerPhone = null
+  form.filterMethod = null
+  form.createDate = []
+  form.orderStatus = null
+  getTableDataList()
+}
 
 </script>
 

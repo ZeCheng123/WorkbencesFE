@@ -109,10 +109,11 @@
       </el-table>
       <el-pagination
         class="table_pagination"
-        :page-size="100"
-        :pager-count="1"
+        :page-size="pageConfig.pageSize"
+        :pager-count="5"
         layout="total, prev, pager, next"
-        :total="100"
+        :total="pageConfig.total"
+        @current-change="handleCurrentChange"
       />
     </span>
   </div>
@@ -191,86 +192,92 @@ const seviceTicketStatusOptions = ref([
 ])
 
 
-
+const pageConfig = ref({
+		  pageIndex: 1,
+		  pageSize: 5,
+		  total: 0
+		});
 
 const tableData = ref([
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "售后重做",
-    text6: "2021-02-28 10:30",
-    text7: "已提报",
-    text8: "",
-  },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "售后重做",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已提报",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "售后重做",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已提报",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "售后重做",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已提报",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "售后重做",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已提报",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "售后重做",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已提报",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "售后重做",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已提报",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "售后重做",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已提报",
+  //   text8: "",
+  // },
 ])
 onMounted(() => {
 		getList(false);
 	});
 const getList = (isTure: boolean) => {
   console.log(form)
-		let param = {"customerName": form.customerName,  "customerPhone": form.customerPhone,  "status": form.orderStatus,  "createdTime": "",   "pageNo": 0,  "pageSize": 100}
+  const customerName = form.customerName==undefined?"":form.customerName;
+  const customerPhone = form.customerPhone==undefined?"":form.customerPhone;
+  let param = {"customerName": customerName,  "customerPhone": customerPhone,  "status": form.orderStatus,  "createdTime": "",  "pageSize":5,"pageNo":pageConfig.value.pageIndex}
 		getServiceticketPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {
@@ -284,8 +291,8 @@ const getList = (isTure: boolean) => {
 				}
 			} else {
 				ElMessage({
-					message: '获取数据失败',
-					type: 'error'
+					message: '暂无数据',
+					type: 'warning'
 				})
 			}
 
@@ -303,7 +310,10 @@ const viewDetails = (rowData) =>{
     id:rowData.id
   }});
 }
-
+const handleCurrentChange = (val: number) => {
+  pageConfig.value.pageIndex=val;
+  getList(true);
+}
 </script>
 
 <style lang="scss" scoped>

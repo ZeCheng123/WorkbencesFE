@@ -59,11 +59,11 @@
         <span class="row_field">
           <span class="field">
             <span class="label">服务技工：</span>
-            <span class="value">{{fieldJobData.fieldJobContactName}}</span>
+            <span class="value">{{fieldJobData.followerId?(extralUserData.find(val=>val["id"]==fieldJobData.followerId)?.name):""}}</span>
           </span>
           <span class="field">
             <span class="label">服务技工电话：</span>
-            <span class="value">{{fieldJobData.contactTelephone}}</span>
+            <span class="value">{{fieldJobData.followerId?(extralUserData.find(val=>val["id"]==fieldJobData.followerId)?.phone):""}}</span>
           </span>
           <span class="field">
             <span class="label">客户地址：</span>
@@ -73,11 +73,11 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户姓名：</span>
-            <span class="value"></span>
+            <span class="value">{{fieldJobData.fieldJobContactName}}</span>
           </span>
           <span class="field">
             <span class="label">客户电话：</span>
-            <span class="value"></span>
+            <span class="value">{{fieldJobData.contactTelephone}}</span>
           </span>
         </span>
       </span>
@@ -152,10 +152,20 @@
           :stripe="false"
           style="width: 100%"
         >
-          <el-table-column prop="text1" label="附件编号" />
-          <el-table-column prop="text2" label="状态" />
-          <el-table-column prop="text3" label="附件链接" />
-          <el-table-column prop="text4" label="操作" width="80px">
+          <el-table-column prop="picNo" label="附件编号" />
+          <el-table-column prop="type" label="类型" />
+          <el-table-column prop="text3" label="附件链接">
+            <template #default="{ row }">
+              <template v-for="(image, index) in row.goodsPicture" :key="index">
+                <el-image
+                style="margin-right: 5px;width: 50px;"
+                :src="image"
+                :preview-src-list="row.goodsPicture"></el-image>
+        </template>
+      </template>
+          </el-table-column>
+          
+          <!-- <el-table-column prop="text4" label="操作" width="80px">
             <template #default="scope">
               <div
                 style="
@@ -169,7 +179,7 @@
                 查看
               </div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </span>
     </span>
@@ -204,7 +214,7 @@
 import { ref, computed, getCurrentInstance, reactive,onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
-import { getFieldJob } from "../../api/common";
+import { getExternalUser, getFieldJob } from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -216,7 +226,7 @@ const route = useRoute()
 
 let fieldJobData=ref<any>({})
 
-
+const extralUserData=ref<any>([])
 
 const priorityOption = ref([
     {
@@ -314,14 +324,14 @@ const tableDataServiceEvaluation = ref([
 ])
 
 const tableDataDispatchAttachment = ref([
-  {
-    text1: "SU2024030101",
-    text2: "已上传",
-    text3: "image.com...",
-    text4: "李工",
-    text5: "",
-  },
-])
+  // {
+  //   text1: "SU2024030101",
+  //   text2: "已上传",
+  //   text3: "image.com...",
+  //   text4: "李工",
+  //   text5: "",
+  // },
+] as any)
 
 const changeStep = (step) => {
   currentStep.value = step
@@ -345,6 +355,7 @@ const initiateComments = () => {
 }
 onMounted(()=>{
   getFieldJobByGet(true,route.query.id)
+  getExtralUserData(false)
 })
 
 const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
@@ -353,7 +364,50 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
 			if (data!=undefined) {
         fieldJobData.value=data
         changeStep(data["stage__c"])
-				if(showMsg)
+        var baseUrl="https://sh.mengtian.com.cn:9595/md/api/common/file/direct-download?fileId=";
+        if(data["goodsPicture"]!=undefined && data["goodsPicture"].length>0){
+          var goodsPicture=[] as any;
+          data["goodsPicture"].forEach(item => {
+            goodsPicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["goodsPicture"].join(","),type:'货物图片',goodsPicture:goodsPicture})
+        }
+        if(data["docPicture"]!=undefined && data["docPicture"].length>0){
+          var docPicture=[] as any;
+          data["docPicture"].forEach(item => {
+            docPicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["docPicture"].join(","),type:'安装图片',goodsPicture:docPicture})
+        }
+        if(data["checkInPicture"]!=undefined && data["checkInPicture"].length>0){
+          var checkInPicture=[] as any;
+          data["checkInPicture"].forEach(item => {
+            checkInPicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["checkInPicture"].join(","),type:'打卡签到',goodsPicture:checkInPicture})
+        }
+        if(data["scenePicture"]!=undefined && data["scenePicture"].length>0){
+          var scenePicture=[] as any;
+          data["scenePicture"].forEach(item => {
+            scenePicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["scenePicture"].join(","),type:'现场墙面保护',goodsPicture:scenePicture})
+        }
+        if(data["afterInstallPicture"]!=undefined && data["afterInstallPicture"].length>0){
+          var afterInstallPicture=[] as any;
+          data["afterInstallPicture"].forEach(item => {
+            afterInstallPicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["afterInstallPicture"].join(","),type:'安装后图片',goodsPicture:afterInstallPicture})
+        }
+        if(data["completePicture"]!=undefined && data["completePicture"].length>0){
+          var completePicture=[] as any;
+          data["completePicture"].forEach(item => {
+            completePicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["completePicture"].join(","),type:'完工证明',goodsPicture:completePicture})
+        }
+        if(showMsg)
 				{
 					ElMessage({
 						message: '查询成功',
@@ -378,6 +432,32 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
 			});
 			console.error('请求数据失败:', error);
 		});
+}
+
+const getExtralUserData = (showMsg: boolean)=>{
+
+let params={"userType": 1,"name": "","phone": ""};
+getExternalUser(params).then((res : any) => {
+    let data = res.data.data
+    if (data!=undefined&&data.length>0) {
+      extralUserData.value = data
+      if(showMsg)
+      {
+        ElMessage({
+          message: '查询成功',
+          type: 'success'
+        })
+      }
+    } else {
+      if(showMsg){
+        ElMessage({
+          message: '获取数据失败',
+          type: 'error'
+        })
+      }
+      
+    }
+})
 }
 </script>
 

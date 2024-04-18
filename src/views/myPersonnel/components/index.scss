@@ -195,3 +195,114 @@
 }
 
 
+
+
+:deep(.showDialog .el-dialog){
+    margin: 10px auto;
+    height: 650px;
+}
+
+:deep(.showDialog .el-dialog__header){
+    font-family: Alibaba PuHuiTi;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    color: #1D2129;
+}
+
+:deep(.showDialog .el-input){
+   width: 300px;
+}
+
+:deep(.showDialog .el-input__wrapper){
+    background: #F2F3F5;
+}
+
+:deep(.showDialog .el-form){
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+:deep(.showDialog .customLayout){
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+:deep(.showDialog .el-textarea){
+    width: 390px;
+}
+
+:deep(.showDialog .el-textarea__inner){
+    background: #F2F3F5;
+}
+
+:deep(.showDialog  .el-dialog__footer){
+    text-align: center !important;
+    width: 100%;
+    bottom: 20px;
+}
+
+:deep(.showDialog .el-checkbox__inner){
+    width: 18px;
+    height: 18px;
+}
+
+:deep(.showDialog .el-checkbox__input.is-checked .el-checkbox__inner){
+    background-color: #165DFF;
+}
+
+:deep(.showDialog .el-checkbox__inner::after){
+    width: 6px;
+    top: 2px;
+    border-width: 2px;
+}
+
+.el-dialog__footer{
+    text-align: center;
+}
+
+.primary_btn{
+    background: #165DFF;
+    width: 148px;
+}
+
+.cancel_btn{
+    width: 148px;
+    background: #F0F0F0;
+    font-family: Alibaba PuHuiTi;
+    letter-spacing: 0px;
+    color: #4E5969;
+}
+
+
+.custom-row{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px 0px;
+}
+
+:deep(.custom-row .el-form-item){
+    margin-bottom: 0px !important;
+}
+
+:deep(.custom-row .el-input__wrapper, .el-select__wrapper){
+    height: 32px;
+    line-height: 32px;
+    background: #F7F8FA;
+}
+
+:deep(.custom-row .el-select__wrapper){
+    height: 32px;
+    line-height: 32px;
+    background: #F7F8FA;
+}
+
+:deep(.custom-row .el-input){
+    width: 256px;
+}
+
+:deep(.custom-row .el-select){
+    width: 256px;
+}

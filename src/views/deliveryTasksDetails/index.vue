@@ -69,7 +69,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户名称：</span>
-            <span class="value">{{taskDetails.accountName}}</span>
+            <span class="value">{{orderData.accountName__C}}</span>
             <!-- <span v-if="taskType === 'ServiceCase'" class="value">服务工单</span>
             <span v-else-if="taskType === 'DispatchNote'" class="value">发货单</span>
             <span v-else class="value">派工单</span> -->
@@ -86,7 +86,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户电话：</span>
-            <span class="value">{{ orderData.contactTel }}</span>
+            <span class="value">{{ orderData.customerPhone }}</span>
           </span>
           <span class="field">
             <span class="label">客户地址：</span>
@@ -155,7 +155,7 @@
                   color: #165dff;
                   cursor: pointer;
                 "
-                @click="console.log(scope)"
+                @click="viewOrderDetails(scope.row)"
               >
                 查看
               </div>
@@ -173,7 +173,7 @@
     <span class="related_item_invoice">
       <span class="table_title">相关项>发货单</span>
       <span class="table_content">
-        <el-table :data="tableDataInvoice" :stripe="false" style="width: 100%">
+        <el-table :data="tableDataInvoice" :stripe="false" style="width: 100%" height="100">
           <el-table-column prop="id" label="操作" width="160px">
             <template #default="scope">
               <div
@@ -217,7 +217,7 @@
           </el-table-column>
           <el-table-column prop="appointmentStartTime" label="计划开始时间" />
           <el-table-column prop="appointmentEndTime" label="计划结束时间" />
-          <el-table-column prop="createTime" label="创建时间" />
+          <el-table-column prop="createdTime" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -380,10 +380,18 @@
             label-position="left"
           >
             <el-form-item label="优先级" prop="priority">
-              <el-input
+              <!-- <el-input
                 placeholder="1-最高 2-高 3-中 4-低"
                 v-model="deliveryOrderForm.priority"
-              />
+              /> -->
+              <el-select v-model="deliveryOrderForm.priority" placeholder="请选择优先级">
+                <el-option
+                  v-for="item in priorityOption"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="派工类型" prop="type">
               <el-input
@@ -572,10 +580,14 @@
             label-position="left"
           >
             <el-form-item label="优先级" prop="priority">
-              <el-input
-                v-model="installationOrderForm.priority"
-                placeholder="1-最高 2-高 3-中 4-低"
-              />
+              <el-select v-model="installationOrderForm.priority" placeholder="请选择优先级">
+                <el-option
+                  v-for="item in priorityOption"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="派工单备注" class="customLayout">
               <el-input
@@ -770,6 +782,25 @@ const currentInstallationOrderStep = ref(1)
 const currentProblemReportingStep = ref(1)
 const deliveryOrderFormRef = ref<FormInstance>();
 
+const priorityOption = ref([
+    {
+			code: "1",
+			name: "最高级",
+		},
+		{
+			code: "2",
+			name: "高",
+		},
+		{
+			code: "3",
+			name: "中",
+		},
+		{
+			code: "4",
+			name: "低",
+		},
+])
+
 let deliveryOrderForm = reactive({
   fieldJobContactName: "",
   contactTelephone: "",
@@ -844,7 +875,7 @@ const installationOrderRule = reactive({
     { required: true, message: "Please input appointment end time", trigger: "blur" },
   ]
 })
-
+const orderData=ref<any>({})
 const problemReportingForm = reactive({
   orderNo: "",
   customerName: "",
@@ -870,8 +901,6 @@ const deliveryOrderDialog = ref(false)
 const installationOrderDialog = ref(false)
 
 const showProblemReportingDialog = ref(false)
-
-const orderData=ref<any>({})
 
 const tableDataOrder = ref([
   // {
@@ -1017,6 +1046,16 @@ const viewDispatchDetails = (row:any) =>{
 		});
 }
 
+const viewOrderDetails = (row:any) =>{
+  proxy.$router.push({
+    path: "/historical_orders_details", query: {
+      id: row.id,
+      po: row.po,
+      status_c:row.status_c
+    },
+  });
+}
+
 const finishDeliveryOrder =  () => {
   let params = deliveryOrderForm;
   params["fieldJobContactName"]=taskDetails.value.accountName==undefined?"":taskDetails.value.accountName.toString();
@@ -1061,7 +1100,7 @@ const finishDeliveryOrder =  () => {
   deliveryOrderDialog.value = false
   // proxy.$message.success("派工单创建完成!")
   currentDeliveryOrderStep.value = 1
-  currentStep.value = 5
+  // currentStep.value = 5
 }
 
 const OpenProblemReportingDialog = () => {
@@ -1158,6 +1197,7 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
 			let data = res.data.data
 			if (data!=undefined) {
         orderData.value = data
+        problemReportingForm.orderNo=orderData.value.po
         tableDataOrder.value.push(data)        
 				if(showMsg)
 				{

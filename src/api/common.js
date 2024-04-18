@@ -84,6 +84,18 @@ export const getOrderList = (data) => {
   })
 }
 
+//获取订单分页列表
+export const getOrderListByPage = (data) => {
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/order/page',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
 export const getFieldJobByPage = (data) => {
   return request({
     method: 'POST',

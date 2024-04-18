@@ -87,8 +87,8 @@
         <el-table-column prop="appointmentEndTime" label="计划结束时间" />
         <el-table-column prop="follower__c" label="技工名称" />
         <el-table-column prop="fieldJobType__c" label="派工种类" >
-        <template #default="scope">
-				  		<div style="display:flex;align-items:center;">
+          <template #default="scope">
+            <div style="display:flex;align-items:center;">
 						{{scope.row.fieldJobType__c?(technicianTypeOption.find(val=>val["code"]==scope.row.fieldJobType__c)?.name):"配送派工单"}}
 						</div>
 					</template>

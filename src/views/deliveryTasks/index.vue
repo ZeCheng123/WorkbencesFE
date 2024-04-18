@@ -102,7 +102,7 @@
 			</el-table>
 			<el-pagination class="table_pagination" 
 			:page-size="pageConfig.pageSize"
-			:pager-count="5"
+			:pager-count="15"
 			layout="total, prev, pager, next"
 			:total="pageConfig.total"
 			@current-change="handleCurrentChange" />
@@ -120,7 +120,7 @@
 
 	const pageConfig = ref({
 		  pageIndex: 1,
-		  pageSize: 5,
+		  pageSize: 15,
 		  total: 0
 		});
 

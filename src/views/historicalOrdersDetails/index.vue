@@ -47,11 +47,11 @@
           </span>
           <span class="field">
             <span class="label">渠道分类：</span>
-            <span class="value">{{ tableData["orderFlow"] }}</span>
+            <span class="value">{{tableData["orderFlow"]}}</span>
           </span>
           <span class="field">
             <span class="label">交期天数：</span>
-            <span class="value">XXX</span>
+            <span class="value">{{tableData["estimatedDeliveryDays"]}}</span>
           </span>
         </span>
         <span class="row_field">
@@ -61,17 +61,17 @@
           </span>
           <span class="field">
             <span class="label">专卖店编号：</span>
-            <span class="value">{{ tableData["storeNo"] }}</span>
+            <span class="value">{{tableData["storeNo"]}}</span>
           </span>
           <span class="field">
             <span class="label">计划出货日期：</span>
-            <span class="value"></span>
+            <span class="value">{{tableData["planedDeliveryDate"]}}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">供应基地：</span>
-            <span class="value">{{ tableData["supply_base__c"] }}</span>
+            <span class="value">{{ tableData["supplyBase__c"] }}</span>
           </span>
           <span class="field">
             <span class="label">预订单编号：</span>
@@ -79,7 +79,7 @@
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
-            <span class="value">{{ tableData["created_time"] }}</span>
+            <span class="value">{{ tableData["createdTime"] }}</span>
           </span>
         </span>
       </span>
@@ -92,7 +92,7 @@
           </span>
           <span class="field" style="width: 400px;">
             <span class="label">客户电话：</span>
-            <span class="value">{{ tableData["contactTel"] }}</span>
+            <span class="value">{{ tableData["customerPhone"] }}</span>
           </span>
           <span class="field" style="width: 400px;">
             <span class="label">客户地址：</span>
@@ -125,7 +125,7 @@
     <span class="related_task">
       <span class="table_title">相关任务</span>
       <span class="table_content">
-        <el-table :data="tableDataRelatedTask" :stripe="false" style="width: 100%">
+        <el-table :data="tableDataRelatedTask" :stripe="false" style="width: 100%" max-height="100">
           <el-table-column prop="id" label="任务编号" />
           <el-table-column prop="taskType" label="类别" />
           <el-table-column prop="followerName" label="经销商负责人" />
@@ -155,23 +155,29 @@
     </span>
     <span class="related_documents">
       <span class="title">相关单据</span>
-      <el-button class="btn">2个问题提报</el-button>
+      <el-button class="btn">{{relatedDocumentsProblemReportingList.length}}个问题提报</el-button>
       <el-button class="btn">1个售后工单</el-button>
-      <el-button class="btn">1个派工单</el-button>
+      <el-button class="btn">{{relatedDocumentsDispatchList.length }}个派工单</el-button>
       <span class="view" @click="showRelatedDocumentsDialog = true">点击查看</span>
     </span>
     <span class="order_details_list">
       <span class="table_title">订单明细</span>
       <span class="table_content">
         <el-table :data="tableDataOrderDetailsList" :stripe="false" style="width: 100%">
-          <el-table-column prop="productionOrderNo__c" label="订单明细编号" />
-          <el-table-column prop="" label="组号" />
+          <el-table-column prop="id" label="订单明细编号" />
+          <el-table-column prop="text2" label="组号" />
           <el-table-column prop="fscProductModel" label="型号" />
-          <el-table-column prop="treeSpecies__c" label="树种"/>
+          <el-table-column prop="treeSpecies__c" label="树种">
+            <!-- <template #default="scope">
+              <div class="custom_cell">
+                {{ scope.row.text4 }}
+              </div>
+            </template> -->
+          </el-table-column>
           <el-table-column prop="quantity" label="数量" />
-          <el-table-column prop="productionOrderNo__c" label="商品编码" />
+          <el-table-column prop="text9" label="商品编码" />
           <el-table-column prop="createdTime" label="创建时间" />
-          <el-table-column label="操作" width="80px">
+          <el-table-column prop="text7" label="操作" width="80px">
             <template #default="scope">
               <div style="
                   display: flex;
@@ -324,12 +330,24 @@
             <span class="tableTitle"> 3. 派工单 </span>
             <span class="tableContent">
               <el-table :data="relatedDocumentsDispatchList" :stripe="false" style="width: 100%">
-                <el-table-column prop="text1" label="派工单编号" />
-                <el-table-column prop="text2" label="类别" />
-                <el-table-column prop="text3" label="负责人" />
-                <el-table-column prop="text4" label="状态" />
-                <el-table-column prop="text5" label="修改时间" />
-                <el-table-column prop="text7" label="操作" width="80px">
+                <el-table-column prop="caseNo" label="派工单编号" />
+                <el-table-column prop="fieldJobType__c" label="类别">
+                  <template #default="scope">
+                    <div style="display:flex;align-items:center;">
+                      {{scope.row.fieldJobType__c?(technicianTypeOption.find(val=>val["code"]==scope.row.fieldJobType__c)?.name):"配送派工单"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="followerName" label="负责人" />
+                <el-table-column prop="stage__c" label="状态">
+                  <template #default="scope">
+                    <div style="display:flex;align-items:center;">
+                      {{scope.row.stage__c?(dispatchWorkerStatusOption.find(val=>val["code"]==scope.row.stage__c)?.name):"待开始"}}                    
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="updatedTime" label="修改时间" />
+                <el-table-column prop="id" label="操作" width="80px">
                   <template #default="scope">
                     <div style="
                         display: flex;
@@ -441,7 +459,43 @@ const orderList = ref([]);
 const commentList = ref<any>([
 ])
 
+const technicianTypeOption = ref([
+    {
+			code: "all",
+			name: "全部",
+		},
+		{
+			code: "0",
+			name: "配送派工单",
+		},
+		{
+			code: "1",
+			name: "安装派工单",
+		},
+		{
+			code: "2",
+			name: "维修派工单",
+		},
+])
 
+const dispatchWorkerStatusOption = ref([
+    {
+			code: "all",
+			name: "全部",
+		},
+		{
+			code: "0",
+			name: "待开始",
+		},
+		{
+			code: "1",
+			name: "进行中",
+		},
+		{
+			code: "2",
+			name: "已完成",
+		},
+])
 
 const otherField = ref<any>({
   haveInstallationConditions: false,
@@ -515,15 +569,15 @@ const relatedDocumentsAftersalesWorkorderList = ref([
 ])
 
 const relatedDocumentsDispatchList = ref([
-  {
-    text1: "XXX",
-    text2: "交付任务",
-    text3: "XXX",
-    text4: "进行中",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  }
-])
+  // {
+  //   text1: "XXX",
+  //   text2: "交付任务",
+  //   text3: "XXX",
+  //   text4: "进行中",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // }
+] as any)
 
 
 onMounted(() => {
@@ -531,8 +585,9 @@ onMounted(() => {
     getList();
     postRelateList();
     postServiceCaseList();
-    getSearchOrderList();
-  }, 500);
+    //getSearchOrderList();
+    postfieldjobeList();
+  }, 1000);
 })
 
 
@@ -542,6 +597,8 @@ const getList = () => {
     let dataList = res.data
     if (dataList.code == "success") {
       tableData.value = dataList.data
+      otherField.value.scheduleDeliveryTime=tableData["estimatedDeliveryDate"]
+      otherField.value.scheduleInstallationTime=tableData["estimatedInstallDate"]
       tableDataOrderDetailsList.value = dataList.data.items
     } else {
       console.log("失败")
@@ -638,21 +695,15 @@ const postfieldjobeList = () => {
       if (dataList.data && typeof dataList.data === 'object') {
         let dataArray = [{
           id: dataList.data.id,
-          questionType: dataList.data.questionType,
-          problemDescription: dataList.data.problemDescription,
-          name: dataList.data.name,
+          stage__c: dataList.data.stage__c,
+          fieldJobType__c: dataList.data.fieldJobType__c,
+          updatedTime: dataList.data.updatedTime,
           entityType: dataList.data.entityType,
-          caseNo: dataList.data.caseNo,
-          province: dataList.data.province,
-          city: dataList.data.city,
-          district: dataList.data.district,
-          caseStatus: dataList.data.caseStatus,
-          picture: dataList.data.picture,
-          video: dataList.data.video,
-          lockStatus: dataList.data.lockStatus
+          followerName: dataList.data.followerName,
+          caseNo:dataList.data.caseNo
         }]
         // 赋值给 relatedDocumentsProblemReportingList
-        relatedDocumentsProblemReportingList.value = dataArray
+        relatedDocumentsDispatchList.value = dataArray
         console.log("dataArray", dataArray)
       }
 

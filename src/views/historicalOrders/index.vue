@@ -11,7 +11,7 @@
             <el-input placeholder="输入客户姓名" v-model="form.customerName" />
           </el-form-item>
           <el-form-item label="客户电话">
-            <el-input placeholder="请输入客户电话" v-model="form.customerName" />
+            <el-input placeholder="请输入客户电话" v-model="form.customerPhone" />
           </el-form-item>
         </el-form>
         <el-form :model="form" :rules="rule" label-width="80px" label-position="left">
@@ -61,16 +61,16 @@
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
         <el-table-column prop="po" label="订单编号" />
         <el-table-column prop="storeName__c" label="专卖店名称" />
-        <el-table-column prop="distributorId__c" label="专卖店编号" />
-        <el-table-column prop="account_name__c" label="客户名称" />
+        <el-table-column prop="storeNo" label="专卖店编号" />
+        <el-table-column prop="accountName__C" label="客户名称" />
         <el-table-column prop="productionOrderNo__c" label="生产单号" />
-        <el-table-column prop="created_time" label="创建时间" />
-				<el-table-column prop="status" label="状态" >
-					<template #default="scope">
+        <el-table-column prop="createdTime" label="创建时间" />
+				<el-table-column prop="status__c" label="状态" >
+					<!-- <template #default="scope">
 				  		<div style="display:flex;align-items:center;">
 						{{scope.row.status_c?(orderStatusPtions.find(val=>val["code"]==scope.row.status_c)?.name):"待开始"}}
 						</div>
-					</template>
+					</template> -->
 				</el-table-column>
       <el-table-column prop="text8" label="操作" width="80px">
         <template #default="scope">
@@ -85,15 +85,19 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="table_pagination" :page-size="20" :pager-count="11" layout="total, prev, pager, next"
-      :total="1000" />
+    <el-pagination class="table_pagination" 
+			:page-size="pageConfig.pageSize"
+			:pager-count="15"
+			layout="total, prev, pager, next"
+			:total="pageConfig.total"
+			@current-change="handleCurrentChange" />
   </span>
 </div></template>
 
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
-import { getOrderList } from '../../api/common.js'
+import { getOrderList,getOrderListByPage } from '../../api/common.js'
 import { ElMessage } from "element-plus";
 
 const { proxy }: any = getCurrentInstance()
@@ -107,6 +111,12 @@ const form = reactive({
   orderStatus: "",
 })
 
+const pageConfig = ref({
+		  pageIndex: 1,
+		  pageSize: 15,
+		  total: 0
+		});
+
 const filterMethodPtions = ref([
   {
     value: "all",
@@ -116,7 +126,7 @@ const filterMethodPtions = ref([
 
 const orderStatusPtions = ref([
   {
-    code: "all",
+    code: "",
     name: "全部",
   },
   {
@@ -199,9 +209,22 @@ const getList = (isTure: boolean) => {
   const orderNo = form.orderNo;
   const customerName = form.customerName
   const customerPhone = form.customerPhone
-
-  let param = { "po": orderNo, "account_name__c": customerName }
-  getOrderList(param).then((res: any) => {
+  const customerStatus= form.orderStatus
+  // let param = { "po": orderNo, "account_name__c": customerName }
+  let param = { "pageNo": pageConfig.value.pageIndex, "pageSize": pageConfig.value.pageSize }
+  if(orderNo!=""){
+    param["po"]=orderNo
+  }
+  if(customerName!=""){
+    param["accountName"]=customerName
+  }
+  if(customerPhone!=""){
+    param["accountPhone"]=customerPhone
+  }
+  if(customerStatus!=""){
+    param["status__c"]=customerStatus
+  }
+  getOrderListByPage(param).then((res: any) => {
     let data = res.data.data
     if (data.length > 0) {
       tableData.value = data
@@ -212,12 +235,17 @@ const getList = (isTure: boolean) => {
         })
       }
     } else {
+      tableData.value = []
       ElMessage({
-        message: '获取数据失败',
+        message: '暂无数据',
         type: 'error'
       })
     }
-
+    pageConfig.value = {
+					pageIndex: res.data.current==undefined?1:parseInt(res.data.current),
+					pageSize: res.data.size,
+					total: res.data.total
+				} as any;
   }).catch((error: any) => {
     // 显示请求失败的提示框
     ElMessage({
@@ -240,14 +268,19 @@ const viewDetails = (row: any) => {
   });
 }
 
+const handleCurrentChange = (val: number) => {
+		pageConfig.value.pageIndex=val;
+		getList(false);
+	}
+
 //重置按钮
 const resetting = () => {
-  form.orderNo = null
-  form.customerName = null
-  form.customerPhone = null
-  form.filterMethod = null
+  form.orderNo = ""
+  form.customerName = ""
+  form.customerPhone = ""
+  form.filterMethod = ""
   form.createDate = []
-  form.orderStatus = null
+  form.orderStatus = ""
   getList(false)
 }
 </script>

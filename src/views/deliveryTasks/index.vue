@@ -213,7 +213,7 @@
 		const customerPhone = form.customerPhone==undefined?"":form.customerPhone;
 		const status = form.orderStatus==undefined?"":form.orderStatus;
 		let param = { "status": status, "createdTimeStart": form.createDate==undefined?"":form.createDate[0],
-		"createdTimeEnd":form.createDate==undefined?"":form.createDate[1],"pageSize":5,"pageNo":pageConfig.value.pageIndex,
+		"createdTimeEnd":form.createDate==undefined?"":form.createDate[1],"pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex,
 		"accountName":customerName,"accountPhone":customerPhone,"taskNumber":orderNo
 		}
 		console.log(param)

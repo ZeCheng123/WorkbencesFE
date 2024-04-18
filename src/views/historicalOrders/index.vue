@@ -3,7 +3,7 @@
     <span class="header"> 订单中心 </span>
     <span class="search">
       <span class="left">
-        <el-form :model="form" :rules="rule" label-width="80px" label-position="left">
+        <el-form :model="form"  label-width="80px" label-position="left">
           <el-form-item label="订单编号">
             <el-input placeholder="请输入任务编号" v-model="form.orderNo" />
           </el-form-item>
@@ -14,7 +14,7 @@
             <el-input placeholder="请输入客户电话" v-model="form.customerPhone" />
           </el-form-item>
         </el-form>
-        <el-form :model="form" :rules="rule" label-width="80px" label-position="left">
+        <el-form :model="form"  label-width="80px" label-position="left">
           <el-form-item label="创建时间">
             <el-date-picker v-model="form.createDate" type="daterange" range-separator="~" start-placeholder="开始时间"
               end-placeholder="结束时间" />
@@ -263,7 +263,7 @@ const viewDetails = (row: any) => {
     path: "/historical_orders_details", query: {
       id: row.id,
       po: row.po,
-      status_c:row.status_c
+      status__c:row.status__c
     },
   });
 }

@@ -215,6 +215,13 @@
                <span>{{scope.row["stage__c"] == "0" ? "待开始" : scope.row["stage__c"] == "1" ? "进行中" : "已完成"}}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="fieldJobType__c" label="派工种类" >
+          <template #default="scope">
+            <div style="display:flex;align-items:center;">
+						{{scope.row.fieldJobType__c?(technicianTypeOption.find(val=>val["code"]==scope.row.fieldJobType__c)?.name):"配送派工单"}}
+						</div>
+					</template>
+        </el-table-column>
           <el-table-column prop="appointmentStartTime" label="计划开始时间" />
           <el-table-column prop="appointmentEndTime" label="计划结束时间" />
           <el-table-column prop="createdTime" label="创建时间" />
@@ -686,10 +693,14 @@
               />
             </el-form-item>
             <el-form-item label="客户姓名" prop="customerName">
-              <el-input
-                placeholder="请输入客户姓名"
-                v-model="problemReportingForm.customerName"
-              />
+              <el-select v-model="problemReportingForm.customerName" @change="onCahngeUserSelectForProblemReport" placeholder="查找或选择服务人员姓名">
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="客户电话" prop="customerPhone">
               <el-input
@@ -708,11 +719,18 @@
               />
             </el-form-item>
              <el-form-item label="上传图片" class="custom_upload">
-              <el-upload
+                <el-upload
+                :on-success="handleSuccessProblemReport"
+                :on-remove="handleDeleteProblemReport"
+                :auto-upload="true"
+                :data="uploadDataProblemReport"
+                :headers="headers"
+                :before-upload="beforeUploadProblemReport"
+                :file-list="problemReportingForm.fileList"
+                list-type="picture-card"
                 class="avatar-uploader"
                 action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
-                :show-file-list="false"
-                v-model:file-list="problemReportingForm.fileList"
+                :show-file-list="true"
               >
                 <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
               </el-upload>
@@ -745,7 +763,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet} from "../../api/common";
+import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase} from "../../api/common";
 import { AnyARecord } from "dns";
 
 const { proxy }: any = getCurrentInstance()
@@ -775,7 +793,20 @@ const taskDetails=ref({
   createdTime:route.query.createdTime,
   createdBy:route.query.createdBy
 })
-
+const technicianTypeOption = ref([
+		{
+			code: "0",
+			name: "配送派工单",
+		},
+		{
+			code: "1",
+			name: "安装派工单",
+		},
+		{
+			code: "2",
+			name: "维修派工单",
+		},
+])
 const currentStep = ref(taskStatus)
 const currentDeliveryOrderStep = ref(1)
 const currentInstallationOrderStep = ref(1)
@@ -881,7 +912,8 @@ const problemReportingForm = reactive({
   customerName: "",
   customerPhone: "",
   desc: "",
-  fileList: []
+  fileList: [] as any,
+  filePath:[] as any
 })
 
 const problemReportingRule = reactive({
@@ -937,16 +969,19 @@ const headers = ref({
 })
 
 const uploadDataDelivery = ref({
-    files: [],
+    files: [] as any,
     name: "files"
 })
 
 const uploadDataInstall = ref({
-    files: [],
+    files: [] as any,
     name: "files"
 })
 
-
+const uploadDataProblemReport = ref({
+    files: [] as any,
+    name: "files"
+})
 
 const changeStep = (step) => {
   currentStep.value = step
@@ -1108,8 +1143,40 @@ const OpenProblemReportingDialog = () => {
 }
 
 const submitProblemReporting = () => {
-  showProblemReportingDialog.value = false
-  proxy.$message.success("提交成功!")
+  console.log("problemReportingForm",problemReportingForm)
+  for(let key in problemReportingForm){
+    if(key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm[key] == ""){
+      proxy.$message.error("必填字段不能为空!");
+      return;
+    }
+  }
+  let params = {
+    caseNo: problemReportingForm["orderNo"],
+    // orderNeoId: problemReportingForm.value["orderNo"],
+    name: problemReportingForm["customerName"],
+    // caseAccountId: problemReportingForm.value["customerName"],
+    phone: problemReportingForm["customerPhone"],
+    problemDescription: problemReportingForm["desc"],
+    picture: problemReportingForm["filePath"],
+    caseStatus: "1",
+    questionType:1
+  }
+  createServiceCase(params).then(res =>{
+    let rtData = res.data;
+    if(rtData.code == "success"){
+      problemReportingForm["orderNo"] ="";
+      problemReportingForm["customerName"] ="";
+      problemReportingForm["customerPhone"] ="";
+      problemReportingForm["desc"] ="";
+      problemReportingForm["fileList"] =[];
+      problemReportingForm["filePath"] =[];
+      showProblemReportingDialog.value = false
+      proxy.$message.success("提交成功!");;
+    }
+    else{
+      proxy.$message.error(rtData?.message)
+    }
+  })
 }
 
 const takeGoods = () => {
@@ -1312,12 +1379,31 @@ const handleSuccessInstall = (res) => {
   }
 }
     
+const handleDeleteProblemReport = (res) => {
+  var resopnse = res["response"];
+}
+
+const beforeUploadProblemReport = (file) => {
+  uploadDataProblemReport.value["files"] = [file];
+}
+
+const handleSuccessProblemReport = (res) => {
+  console.log(res);
+  if(res.code == "success"){
+    let path = res.data.map(val => val["fileId"]);
+    if(path[0]){
+      problemReportingForm["filePath"].push(path[0])
+    }
+    // installationOrderForm["filePath"] = installationOrderForm["filePath"].concat(path)
+  }
+}
+    
 const handleDeleteInstall = (res) => {
   var resopnse = res["response"];
 }
 
 const beforeUploadInstall = (file) => {
-  uploadDataInstall.value["files"] = [file];
+  uploadDataProblemReport.value["files"] = [file];
 }
 
 const onCahngeUserSelectForInstallion = (event) => {
@@ -1334,6 +1420,15 @@ const onCahngeUserSelectForDelivery = (event) => {
   if(item){
     deliveryOrderForm["fieldJobContactName"] = item["name"];
     deliveryOrderForm["contactTelephone"] = item["phone"];    
+    //installationOrderForm.value["customerPhone"] = item["phone"];
+  }
+}
+
+const onCahngeUserSelectForProblemReport = (event) => {
+  let item = extralUserData.value.find(val => val["id"] == event);
+  if(item){
+    problemReportingForm["customerName"] = item["name"];
+    problemReportingForm["customerPhone"] = item["phone"];    
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
 }

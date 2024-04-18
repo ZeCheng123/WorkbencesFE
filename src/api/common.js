@@ -142,6 +142,14 @@ export const getServiceticketById = (data)=>{
   })
 }
 
+export const getServiceticketList = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/service-ticket/list'
+  })
+}
+
 // 查询售后记录处理详情
 export const getTicketSolutionById = (data)=>{
   return request({

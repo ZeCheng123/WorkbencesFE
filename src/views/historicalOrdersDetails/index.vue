@@ -5,9 +5,9 @@
       <span class="step">
         <span class="item" @click="changeStep(1)">
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">...</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">{{tableData["status__c"]}}</span>
         </span>
-        <span class="item" @click="changeStep(2)">
+        <!-- <span class="item" @click="changeStep(2)">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
           <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已包装</span>
         </span>
@@ -30,8 +30,8 @@
         <span class="item" @click="changeStep(7)">
           <span :class="currentStep == 7 ? 'num_selected' : 'num'">7</span>
           <span :class="currentStep >= 7 ? 'name_selected' : 'name'">...</span>
-        </span>
-      </span>
+        </span>-->
+      </span> 
     </span>
     <span class="order_info">
       <span class="title">
@@ -57,7 +57,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">经销商编号：</span>
-            <span class="value">{{ tableData["distributorId__c"] }}</span>
+            <span class="value">{{ tableData["distributorNo"] }}</span>
           </span>
           <span class="field">
             <span class="label">专卖店编号：</span>
@@ -75,7 +75,7 @@
           </span>
           <span class="field">
             <span class="label">预订单编号：</span>
-            <span class="value"></span>
+            <span class="value">{{ tableData["resnOrderNo"] }}</span>
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
@@ -92,7 +92,7 @@
           </span>
           <span class="field" style="width: 400px;">
             <span class="label">客户电话：</span>
-            <span class="value">{{ tableData["customerPhone"] }}</span>
+            <span class="value">{{ tableData["contactTel"] }}</span>
           </span>
           <span class="field" style="width: 400px;">
             <span class="label">客户地址：</span>
@@ -130,13 +130,21 @@
           <el-table-column prop="taskType" label="类别" />
           <el-table-column prop="followerName" label="经销商负责人" />
           <!-- <el-table-column prop="status" label="状态" /> -->
-          <el-table-column prop="status" label="状态">
+          <!-- <el-table-column prop="status" label="状态">
             <template #default="scope">
               <div style="display:flex;align-items:center;">
                 {{ scope.row.status ? (RelatedTaskOptions.find(val => val["code"] == scope.row.status)?.name) : "待开始" }}
               </div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
+          <el-table-column prop="status" label="状态" >
+					<template #default="scope">
+				  		<div style="display:flex;align-items:center;">
+						{{scope.row.status?(orderStatusPtions.find(val=>val["code"]==scope.row.status)?.name):"待开始"}}
+						</div>
+					</template>
+				</el-table-column>
+
           <el-table-column prop="createdTime" label="创建时间" />
           <el-table-column label="操作" width="80px">
             <template #default="scope">
@@ -145,7 +153,7 @@
                   align-items: center;
                   color: #165dff;
                   cursor: pointer;
-                " @click="console.log(scope)">
+                " @click="viewTaskDetails(scope.row)">
                 查看
               </div>
             </template>
@@ -156,16 +164,16 @@
     <span class="related_documents">
       <span class="title">相关单据</span>
       <el-button class="btn">{{relatedDocumentsProblemReportingList.length}}个问题提报</el-button>
-      <el-button class="btn">1个售后工单</el-button>
+      <el-button class="btn">{{relatedDocumentsAftersalesWorkorderList.length}}个售后工单</el-button>
       <el-button class="btn">{{relatedDocumentsDispatchList.length }}个派工单</el-button>
       <span class="view" @click="showRelatedDocumentsDialog = true">点击查看</span>
     </span>
     <span class="order_details_list">
       <span class="table_title">订单明细</span>
       <span class="table_content">
-        <el-table :data="tableDataOrderDetailsList" :stripe="false" style="width: 100%">
+        <el-table :data="tableDataOrderDetailsList" :stripe="false" style="width: 100%" max-height="200">
           <el-table-column prop="id" label="订单明细编号" />
-          <el-table-column prop="text2" label="组号" />
+          <!-- <el-table-column prop="text2" label="组号" /> -->
           <el-table-column prop="fscProductModel" label="型号" />
           <el-table-column prop="treeSpecies__c" label="树种">
             <!-- <template #default="scope">
@@ -175,7 +183,7 @@
             </template> -->
           </el-table-column>
           <el-table-column prop="quantity" label="数量" />
-          <el-table-column prop="text9" label="商品编码" />
+          <!-- <el-table-column prop="text9" label="商品编码" /> -->
           <el-table-column prop="createdTime" label="创建时间" />
           <el-table-column prop="text7" label="操作" width="80px">
             <template #default="scope">
@@ -191,8 +199,8 @@
           </el-table-column>
         </el-table>
       </span>
-      <el-pagination class="table_pagination" :page-size="20" :pager-count="11" layout="total, prev, pager, next"
-        :total="50" />
+      <!-- <el-pagination class="table_pagination" :page-size="20" :pager-count="11" layout="total, prev, pager, next"
+        :total="50" /> -->
     </span>
     <div class="action_list">
       <div class="left">
@@ -306,12 +314,18 @@
             <span class="tableTitle"> 2. 售后工单 </span>
             <span class="tableContent">
               <el-table :data="relatedDocumentsAftersalesWorkorderList" :stripe="false" style="width: 100%">
-                <el-table-column prop="text1" label="售后工单编号" />
-                <el-table-column prop="text2" label="类别" />
-                <el-table-column prop="text3" label="负责人" />
-                <el-table-column prop="text4" label="状态" />
-                <el-table-column prop="text5" label="修改时间" />
-                <el-table-column prop="text6" label="操作" width="80px">
+                <el-table-column prop="ticketNo__c" label="售后工单编号" />
+                <el-table-column prop="ticketProblemCategory__c" label="类别" />
+                <el-table-column prop="reporter__c" label="负责人" />
+                <el-table-column prop="status__c" label="售后状态" >
+                  <template #default="scope">
+                    <div style="display:flex;align-items:center;">
+                      {{scope.row.status__c?(seviceTicketStatusOptions.find(val=>val["code"]==scope.row.status__c)?.name):""}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="updatedTime" label="修改时间" />
+                <el-table-column prop="text" label="操作" width="80px">
                   <template #default="scope">
                     <div style="
                         display: flex;
@@ -440,7 +454,7 @@ import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
-import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase } from '../../api/common.js'
+import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase, getServiceticketPage, getServiceticketList } from '../../api/common.js'
 
 
 const { proxy }: any = getCurrentInstance()
@@ -448,9 +462,9 @@ const size = ref('default')
 
 //主界面传参 
 const route = useRoute()
-const taskStatus_c = route.query.status_c != null ? parseInt(route.query.status_c.toString(), 0) + 1 : 1
+//const taskStatus_c = route.query.status_c != null ? parseInt(route.query.status_c.toString(), 0) + 1 : 1
 
-const currentStep = ref(taskStatus_c)
+const currentStep = ref(1)
 
 const tableData = ref({})
 
@@ -497,6 +511,45 @@ const dispatchWorkerStatusOption = ref([
 		},
 ])
 
+const seviceTicketStatusOptions = ref([
+  {
+    code: "1",
+    name: "开始",
+  },
+  {
+    code: "2",
+    name: "已提报问题",
+  },
+  {
+    code: "3",
+    name: "售后审核",
+  },
+  {
+    code: "4",
+    name: "已定损",
+  },
+  {
+    code: "5",
+    name: "定责发起",
+  },
+  {
+    code: "6",
+    name: "已提交OA审批",
+  },
+  {
+    code: "7",
+    name: "已追责",
+  },
+  {
+    code: "8",
+    name: "已追责",
+  },
+  {
+    code: "8",
+    name: "结束",
+  }
+])
+
 const otherField = ref<any>({
   haveInstallationConditions: false,
   scheduleDeliveryTime: null,
@@ -537,20 +590,46 @@ const ShowRelatedFieldDialogs = ref(false)
 
 const tableDataRelatedTask = ref([])
 
-const RelatedTaskOptions = ref([
-  {
-    code: "0",
-    name: "未开始",
-  },
-  {
-    code: "1",
-    name: "进行中",
-  },
-  {
-    code: "2",
-    name: "已完成",
-  }
-])
+// const RelatedTaskOptions = ref([
+//   {
+//     code: "0",
+//     name: "未开始",
+//   },
+//   {
+//     code: "1",
+//     name: "进行中",
+//   },
+//   {
+//     code: "2",
+//     name: "已完成",
+//   }
+// ])
+const orderStatusPtions = ref([
+		{
+			code: "0",
+			name: "待开始",
+		},
+		{
+			code: "1",
+			name: "提货",
+		},
+		{
+			code: "2",
+			name: "入库",
+		},
+		{
+			code: "3",
+			name: "配送",
+		},
+		{
+			code: "4",
+			name: "安装",
+		},
+		{
+			code: "5",
+			name: "完成",
+		}
+	])
 
 const tableDataOrderDetailsList = ref([])
 
@@ -558,14 +637,14 @@ const tableDataOrderDetailsList = ref([])
 const relatedDocumentsProblemReportingList = ref([])
 
 const relatedDocumentsAftersalesWorkorderList = ref([
-  {
-    text1: "XXX",
-    text2: "交付任务",
-    text3: "XXX",
-    text4: "进行中",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  }
+  // {
+  //   text1: "XXX",
+  //   text2: "交付任务",
+  //   text3: "XXX",
+  //   text4: "进行中",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // }
 ])
 
 const relatedDocumentsDispatchList = ref([
@@ -619,7 +698,8 @@ const postRelateList = () => {
   let param = {
     "status": "",
     "accountName": "",
-    "createdTime": ""
+    "createdTime": "",
+    "orderId":route.query.id
   }
   getLoginInfo(param).then((res: any) => {
     let dataList = res.data
@@ -684,7 +764,35 @@ const postServiceCaseList = () => {
 
 
 //售后工单
+const getServiceticketData = (isTure: boolean) => {
+  let param = {"orderNoeId":route.query.id}
+		getServiceticketList(param).then((res : any) => {
+			let data = res.data.data
+			if (data.length > 0) {
+				relatedDocumentsAftersalesWorkorderList.value = data
+				if(isTure)
+				{
+					ElMessage({
+						message: '查询成功',
+						type: 'success'
+					})
+				}
+			} else {
+				ElMessage({
+					message: '暂无数据',
+					type: 'warning'
+				})
+			}
 
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
+}
 
 //派工单
 const postfieldjobeList = () => {
@@ -849,6 +957,23 @@ const beforeUpload = (file) => {
   uploadData.value["files"].push(file)
 }
 
+const viewTaskDetails = (row: any) => {
+		console.log(row)
+		// proxy.$router.push("/delivery_tasks_details?id="+id)
+		proxy.$router.push({ path: "/delivery_tasks_details", query: {
+			id:row.id,
+			serviceCaseNeoId:row.serviceCaseId,
+			orderId:row.orderId,
+			taskType:row.taskType,
+			status:row.status,
+			distributorName:row.distributorName,
+			followerName:row.followerName,
+			accountName:row.accountName,
+			createdTime:row.createdTime,
+			createdBy:row.createdBy
+			} ,
+		});
+	}
 
 </script>
 

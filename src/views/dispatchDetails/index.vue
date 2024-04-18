@@ -151,6 +151,7 @@
           :data="tableDataDispatchAttachment"
           :stripe="false"
           style="width: 100%"
+          max-height="100"
         >
           <el-table-column prop="picNo" label="附件编号" />
           <el-table-column prop="type" label="类型" />

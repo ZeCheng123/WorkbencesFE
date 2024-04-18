@@ -47,7 +47,7 @@
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
-            <span class="value">{{ currentItem["estimatedResolutionDate"] }}</span>
+            <span class="value">{{ currentItem["createdTime"] }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -62,11 +62,11 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户姓名：</span>
-            <span class="value">{{ currentItem["caseAccountId"] }}</span>
+            <span class="value">{{ currentItem["caseAccountName"] }}</span>
           </span>
           <span class="field">
             <span class="label">客户手机号：</span>
-            <span class="value">{{ currentItem["phone"] }}</span>
+            <span class="value">{{ currentItem["caseAccountPhone"] }}</span>
           </span>
           <span class="field">
             <span class="label">来源：</span>
@@ -95,11 +95,11 @@
           </span>
           <span class="field">
             <span class="label">提报人：</span>
-            <span class="value">王工</span>
+            <span class="value">{{ currentItem["externalUserName"] }}</span>
           </span>
           <span class="field">
             <span class="label">提报人电话：</span>
-            <span class="value">16822822288</span>
+            <span class="value">{{ currentItem["externalUserPhone"] }}</span>
           </span>
         </span>
       </span>
@@ -208,7 +208,7 @@
               </el-table-column>
               <!-- <el-table-column type="selection" width="55" /> -->
               <el-table-column prop="orderId" label="订单编号" />
-              <el-table-column prop="orderNeoId" label="详单编号" />
+              <el-table-column prop="sku" label="详单编号" />
               <el-table-column prop="category1" label="产品大类" />
               <el-table-column prop="fscProductModel" label="产品型号" />
               <el-table-column prop="treeSpecies__c" label="树种" />
@@ -226,7 +226,7 @@
               <el-option v-for="item in problemTypeList" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <span class="label required">售后问题</span>
-            <el-select v-model="dialog2Form.afterSalesIssues" placeholder="">
+            <el-select multiple  collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
               <el-option v-for="item in afterSalesIssuesList" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <span class="label required">责任人</span>
@@ -240,13 +240,11 @@
           <div class="responsibilityPerson">
             <span class="label">上传文件</span>
           </div>
-
           <div class="containerUpload">
             <span class="item">
               <el-upload
                 name="files"
                 :on-success="handleUploaded"
-                :on-change="handleChange"
                class="upload" drag action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" multiple>
                 <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                 <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
@@ -376,18 +374,30 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="优先级" prop="priority">
-              <el-input
-                placeholder="1-最高 2-高 3-中 4-低"
-                v-model="deliveryOrderForm.priority"
+          <el-form-item label="优先级" prop="priority">
+              <el-select v-model="deliveryOrderForm.priority"  placeholder="选择优先级">
+              <el-option
+                v-for="item in priority"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
               />
+              </el-select>
             </el-form-item>
             <el-form-item label="派工类型" prop="type">
-              <el-input
+              <el-select v-model="deliveryOrderForm.type"  placeholder="选择派工类型">
+              <el-option
+                v-for="item in dispatchType"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              />
+              </el-select>
+              <!-- <el-input
                 disabled
                 placeholder="配送派工"
                 v-model="deliveryOrderForm.type"
-              />
+              /> -->
             </el-form-item>
             <el-form-item label="派工单备注" class="customLayout">
               <el-input
@@ -515,8 +525,9 @@
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
-import { ElMessage, ElMessageBox } from "element-plus"
+import { ElMessage, ElMessageBox} from "element-plus"
 import { useRoute } from "vue-router"
+import { Plus } from "@element-plus/icons-vue"
 import { getServiceCaseItem, getPickList, getOrderList, addFieldJob, getticketsolution, getOrderListById, getTicketSolutionByneoID,getExternalUser,getFieldJob} from '../../api/common.js'
 
 const { proxy }: any = getCurrentInstance()
@@ -525,7 +536,7 @@ const commentList = ref<any>([])
 const currentDeliveryOrderStep = ref(1)
 const route = useRoute()
 const id = ref(route.query.id)
-const neoid = ref(route.query.neoid)
+const neoid = ref<any>(route.query.neoid)
 const taskStatus = route.query.status != null ? parseInt(route.query.status.toString(), 0) + 1 : 1
 const showRelatedDocumentsDialog = ref(false)
 const orderList = ref([]);
@@ -538,6 +549,7 @@ const currentItem = ref<any>({});
 const provinceList = ref([]);
 const cityList = ref([]);
 const districtList = ref([]);
+
 
 
 
@@ -557,7 +569,7 @@ const formDialog = ref<any>({
 const dialog2Form = ref<any>({
   serviceTicketId: 0,
   problemType: "",
-  afterSalesIssues: "",
+  afterSalesIssues: [],
   responsiblePerson: "",
   problemDesc: "",
   fileList: [],
@@ -581,10 +593,13 @@ const filterList5 = ref([{ label: "油漆颜色", value: "1" }])
 
 const filterList6 = ref([{ label: "尺寸", value: "1" }])
 
-let fileId = ref([])
+
+///图片上传组合数组
+const fileIdList = ref<any>([])
 const handleUploaded = (rep) => {
-  fileId.value = rep.data.map(item => item.fileId)
+  fileIdList.value = fileIdList.value.concat(rep.data.map(item => item.fileId))
 }
+
 
 const multipleTableRef = ref()
 const multipleSelection = ref([])
@@ -786,7 +801,18 @@ const complaintSource = ref([
   { code: "4", name: "经销商" },
 ])
 
+const dispatchType = ref([
+  { code: "1", name: "配送派工" },
+  { code: "2", name: "安装派工" },
+  { code: "3", name: "维修" },
+])
 
+const priority = ref([
+  { code: "1", name: "最高" },
+  { code: "2", name: "高" },
+  { code: "3", name: "中" },
+  { code: "4", name: "低" },
+])
 
 const currentDialogStep = ref(1)
 
@@ -841,7 +867,7 @@ let deliveryOrderForm = reactive({
   fieldJobContactName: "",
   contactTelephone: "",
   priority: "",
-  type: "配送派工",
+  type: "3",
   remark: "",
   appointmentStartTime: "",
   appointmentEndTime: "",
@@ -888,7 +914,6 @@ const handleDeleteDelivery = (res) => {
 }
 
 const handleSuccessDelivery = (res) => {
-  console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileId"]);
     if(path[0]){
@@ -1030,24 +1055,32 @@ const currentDialogStepBut = () => {
 }
 
 const submitDialog = () => {
-  // let params = dialog2Form.value
-  // console.info("params",params)
-  // console.info("勾选数据：：", tableData.value)
-
+  console.info("fileIdfileId",fileIdList)
   const selectData = tableData.value.filter(item => item.checked)
-  console.info("过滤：", selectData)
+
+  console.info("过滤：", selectData["id"])
   if(selectData.length <= 0){
     proxy.$message.error("必须勾选数据!");
     return;
   }
   selectData.forEach(item => {
-    item["orderProductId"] = 1489
-    item["caseVo"] = 2
+    item["picture"] = fileIdList.value //图片id
+    item["orderProductId"] = item["id"] //订单明细
+    item["treeSpecies"] = item["treeSpecies__c"] //树种
+    item["category"] = item["category1"] //产品大类
+    item["paintColor"] = item["paintColor__c"] //油漆颜色
+    item["ticketClassification"] = dialog2Form.value.problemType //问题大类
+    item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
+    item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
+    item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
   })
+  
   let params = {
-    serviceCaseId:195,
+    serviceCaseId:parseInt(neoid.value),
     details: selectData
   }
+
+  console.info("selectDataselectData",selectData)
   
   // dialog2Form.value["details"] = selectData
   if (!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues || !dialog2Form.value.responsiblePerson || !dialog2Form.value.problemDesc) {
@@ -1121,7 +1154,10 @@ const loadingOrderList = (row) => {
     if (res.data.code == "success") {
       getOrderListById(res.data.data[0].id).then((res: any) => {
         tableData.value = res.data.data.items
-        tableData.value.forEach(item => item['checked'] = false)
+        tableData.value.forEach(item => {
+          item['checked'] = false
+          item["orderId"] = formDialog.value.orderNo
+        })        
       })
     } else {
       proxy.$message.error("数据异常!");
@@ -1174,14 +1210,13 @@ const showRelatedDocumentsDialogClick = () => {
       }
     } else {
       ElMessage({
-        message: '请求失败，请重试',
+        message: '请求失败，请重试;',
         type: 'error'
       });
     }
   }).catch((error: any) => {
-    // 显示请求失败的提示框
     ElMessage({
-      message: '请求失败，请重试',
+      message: '请求失败，请重试!',
       type: 'error'
     });
   });
@@ -1194,8 +1229,18 @@ const showRelatedDocumentsDialogClick = () => {
 
       }]
       relatedDocumentsDispatchList.value = dataArray
+    }else{
+      ElMessage({
+        message: '请求失败，请重试',
+        type: 'error'
+      });
     }
-  })
+  }).catch((error: any) => {
+    ElMessage({
+      message: '请求失败，请重试!!',
+      type: 'error'
+    });
+  });
 }
 
 

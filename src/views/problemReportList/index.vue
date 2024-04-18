@@ -72,15 +72,15 @@
         <el-table-column prop="caseNo" label="问题编号" />
         <el-table-column prop="name" label="客户姓名" />
         <el-table-column prop="problemDescription" label="问题描述" />
-        <el-table-column prop="sourceOfProblem" label="来源">
+        <el-table-column prop="complaintSourceC" label="来源">
            <template #default="scope">
             <div style="display: flex; align-items: center;">
               {{scope.row.sourceOfProblem ? (caseSource.find(val => val["code"] == scope.row.sourceOfProblem)?.name) : ""}}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="distributorName" label="提报人" />
-        <el-table-column prop="actualResolutionDate" label="创建时间" />
+        <el-table-column prop="externalUserName" label="提报人" />
+        <el-table-column prop="createdTime" label="创建时间" />
         <el-table-column prop="caseStatus" label="问题状态">
           <template #default="scope">
             <div style="display: flex; align-items: center;">
@@ -272,16 +272,16 @@ const orderStatusOptions = ref([
 
 const caseSource = ref([
   {
-    name:"品质",code:"1"
+    name:"配送技工",code:"1"
   },
   {
-    name:"交期",code:"2"
+    name:"安装技工",code:"2"
   },
   {
-    name:"服务",code:"3"
+    name:"终端用户",code:"3"
   },
   {
-    name:"销售",code:"4"
+    name:"经销商",code:"4"
   }
 ])
 

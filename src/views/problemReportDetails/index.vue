@@ -91,7 +91,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">经销商内部提报：</span>
-            <span class="value">复选框</span>
+            <el-checkbox v-model="checked1" disabled></el-checkbox>
           </span>
           <span class="field">
             <span class="label">提报人：</span>
@@ -197,10 +197,8 @@
             </el-select>
           </div>
           <div class="table">
-            <el-table 
-            ref="multipleTableRef"
-            :selection-change="handleSelectionChange"
-            :data="tableData" :stripe="false" style="width: 100%;max-height: 200px;overflow: auto;">
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData" :stripe="false"
+              style="width: 100%;max-height: 200px;overflow: auto;">
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #default="scope">
                   <el-checkbox v-model="scope.row.checked" />
@@ -214,10 +212,24 @@
               <el-table-column prop="treeSpecies__c" label="树种" />
               <el-table-column prop="paintColor__c" label="油漆颜色 " />
               <el-table-column prop="fscProductSpec" label="尺寸 " />
-              <el-table-column prop="" label="问题大类" />
-              <el-table-column prop="" label="售后问题 " />
+              <el-table-column prop="ticketClassification" label="问题大类">
+                <template #default="scope">
+                  <div style="display:flex;align-items:center;">
+                    {{ scope.row.ticketClassification ? (problemTypeList.find(val => val["code"] ==
+                      scope.row.ticketClassification)?.name) : "" }}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="ticketProblem" label="售后问题 ">
+                <template #default="scope">
+                  <div style="display:flex;align-items:center;">
+                    {{ scope.row.ticketProblem ? (afterSalesIssuesList.find(val => val["code"] ==
+                      scope.row.ticketProblem)?.name) : "" }}
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column prop="" label="责任人 " />
-              <el-table-column prop="" label="问题描述 " />
+              <el-table-column prop="descriptionOfTicketProblem" label="问题描述 " />
             </el-table>
           </div>
           <div class="responsibilityPerson">
@@ -226,7 +238,7 @@
               <el-option v-for="item in problemTypeList" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <span class="label required">售后问题</span>
-            <el-select multiple  collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
+            <el-select multiple collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
               <el-option v-for="item in afterSalesIssuesList" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <span class="label required">责任人</span>
@@ -242,10 +254,8 @@
           </div>
           <div class="containerUpload">
             <span class="item">
-              <el-upload
-                name="files"
-                :on-success="handleUploaded"
-               class="upload" drag action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" multiple>
+              <el-upload name="files" :on-success="handleUploaded" class="upload" drag
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" multiple>
                 <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                 <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
                 <template #tip>
@@ -271,127 +281,68 @@
 
     <!-- 创建派工单 -->
     <div class="deliveryOrderDialog">
-      <el-dialog
-        v-model="deliveryOrderDialog"
-        title="新建配送派工单"
-        width="80%"
-        :show-close="false"
-      >
+      <el-dialog v-model="deliveryOrderDialog" title="新建配送派工单" width="80%" :show-close="false">
         <div class="step">
           <span class="item">
-            <span
-              @click="changeDeliveryOrderStep(1)"
-              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'"
-              >1</span
-            >
-            <span
-              :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
-              >选择配送司机
+            <span @click="changeDeliveryOrderStep(1)"
+              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'">1</span>
+            <span :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'">选择配送司机
               <span class="remark">选择配送货品的司机</span>
             </span>
           </span>
           <span class="item">
-            <span
-              @click="changeDeliveryOrderStep(2)"
-              :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'"
-              >2</span
-            >
-            <span
-              :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'"
-              >输入派工单注意事项
+            <span @click="changeDeliveryOrderStep(2)"
+              :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'">2</span>
+            <span :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'">输入派工单注意事项
               <span class="remark">如有,请填写关键备注</span>
             </span>
           </span>
           <span class="item">
-            <span
-              @click="changeDeliveryOrderStep(3)"
-              :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'"
-              >3</span
-            >
-            <span
-              :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'"
-              >完成创建
+            <span @click="changeDeliveryOrderStep(3)"
+              :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'">3</span>
+            <span :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'">完成创建
               <span class="remark">等待司机配送</span>
             </span>
           </span>
         </div>
         <div class="content">
-          <el-form
-            v-if="currentDeliveryOrderStep == 1"
-            :model="deliveryOrderForm"
-            :rules="deliveryOrderRule"
-            ref="deliveryOrderFormRef"
-            label-width="90px"
-            label-position="left"
-          >
-          <el-form-item label="人员名称" prop="followerId">              
-              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
-                <el-option
-                  v-for="item in extralUserData"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="item.id"
-                />
+          <el-form v-if="currentDeliveryOrderStep == 1" :model="deliveryOrderForm" :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef" label-width="90px" label-position="left">
+            <el-form-item label="人员名称" prop="followerId">
+              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery"
+                placeholder="查找或输入服务人员姓名">
+                <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
               </el-select>
               <span class="custom_item"><img src="@/assets/images/add.png" alt="" /></span>
             </el-form-item>
             <el-form-item label="联系方式" prop="contactTelephone">
-              <el-input
-                v-model="deliveryOrderForm.contactTelephone"
-                placeholder="查找或输入配送司机手机号码"
-              />
+              <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="查找或输入配送司机手机号码" />
             </el-form-item>
-            
+
             <el-form-item label="预约开始" prop="appointmentStartTime">
-              <el-date-picker
-                v-model="deliveryOrderForm.appointmentStartTime"
-                type="datetime"
-                placeholder="日期/时间"
-                value-format="YYYY-MM-DD HH:mm:ss"
-              />
+              <el-date-picker v-model="deliveryOrderForm.appointmentStartTime" type="datetime" placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss" />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
-              <el-date-picker
-                v-model="deliveryOrderForm.appointmentEndTime"
-                type="datetime"
-                placeholder="日期/时间"
-                value-format="YYYY-MM-DD HH:mm:ss"
-              />
+              <el-date-picker v-model="deliveryOrderForm.appointmentEndTime" type="datetime" placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss" />
             </el-form-item>
             <el-form-item label="是否具备安装条件" class="check_item">
               <span>
-                <el-checkbox
-                  v-model="deliveryOrderForm.haveInstallConditions"
-                ></el-checkbox>
+                <el-checkbox v-model="deliveryOrderForm.haveInstallConditions"></el-checkbox>
               </span>
             </el-form-item>
           </el-form>
-          <el-form
-            v-if="currentDeliveryOrderStep == 2"
-            :model="deliveryOrderForm"
-            :rules="deliveryOrderRule"
-            ref="deliveryOrderFormRef"
-            label-width="90px"
-            label-position="left"
-          >
-          <el-form-item label="优先级" prop="priority">
-              <el-select v-model="deliveryOrderForm.priority"  placeholder="选择优先级">
-              <el-option
-                v-for="item in priority"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              />
+          <el-form v-if="currentDeliveryOrderStep == 2" :model="deliveryOrderForm" :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef" label-width="90px" label-position="left">
+            <el-form-item label="优先级" prop="priority">
+              <el-select v-model="deliveryOrderForm.priority" placeholder="选择优先级">
+                <el-option v-for="item in priority" :key="item.code" :label="item.name" :value="item.code" />
               </el-select>
             </el-form-item>
             <el-form-item label="派工类型" prop="type">
-              <el-select v-model="deliveryOrderForm.type"  placeholder="选择派工类型">
-              <el-option
-                v-for="item in dispatchType"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              />
+              <el-select v-model="deliveryOrderForm.type" placeholder="选择派工类型">
+                <el-option v-for="item in dispatchType" :key="item.code" :label="item.name" :value="item.code" />
               </el-select>
               <!-- <el-input
                 disabled
@@ -400,53 +351,29 @@
               /> -->
             </el-form-item>
             <el-form-item label="派工单备注" class="customLayout">
-              <el-input
-                v-model="deliveryOrderForm.remark"
-                :rows="5"
-                type="textarea"
-                maxlength="500"
-                placeholder="请填写派工单备注"
-                show-word-limit
-              />
+              <el-input v-model="deliveryOrderForm.remark" :rows="5" type="textarea" maxlength="500"
+                placeholder="请填写派工单备注" show-word-limit />
             </el-form-item>
             <el-form-item label="上传图片" class="custom_upload">
-              <el-upload
-                :on-success="handleSuccessDelivery"
-                :on-remove="handleDeleteDelivery"
-                :auto-upload="true"
-                :data="uploadDataDelivery"
-                :headers="headers"
-                :before-upload="beforeUploadDelivery"
-                v-model:file-list="deliveryOrderForm.fileList"
-                class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
-                :show-file-list="true"
-                list-type="picture-card"
-              >
-                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              <el-upload :on-success="handleSuccessDelivery" :on-remove="handleDeleteDelivery" :auto-upload="true"
+                :data="uploadDataDelivery" :headers="headers" :before-upload="beforeUploadDelivery"
+                v-model:file-list="deliveryOrderForm.fileList" class="avatar-uploader"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                list-type="picture-card">
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
+                </el-icon>
               </el-upload>
             </el-form-item>
           </el-form>
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="deliveryOrderDialog = false"
-              >取消</el-button
-            >
-            <el-button
-              v-if="currentDeliveryOrderStep == 1"
-              type="primary"
-              class="primary_btn"
-              @click="deliveryOrderNextStep"
-              >下一步</el-button
-            >
-            <el-button
-              v-if="currentDeliveryOrderStep == 2"
-              type="primary"
-              class="primary_btn"
-              @click="finishDeliveryOrder"
-              >完成</el-button
-            >
+            <el-button class="cancel_btn" @click="deliveryOrderDialog = false">取消</el-button>
+            <el-button v-if="currentDeliveryOrderStep == 1" type="primary" class="primary_btn"
+              @click="deliveryOrderNextStep">下一步</el-button>
+            <el-button v-if="currentDeliveryOrderStep == 2" type="primary" class="primary_btn"
+              @click="finishDeliveryOrder">完成</el-button>
           </div>
         </template>
       </el-dialog>
@@ -525,10 +452,10 @@
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
-import { ElMessage, ElMessageBox} from "element-plus"
+import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
 import { Plus } from "@element-plus/icons-vue"
-import { getServiceCaseItem, getPickList, getOrderList, addFieldJob, getticketsolution, getOrderListById, getTicketSolutionByneoID,getExternalUser,getFieldJob} from '../../api/common.js'
+import { getServiceCaseItem, getPickList, getOrderList, addFieldJob, getticketsolution, getOrderListById, getTicketSolutionBycaseId, getTicketSolutionByneoID, getExternalUser, getFieldJob } from '../../api/common.js'
 
 const { proxy }: any = getCurrentInstance()
 
@@ -537,6 +464,7 @@ const currentDeliveryOrderStep = ref(1)
 const route = useRoute()
 const id = ref(route.query.id)
 const neoid = ref<any>(route.query.neoid)
+let caseneoId = ""
 const taskStatus = route.query.status != null ? parseInt(route.query.status.toString(), 0) + 1 : 1
 const showRelatedDocumentsDialog = ref(false)
 const orderList = ref([]);
@@ -549,7 +477,7 @@ const currentItem = ref<any>({});
 const provinceList = ref([]);
 const cityList = ref([]);
 const districtList = ref([]);
-
+let solutionId="";
 
 
 
@@ -829,8 +757,8 @@ const createDeliveryOrder = () => {
 }
 
 const uploadDataDelivery = ref({
-    files: [],
-    name: "files"
+  files: [],
+  name: "files"
 })
 
 const beforeUploadDelivery = (file) => {
@@ -872,14 +800,14 @@ let deliveryOrderForm = reactive({
   appointmentStartTime: "",
   appointmentEndTime: "",
   haveInstallConditions: false,
-  fieldJobOrderId:route.query.orderId,
-  fieldJobType__c:0,
-  stage__c:0,
-  name:taskDetails.value.accountName+"的配送派工单",
+  fieldJobOrderId: route.query.orderId,
+  fieldJobType__c: 0,
+  stage__c: 0,
+  name: taskDetails.value.accountName + "的配送派工单",
   fileList: [] as any,
-  filePath:[] as any,
-  followerId:null,
-  address:""
+  filePath: [] as any,
+  followerId: null,
+  address: ""
 })
 
 const deliveryOrderRule = reactive({
@@ -914,11 +842,11 @@ const handleDeleteDelivery = (res) => {
 }
 
 const handleSuccessDelivery = (res) => {
-  if(res.code == "success"){
+  if (res.code == "success") {
     let path = res.data.map(val => val["fileId"]);
-    if(path[0]){
+    if (path[0]) {
       deliveryOrderForm["filePath"].push(path[0])
-    }    
+    }
   }
 }
 
@@ -935,37 +863,36 @@ const headers = ref({
   "Trace-Id": "",
 })
 
-const getExtralUserData = (showMsg: boolean)=>{
+const getExtralUserData = (showMsg: boolean) => {
 
-let params={"userType": 1,"name": "","phone": ""};
-getExternalUser(params).then((res : any) => {
+  let params = { "userType": 1, "name": "", "phone": "" };
+  getExternalUser(params).then((res: any) => {
     let data = res.data.data
-    if (data!=undefined&&data.length>0) {
+    if (data != undefined && data.length > 0) {
       extralUserData.value = data
-      if(showMsg)
-      {
+      if (showMsg) {
         ElMessage({
           message: '查询成功',
           type: 'success'
         })
       }
     } else {
-      if(showMsg){
+      if (showMsg) {
         ElMessage({
           message: '获取数据失败',
           type: 'error'
         })
       }
-      
+
     }
-})
+  })
 }
 
 const onCahngeUserSelectForDelivery = (event) => {
   let item = extralUserData.value.find(val => val["id"] == event);
-  if(item){
+  if (item) {
     deliveryOrderForm["fieldJobContactName"] = item["name"];
-    deliveryOrderForm["contactTelephone"] = item["phone"];    
+    deliveryOrderForm["contactTelephone"] = item["phone"];
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
 }
@@ -1055,11 +982,11 @@ const currentDialogStepBut = () => {
 }
 
 const submitDialog = () => {
-  console.info("fileIdfileId",fileIdList)
+  console.info("fileIdfileId", fileIdList)
   const selectData = tableData.value.filter(item => item.checked)
 
   console.info("过滤：", selectData["id"])
-  if(selectData.length <= 0){
+  if (selectData.length <= 0) {
     proxy.$message.error("必须勾选数据!");
     return;
   }
@@ -1074,14 +1001,16 @@ const submitDialog = () => {
     item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
     item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
   })
-  
+
   let params = {
-    serviceCaseId:parseInt(neoid.value),
+    serviceCaseId: parseInt(caseneoId),
     details: selectData
   }
+  if(solutionId!=""){
+    params["id"]=solutionId
+  }
+  console.info("selectDataselectData", selectData)
 
-  console.info("selectDataselectData",selectData)
-  
   // dialog2Form.value["details"] = selectData
   if (!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues || !dialog2Form.value.responsiblePerson || !dialog2Form.value.problemDesc) {
     proxy.$message.error("必填选项不能为空!");
@@ -1093,6 +1022,10 @@ const submitDialog = () => {
       //提交方法
       getticketsolution(params).then((res: any) => {
         console.log(res)
+        let data=res.data.data;
+        if(data!=undefined){
+          solutionId=data["id"]
+        }
       })
     }, 500);
   }
@@ -1147,6 +1080,7 @@ const getDistrictList = () => {
 
 //升级到总部售后点击下一步加载订单里面的items数据
 const loadingOrderList = (row) => {
+  let caseid = "";
   let params = {
     po: row
   }
@@ -1154,18 +1088,43 @@ const loadingOrderList = (row) => {
     if (res.data.code == "success") {
       getOrderListById(res.data.data[0].id).then((res: any) => {
         tableData.value = res.data.data.items
+        caseneoId = res.data.data.neoid
+        caseid = res.data.data.neoid
         tableData.value.forEach(item => {
           item['checked'] = false
           item["orderId"] = formDialog.value.orderNo
-        })        
+        })
+        getTicketSolutionBycaseId(caseid).then((res: any) => {
+          if (res.data.code == "success") {
+            let rtData = res.data.data.details;
+            if(res.data.data!=undefined){
+              solutionId=res.data.data["id"]
+            }
+            if (rtData && rtData.length > 0) {
+              tableData.value.forEach(val => {
+                let item = rtData.find(val2 => val["id"] == val2["orderProductId"]);
+                if (item) {
+                  val["descriptionOfTicketProblem"] = item["descriptionOfTicketProblem"];
+                  val["ticketClassification"] = item["ticketClassification"];
+                  val["ticketProblem"] = item["ticketProblem"];
+                  val["responsibleSubject"] = item["responsibleSubject"];
+                }
+              })
+              console.log("new Date", tableData)
+            } else {
+              console.info("details没数据")
+            }
+          } else {
+            console.info("接口请求失败")
+            proxy.$message.error("接口请求失败!");
+          }
+        });
       })
     } else {
       proxy.$message.error("数据异常!");
     }
   })
 }
-
-
 
 
 // const handleSelectionChange = (selection) => {
@@ -1222,14 +1181,14 @@ const showRelatedDocumentsDialogClick = () => {
   });
 
   //获取售后派工单详情
-  getFieldJob(id.value).then((res:any)=>{
+  getFieldJob(id.value).then((res: any) => {
     let dataList = res.data;
-    if(dataList.data && typeof dataList.data === 'object'){
+    if (dataList.data && typeof dataList.data === 'object') {
       let dataArray = [{
 
       }]
       relatedDocumentsDispatchList.value = dataArray
-    }else{
+    } else {
       ElMessage({
         message: '请求失败，请重试',
         type: 'error'
@@ -1244,47 +1203,47 @@ const showRelatedDocumentsDialogClick = () => {
 }
 
 
-const finishDeliveryOrder =  () => {
+const finishDeliveryOrder = () => {
   let params = deliveryOrderForm;
-  params["fieldJobContactName"]=taskDetails.value.accountName==undefined?"":taskDetails.value.accountName.toString();
+  params["fieldJobContactName"] = taskDetails.value.accountName == undefined ? "" : taskDetails.value.accountName.toString();
   // params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   // params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
-  addFieldJob(params).then((res : any) => {
-			let data = res.data.data;
-      tableDataDispatch.value.push(data);
-			if (data!=undefined) {
-					ElMessage({
-						message: '新增派工单成功',
-						type: 'success'
-					})
+  addFieldJob(params).then((res: any) => {
+    let data = res.data.data;
+    tableDataDispatch.value.push(data);
+    if (data != undefined) {
+      ElMessage({
+        message: '新增派工单成功',
+        type: 'success'
+      })
 
-			} else {
-          ElMessage({
-            message: '新增派工单失败',
-            type: 'error'
-  				})
-				
-			}
-      Object.keys(deliveryOrderForm).forEach(key => {
-        if(!key.includes("type")&&!key.includes("haveInstallConditions")&&key!=="fieldJobOrderId"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
-        if(key==="haveInstallConditions") deliveryOrderForm[key] =false;
-        if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
-      });
-		}).catch((error: any) => {
-			// 显示请求失败的提示框
-			ElMessage({
-				message: '请求新增派工单失败，请重试',
-				type: 'error'
-			});
-      Object.keys(deliveryOrderForm).forEach(key => {
-        if(key!=="type"&&key!=="haveInstallConditions"&&key!=="fieldJobOrderId"&&key!=="fieldJobType__c"&&key!=="stage__c"&&key!=="name") deliveryOrderForm[key] = '';
-        if(key=="haveInstallConditions") deliveryOrderForm[key] =false;
-        if(key=="fileList" || key=="filePath") deliveryOrderForm[key] = [];
-      });
-			console.error('请求新增派工单失败:', error);
-		});
+    } else {
+      ElMessage({
+        message: '新增派工单失败',
+        type: 'error'
+      })
+
+    }
+    Object.keys(deliveryOrderForm).forEach(key => {
+      if (!key.includes("type") && !key.includes("haveInstallConditions") && key !== "fieldJobOrderId" && key !== "fieldJobType__c" && key !== "stage__c" && key !== "name") deliveryOrderForm[key] = '';
+      if (key === "haveInstallConditions") deliveryOrderForm[key] = false;
+      if (key == "fileList" || key == "filePath") deliveryOrderForm[key] = [];
+    });
+  }).catch((error: any) => {
+    // 显示请求失败的提示框
+    ElMessage({
+      message: '请求新增派工单失败，请重试',
+      type: 'error'
+    });
+    Object.keys(deliveryOrderForm).forEach(key => {
+      if (key !== "type" && key !== "haveInstallConditions" && key !== "fieldJobOrderId" && key !== "fieldJobType__c" && key !== "stage__c" && key !== "name") deliveryOrderForm[key] = '';
+      if (key == "haveInstallConditions") deliveryOrderForm[key] = false;
+      if (key == "fileList" || key == "filePath") deliveryOrderForm[key] = [];
+    });
+    console.error('请求新增派工单失败:', error);
+  });
   deliveryOrderDialog.value = false
   // proxy.$message.success("派工单创建完成!")
   currentDeliveryOrderStep.value = 1

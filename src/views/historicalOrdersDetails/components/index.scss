@@ -821,3 +821,7 @@
     justify-content: flex-start;
     align-items: center;
 }
+
+.custom-date-picker .el-input__inner  {
+    color: blue!important; /* 修改为你想要的颜色 */
+  }

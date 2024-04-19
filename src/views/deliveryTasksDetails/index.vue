@@ -86,7 +86,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户电话：</span>
-            <span class="value">{{ orderData.customerPhone }}</span>
+            <span class="value">{{ orderData.contactTel }}</span>
           </span>
           <span class="field">
             <span class="label">客户地址：</span>
@@ -212,7 +212,7 @@
           <el-table-column prop="id" label="派工单编号" />
           <el-table-column prop="stage__c" label="状态">
              <template #default="scope">
-               <span>{{scope.row["stage__c"] == "0" ? "待开始" : scope.row["stage__c"] == "1" ? "进行中" : "已完成"}}</span>
+               <span style="color: blue;">{{scope.row["stage__c"] == "0" ? "待开始" : scope.row["stage__c"] == "1" ? "进行中" : "已完成"}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="fieldJobType__c" label="派工种类" >

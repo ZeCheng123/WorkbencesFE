@@ -101,24 +101,28 @@
         </span>
         <span class="row_field" style="justify-content: space-around;">
           <span class="field" style="width: 400px;display: flex; align-items: center;">
-            <span class="label">是否具备安装条件：</span>
+            <span class="label" style="color: blue;">是否具备安装条件：</span>
             <span class="value" style="display:flex">
-              <el-checkbox disabled v-model="tableData['ifConinsall__C']"></el-checkbox>
+              <el-checkbox v-model="otherField.haveInstallationConditions"></el-checkbox>
             </span>
           </span>
           <span class="field" style="width: 400px;">
-            <span class="label">预计配送时间：</span>
+            <span class="label" style="color: blue;">预计配送时间：</span>
             <span class="value">
-              <el-date-picker readonly v-model="otherField.scheduleDeliveryTime" type="datetime" placeholder="日期/时间" />
+              <el-date-picker class="custom-date-picker" v-model="otherField.scheduleDeliveryTime" type="datetime" placeholder="日期/时间" />
             </span>
           </span>
-          <span class="field" style="width: 400px;">
-            <span class="label">预计安装时间：</span>
+          <span class="field" style="width: 200px;">
+            <span class="label" style="color: blue;">预计安装时间：</span>
             <span class="value">
-              <el-date-picker readonly v-model="otherField.scheduleInstallationTime" type="datetime"
+              <el-date-picker class="custom-date-picker" v-model="otherField.scheduleInstallationTime" type="datetime"
                 placeholder="日期/时间" />
             </span>
           </span>
+          <!-- <span class="right" >
+              <el-button @click="updateOrderData" type="primary" class="search_btn">保存</el-button>
+          </span> -->
+          
         </span>
       </span>
     </span>
@@ -975,6 +979,9 @@ const viewTaskDetails = (row: any) => {
 		});
 	}
 
+const updateOrderData=()=>{
+
+}
 </script>
 
 <style lang="scss" scoped>

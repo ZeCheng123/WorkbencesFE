@@ -82,7 +82,7 @@
     </span>
     <span class="table">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
-        <el-table-column prop="case_no" label="派工编号" />
+        <el-table-column prop="caseNo" label="派工编号" />
         <el-table-column prop="appointmentStartTime" label="计划开始时间" />
         <el-table-column prop="appointmentEndTime" label="计划结束时间" />
         <el-table-column prop="follower__c" label="技工名称" />
@@ -119,10 +119,11 @@
       </el-table>
       <el-pagination
         class="table_pagination"
-        :page-size="20"
-        :pager-count="11"
+        :page-size="pageConfig.pageSize"
+        :pager-count="15"
         layout="total, prev, pager, next"
-        :total="1000"
+        :total="pageConfig.total"
+        @current-change="handleCurrentChange" 
       />
     </span>
   </div>
@@ -136,6 +137,12 @@ import { ElMessage } from "element-plus";
 //import { Row } from "element-plus/es/components/table-v2/src/components";
 
 const { proxy }: any = getCurrentInstance()
+
+const pageConfig = ref({
+		  pageIndex: 1,
+		  pageSize: 15,
+		  total: 0
+		});
 
 const form = reactive({
   dispatchWorkerNo: "",
@@ -174,7 +181,7 @@ const technicianTypeOption = ref([
 
 const dispatchWorkerStatusOption = ref([
     {
-			code: "all",
+			code: "",
 			name: "全部",
 		},
 		{
@@ -192,76 +199,76 @@ const dispatchWorkerStatusOption = ref([
 ])
 
 const tableData = ref([
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
-    text8: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "梦天慈溪经销商-专卖店A",
-    text3: "H404304",
-    text4: "李女士",
-    text5: "安装派工",
-    text6: "2021-02-28 10:30",
-    text7: "已派工",
-    text8: "",
-  },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "安装派工",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已派工",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "安装派工",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已派工",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "安装派工",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已派工",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "安装派工",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已派工",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "安装派工",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已派工",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "安装派工",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已派工",
+  //   text8: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "梦天慈溪经销商-专卖店A",
+  //   text3: "H404304",
+  //   text4: "李女士",
+  //   text5: "安装派工",
+  //   text6: "2021-02-28 10:30",
+  //   text7: "已派工",
+  //   text8: "",
+  // },
 ])
 
 const viewDetails = (row) =>{
@@ -275,7 +282,7 @@ onMounted(() => {
 	});
 const getList = (isTure: boolean) => {
 
-		let param = {"fieldJobType__c": "",  "appointmentEndTime": "",  "createdTime": "",  "status": "",  "caseNo": "",  "artisanName": "",  "pageNo": 0,  "pageSize": 20}
+		let param = {"fieldJobType__c": form.technicianType==undefined?"":form.technicianType,  "appointmentEndTime": "",  "createdTime": "",  "status": form.dispatchWorkerStatus==undefined?"":form.dispatchWorkerStatus,  "caseNo": form.dispatchWorkerNo==undefined?"":form.dispatchWorkerNo,  "artisanName": form.technicianName==undefined?"":form.technicianName,  "pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex}
 		getFieldJobByPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {
@@ -288,8 +295,9 @@ const getList = (isTure: boolean) => {
 					})
 				}
 			} else {
+        tableData.value=[]
 				ElMessage({
-					message: '获取数据失败',
+					message: '暂无对应数据',
 					type: 'error'
 				})
 			}
@@ -303,7 +311,10 @@ const getList = (isTure: boolean) => {
 			console.error('请求数据失败:', error);
 		});
 }
-
+const handleCurrentChange = (val: number) => {
+		pageConfig.value.pageIndex=val;
+		getList(false);
+}
 //重置按钮
 const resetting = () => {
 		form.dispatchWorkerNo = ''
@@ -312,6 +323,7 @@ const resetting = () => {
 		form.filterMethod = ''
 		form.createDate = []
 		form.dispatchWorkerStatus = ''
+    getList(false);
 	}
 </script>
 

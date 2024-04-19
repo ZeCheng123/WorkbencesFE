@@ -63,21 +63,11 @@
 				<!-- <el-table-column prop="serviceCaseId" label="关联的服务工单id" :visible="true"/> -->
 				<!-- <el-table-column prop="fieldJobNeoId" label="任务结束时间" />  -->
 				<el-table-column prop="taskType" label="任务类型" >
-				<!-- <template #default="{ row }">
-				    <el-select v-model="row.taskType" disabled  placeholder="请选择">
-				      <el-option
-				        v-for="item in taskTypeOptions"
-				        :key="item.value"
-				        :label="item.label"
-				        :value="item.value">
-				      </el-option>
-				    </el-select>
-				  </template> -->
-				  	<template #default="scope">
+				  	<!-- <template #default="scope">
 				  		<div style="display:flex;align-items:center;">
 						{{scope.row.taskType?(taskTypeOptions.find(val=>val["code"]==scope.row.taskType)?.name):""}}
 						</div>
-					</template>
+					</template> -->
 				</el-table-column>
 				<el-table-column prop="createdTime" label="创建时间" />
 				<el-table-column prop="status" label="状态" >
@@ -220,6 +210,9 @@
 		getTaskByPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {
+				data.forEach(item => {
+					item["taskType"]="交付"
+				});
 				tableData.value = data
 				if(isTure)
 				{
@@ -249,7 +242,7 @@
 
 	const handleCurrentChange = (val: number) => {
 		pageConfig.value.pageIndex=val;
-		getList(true);
+		getList(false);
 	}
 
 	//重置按钮
@@ -260,6 +253,7 @@
 		form.filterMethod = ''
 		form.createDate = []
 		form.orderStatus = ''
+		getList(false)
 	}
 </script>
 

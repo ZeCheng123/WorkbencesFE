@@ -109,7 +109,7 @@
           <span class="field" style="width: 400px;">
             <span class="label" style="color: blue;">预计配送时间：</span>
             <span class="value">
-              <el-date-picker class="custom-date-picker" v-model="otherField.scheduleDeliveryTime" type="datetime" placeholder="日期/时间" />
+              <el-date-picker class="custom-date-picker" v-model="otherField.scheduleDeliveryTime" type="datetime" placeholder="日期/时间" value-format="YYYY-MM-DD HH:mm:ss"/>
             </span>
           </span>
           <span class="field" style="width: 204px;">

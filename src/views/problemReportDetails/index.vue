@@ -922,7 +922,7 @@ const getDetailsData = () => {
     let rtData = res.data;
     if (rtData.code == "success") {
       currentItem.value = rtData.data;
-      formDialog.value["orderNo"] = currentItem.value["orderNeoId"]
+      formDialog.value["orderNo"] = currentItem.value["caseNo"]
       console.log("wenti:")
       console.log(rtData.data["caseNo"])
       getSearchOrderOneList(rtData.data["caseNo"])
@@ -1003,6 +1003,7 @@ const submitDialog = () => {
     item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
     item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
     item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
+    item["id"]=""
   })
 
   let params = {
@@ -1083,7 +1084,7 @@ const getDistrictList = () => {
 
 //升级到总部售后点击下一步加载订单里面的items数据
 const loadingOrderList = (row) => {
-  let caseid = "";
+  //let caseid = "";
   let params = {
     po: row
   }
@@ -1091,15 +1092,20 @@ const loadingOrderList = (row) => {
     if (res.data.code == "success") {
       getOrderListById(res.data.data[0].id).then((res: any) => {
         tableData.value = res.data.data.items
-        caseneoId = res.data.data.neoid
-        caseid = res.data.data.neoid
+        caseneoId = parseInt(neoid.value)//res.data.data.neoid
+        // caseid = res.data.data.neoid
         tableData.value.forEach(item => {
           item['checked'] = false
           item["orderId"] = formDialog.value.orderNo
         })
-        getTicketSolutionBycaseId(caseid).then((res: any) => {
+        getTicketSolutionBycaseId(caseneoId).then((res: any) => {
           if (res.data.code == "success") {
+            console.info("getTicketSolutionBycaseId",res)
+            console.info("caseneoId",caseneoId)
             let rtData = res.data.details;
+            if(rtData==undefined){
+              rtData= res.data.data.details;
+            }
             if(res.data.data!=undefined){
               solutionId=res.data.data["id"]
             }

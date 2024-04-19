@@ -730,9 +730,9 @@ const complaintSource = ref([
 ])
 
 const dispatchType = ref([
-  { code: "1", name: "配送派工" },
-  { code: "2", name: "安装派工" },
-  { code: "3", name: "维修" },
+  { code: "0", name: "配送派工" },
+  { code: "1", name: "安装派工" },
+  { code: "2", name: "维修" },
 ])
 
 const priority = ref([
@@ -795,7 +795,7 @@ let deliveryOrderForm = reactive({
   fieldJobContactName: "",
   contactTelephone: "",
   priority: "",
-  type: "3",
+  type: "2",
   remark: "",
   appointmentStartTime: "",
   appointmentEndTime: "",
@@ -923,6 +923,9 @@ const getDetailsData = () => {
     if (rtData.code == "success") {
       currentItem.value = rtData.data;
       formDialog.value["orderNo"] = currentItem.value["orderNeoId"]
+      console.log("wenti:")
+      console.log(rtData.data["caseNo"])
+      getSearchOrderOneList(rtData.data["caseNo"])
     }
     else {
       proxy.$message.error(rtData?.message);
@@ -1096,7 +1099,7 @@ const loadingOrderList = (row) => {
         })
         getTicketSolutionBycaseId(caseid).then((res: any) => {
           if (res.data.code == "success") {
-            let rtData = res.data.data.details;
+            let rtData = res.data.details;
             if(res.data.data!=undefined){
               solutionId=res.data.data["id"]
             }
@@ -1208,6 +1211,11 @@ const finishDeliveryOrder = () => {
   params["fieldJobContactName"] = taskDetails.value.accountName == undefined ? "" : taskDetails.value.accountName.toString();
   // params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   // params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
+  console.log(orderDetails)
+  params["fieldJobOrderId"]=orderDetails.value[0]["id"]
+  params["contactTelephone"]=orderDetails.value[0]["contactTel"]
+  params["fieldJobContactName"]=orderDetails.value[0]["accountName__C"]
+  params["name"]=orderDetails.value[0]["accountName__C"]+"的维修派工单"
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
   addFieldJob(params).then((res: any) => {
@@ -1282,7 +1290,32 @@ const convertDistrict = (code) => {
   }
 }
 
-
+const orderDetails=ref({} as any)
+//获取订单列表
+const getSearchOrderOneList = (po) => {
+  let params = {
+    "deliveryDate": "",
+    "status__c": "",
+    "orderType__c": "",
+    "transactionDate": "",
+    "po": po,
+    "accountName": "",
+    "accountPhone": ""
+  }
+  getOrderList(params).then(res => {
+    let rtData = res.data;
+    if (rtData.code == "success") {
+      orderDetails.value=rtData.data
+      deliveryOrderForm["fieldJobOrderId"]=rtData.data["id"]
+      deliveryOrderForm["contactTelephone"]=rtData.data["contactTel"]
+      deliveryOrderForm["fieldJobContactName"]=rtData.data["accountName__C"]
+      deliveryOrderForm["name"]=rtData.data["accountName__C"]+"的维修派工单"
+    }
+    else {
+      proxy.$message.error(rtData?.message);
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>

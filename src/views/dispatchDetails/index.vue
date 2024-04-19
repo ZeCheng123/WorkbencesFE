@@ -123,9 +123,9 @@
         >
           <el-table-column prop="text1" label="服务评价号" />
           <el-table-column prop="text2" label="状态" />
-          <el-table-column prop="text3" label="其它字段" />
+          <el-table-column prop="text3" label="满意度" />
           <el-table-column prop="text4" label="服务技工" />
-          <!-- <el-table-column prop="text5" label="创建时间" /> -->
+          <el-table-column prop="text5" label="创建时间" />
           <el-table-column prop="text6" label="操作" width="80px">
             <template #default="scope">
               <div
@@ -316,8 +316,8 @@ const tableDataOrderDetials = ref([
 const tableDataServiceEvaluation = ref([
   {
     text1: "SU2024030101",
-    text2: "已评价",
-    text3: "示例字段...",
+    text2: "未评价",
+    text3: "待填写",
     text4: "李工",
     text5: "2021-02-28 10:30:50",
     text6: "",

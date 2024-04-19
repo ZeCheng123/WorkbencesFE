@@ -1020,13 +1020,13 @@ const extralUserData=ref<any>([])
 const finishInstallationOrder = async () => {
   console.log(installationOrderForm);
   let params = {
-    fieldJobContactName: taskDetails.value.accountName==undefined?"":taskDetails.value.accountName,
+    fieldJobContactName: orderData.value.accountName__C==undefined?"":orderData.value.accountName__C,
     contactTelephone: orderData.value.contactTel==undefined?"":orderData.value.contactTel,
     priority: installationOrderForm.priority,
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
     fieldJobOrderId: route.query.orderId,
-    name:taskDetails.value.accountName+"的安装派工单",
+    name:orderData.value.accountName__C+"的安装派工单",
     type: "安装派工",
     fieldJobType__c:1,
     stage__c:0,
@@ -1093,11 +1093,12 @@ const viewOrderDetails = (row:any) =>{
 
 const finishDeliveryOrder =  () => {
   let params = deliveryOrderForm;
-  params["fieldJobContactName"]=taskDetails.value.accountName==undefined?"":taskDetails.value.accountName.toString();
+  params["fieldJobContactName"]=orderData.value.accountName__C==undefined?"":orderData.value.accountName__C.toString();
   params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
+  params["name"] = orderData.value.accountName__C+"的配送派工单";
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
       tableDataDispatch.value.push(data);

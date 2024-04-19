@@ -112,16 +112,16 @@
               <el-date-picker class="custom-date-picker" v-model="otherField.scheduleDeliveryTime" type="datetime" placeholder="日期/时间" />
             </span>
           </span>
-          <span class="field" style="width: 200px;">
+          <span class="field" style="width: 204px;">
             <span class="label" style="color: blue;">预计安装时间：</span>
             <span class="value">
               <el-date-picker class="custom-date-picker" v-model="otherField.scheduleInstallationTime" type="datetime"
-                placeholder="日期/时间" />
+                placeholder="日期/时间" value-format="YYYY-MM-DD HH:mm:ss" />
             </span>
           </span>
-          <!-- <span class="right" >
-              <el-button @click="updateOrderData" type="primary" class="search_btn">保存</el-button>
-          </span> -->
+          <span class="right" >
+              <el-button @click="updateOrderInfo" type="primary" class="search_btn">保存</el-button>
+          </span>
           
         </span>
       </span>
@@ -458,7 +458,7 @@ import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
-import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase, getServiceticketPage, getServiceticketList } from '../../api/common.js'
+import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase, getServiceticketPage, getServiceticketList, updateOrderData } from '../../api/common.js'
 
 
 const { proxy }: any = getCurrentInstance()
@@ -470,7 +470,7 @@ const route = useRoute()
 
 const currentStep = ref(1)
 
-const tableData = ref({})
+const tableData = ref({} as any)
 
 const orderList = ref([]);
 
@@ -680,8 +680,9 @@ const getList = () => {
     let dataList = res.data
     if (dataList.code == "success") {
       tableData.value = dataList.data
-      otherField.value.scheduleDeliveryTime=tableData["estimatedDeliveryDate"]
-      otherField.value.scheduleInstallationTime=tableData["estimatedInstallDate"]
+      otherField.value.scheduleDeliveryTime=tableData.value["estimatedDeliveryDate"]
+      otherField.value.scheduleInstallationTime=tableData.value["estimatedInstallDate"]
+      otherField.value.haveInstallationConditions=tableData.value["ifConinsall__C"]
       tableDataOrderDetailsList.value = dataList.data.items
     } else {
       console.log("失败")
@@ -979,8 +980,37 @@ const viewTaskDetails = (row: any) => {
 		});
 	}
 
-const updateOrderData=()=>{
+const updateOrderInfo=()=>{
+  
+  let params = {
+    ifConinsall__C:otherField.value.haveInstallationConditions,
+    estimatedDeliveryDate:otherField.value.scheduleDeliveryTime,
+    estimatedInstallDate:otherField.value.scheduleInstallationTime,
+    id:tableData.value["id"]
+  };
+  updateOrderData(params).then((res : any) => {
+			let data = res.data.data;
+			if (data!=undefined) {
+					ElMessage({
+						message: '更新订单成功',
+						type: 'success'
+					})
 
+			} else {
+          ElMessage({
+            message: '未存在对应订单',
+            type: 'error'
+  				})
+				
+			}
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求更新订单信息失败，请重试',
+				type: 'error'
+			});
+			console.error('请求更新订单信息失败，请重试:', error);
+		});
 }
 </script>
 

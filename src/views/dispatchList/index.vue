@@ -301,7 +301,11 @@ const getList = (isTure: boolean) => {
 					type: 'error'
 				})
 			}
-
+      pageConfig.value = {
+					pageIndex: res.data.current==undefined?1:parseInt(res.data.current),
+					pageSize: res.data.size,
+					total: res.data.total
+				} as any;
 		}).catch((error: any) => {
 			// 显示请求失败的提示框
 			ElMessage({

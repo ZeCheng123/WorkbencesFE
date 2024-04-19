@@ -207,3 +207,18 @@ export const addExternalUser = (data)=>{
   })
 }
 
+
+export const updateOrderData = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/order/delivery-info'
+  })
+}
+
+export const getTicketSolutionBycaseId = (data)=>{
+    return request({
+      method: 'GET',
+      url: '/md/api/ticket-solution?caseId='+data
+    })
+  }

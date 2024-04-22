@@ -162,11 +162,19 @@
               </el-form-item>
             </div>
             <div class="custom-row">
-              <el-form-item label="经销商编号">              
-                <el-input placeholder="请输入经销商编号" v-model="dialogForm.distributorNo"/>
+              <el-form-item label="经销商编码">              
+                <el-input placeholder="请输入经销商编码" v-model="dialogForm.distributorNo"/>
               </el-form-item>
               <el-form-item label="经销商名称">              
                 <el-input placeholder="请输入经销商名称" v-model="dialogForm.distributorName"/>
+              </el-form-item>
+            </div>
+            <div class="custom-row">
+              <el-form-item label="总代编码">              
+                <el-input placeholder="请输入总代编码" v-model="dialogForm.generalAgentNo"/>
+              </el-form-item>
+              <el-form-item label="总代名称">              
+                <el-input placeholder="请输入总代名称" v-model="dialogForm.generalAgentName"/>
               </el-form-item>
             </div>
 
@@ -208,14 +216,16 @@ const form = ref({
 })
 
 const dialogForm = ref({
-  userType: 1,
-  name: "",
-  phone: "",
-  status: 1,
-  storeNo: "",
-  storeName: "",
-  distributorNo: "",
-  distributorName: ""
+    userType: 1,
+    name: "",
+    phone: "",
+    status: 1,
+    storeNo: "HY0011",
+    storeName: "梦天木门集团有限公司",
+    distributorNo: "HY01",
+    distributorName: "梦天集团",
+    generalAgentNo: "GD01",
+    generalAgentName: "梦天"
 })
 
 const dialogFormRule = ref({
@@ -322,10 +332,12 @@ const cacnelAdd = () =>{
       name: "",
       phone: "",
       status: 1,
-      storeNo: "",
-      storeName: "",
-      distributorNo: "",
-      distributorName: ""
+      storeNo: "HY0011",
+      storeName: "梦天木门集团有限公司",
+      distributorNo: "HY01",
+      distributorName: "梦天集团",
+      generalAgentNo: "GD01",
+      generalAgentName: "梦天"
   } as any;
   formRef.value.clearValidate();
   showDialog.value = false
@@ -345,10 +357,12 @@ const comfirmAdd = () =>{
             name: "",
             phone: "",
             status: 1,
-            storeNo: "",
-            storeName: "",
-            distributorNo: "",
-            distributorName: ""
+            storeNo: "HY0011",
+            storeName: "梦天木门集团有限公司",
+            distributorNo: "HY01",
+            distributorName: "梦天集团",
+            generalAgentNo: "GD01",
+            generalAgentName: "梦天"
           } as any;
           showDialog.value = false;
           ElMessage({

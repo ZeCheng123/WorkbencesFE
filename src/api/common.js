@@ -221,4 +221,20 @@ export const getTicketSolutionBycaseId = (data)=>{
       method: 'GET',
       url: '/md/api/ticket-solution?caseId='+data
     })
-  }
+}
+
+export const sendCode = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: 'md/api/common/captcha'
+  })
+}
+
+export const login = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: 'md/api/auth/login/phone'
+  })
+}

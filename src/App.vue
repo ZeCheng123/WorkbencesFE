@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%; height: calc(100% - 16px);" ref="mainElement">
-    <div class="nav_list" v-if="proxy.$route.path!='/main'">
+    <div class="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login'">
        <ul>
           <li v-for="(record, index) in routes" :key="index" @click="clickNav(record,index)" >
              <template v-if="index == 0"><img  src="@/assets/images/main_icon.png" alt=""></template>
@@ -23,6 +23,7 @@ const routes = ref([]);
 const mainElement = ref<HTMLDivElement | null>(null);
 
 
+
 // 实时监听路由变化
 watch(() => proxy.$route,
       (to, from) => {
@@ -38,15 +39,22 @@ watch(() => proxy.$route,
             path: to.path
           }];
         }
-        else if(to.path!="/main"){
+        else if(to.path!="/main" && to.path!="/login"){
           routes.value.push({
             name: to.name,
-            path: to.path
+            path: to.path,
+            query: to.query
           });
         }
         var appEl = document.getElementById("app");
-        if(to.path == "/main" && appEl){
-          appEl.style.padding = "16px 16px 16px 16px";
+        if(to.path == "/login" && appEl){
+          appEl.style.cssText = `padding: 0px !important`;
+          if(mainElement.value){
+            mainElement.value.style.height = "100%";
+          }
+        }
+        else if(to.path == "/main" && appEl){
+          appEl.style.cssText = "padding: 16px !important";
           if(mainElement.value){
             mainElement.value.style.height = "100%";
           }
@@ -56,6 +64,16 @@ watch(() => proxy.$route,
           if(mainElement.value){
             mainElement.value.style.height = "calc(100% - 16px)";
           }
+        }
+
+        if(document.createEvent){
+          var event = document.createEvent("HTMLEvents");
+          event.initEvent("resize",true,true);
+          window.dispatchEvent(event);
+        }
+        else if(typeof Event === 'function')
+        {
+          window.dispatchEvent(new Event('resize'));
         }
       }
     );
@@ -98,6 +116,17 @@ onMounted(() =>{
               mainElement.value.style.cssText = "width: 100%; height: calc(100% - 16px)";
             }
           }
+          let appEl = document.getElementById("app");
+          if(appEl && proxy.$route.path!="/main"){
+            appEl.style.cssText = `padding: 0px 16px 16px 16px`
+          }
+        }
+        else{
+          let appEl = document.getElementById("app");
+          mainElement.value.style.cssText = `width: 100%; height: 100%`;
+          if(appEl){
+            appEl.style.cssText = `padding: 0px 0px 0px 0px`
+          }
         }
       },0));
       if(document.createEvent){
@@ -118,7 +147,10 @@ onMounted(() =>{
 const clickNav = (item,index) =>{
   if(index != routes.value.length - 1)
   {
-    proxy.$router.push(item.path);
+    proxy.$router.push({
+      path: item.path, 
+      query: item.query
+    })
   }
 }
 

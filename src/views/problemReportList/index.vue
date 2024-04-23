@@ -298,7 +298,7 @@ const caseStatus = ref([
     name:"待回复",code:"4"
   },
   {
-    name:"已完成",code:"4"
+    name:"已完成",code:"5"
   }
 ])
 

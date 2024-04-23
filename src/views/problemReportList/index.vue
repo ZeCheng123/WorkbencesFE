@@ -16,10 +16,7 @@
             <el-input placeholder="输入客户名称" v-model="form.customerName" />
           </el-form-item>
           <el-form-item label="客户电话">
-            <el-input
-              placeholder="请输入客户电话"
-              v-model="form.customerName"
-            />
+            <el-input placeholder="请输入客户电话" v-model="form.customerPhone"/>
           </el-form-item>
         </el-form>
         <el-form
@@ -35,15 +32,17 @@
               range-separator="~"
               start-placeholder="开始时间"
               end-placeholder="结束时间"
+              format="YYYY/MM/DD"
+              value-format="YYYY-MM-DD"
             />
           </el-form-item>
           <el-form-item label="订单状态">
             <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
               <el-option
-                v-for="item in orderStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in caseStatus"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
               />
             </el-select>
           </el-form-item>
@@ -397,11 +396,12 @@ const submitProblemReporting = () => {
   })
 }
 
+//查询按钮方法
 const getTableDataList = () =>{
   let params = {
     caseStatus: "",
-    caseNo: form.problemNo,
-    name: form.customerName
+    caseNo: form.problemNo !=null?form.problemNo.trim():form.problemNo,
+    name: form.customerName !=null? form.customerName.trim():form.customerName
   }
   getServiceCaseList(params).then(res =>{
     let rtData = res.data;

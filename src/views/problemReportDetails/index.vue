@@ -205,7 +205,7 @@
                 </template>
               </el-table-column>
               <!-- <el-table-column type="selection" width="55" /> -->
-              <el-table-column prop="orderId" label="订单编号" />
+              <el-table-column prop="orderPo" label="订单编号" />
               <el-table-column prop="sku" label="详单编号" />
               <el-table-column prop="category1" label="产品大类" />
               <el-table-column prop="fscProductModel" label="产品型号" />
@@ -464,7 +464,7 @@ const currentDeliveryOrderStep = ref(1)
 const route = useRoute()
 const id = ref(route.query.id)
 const neoid = ref<any>(route.query.neoid)
-let caseneoId = ""
+let caseneoId = null
 const taskStatus = route.query.status != null ? parseInt(route.query.status.toString(), 0) + 1 : 1
 const showRelatedDocumentsDialog = ref(false)
 const orderList = ref([]);
@@ -477,7 +477,7 @@ const currentItem = ref<any>({});
 const provinceList = ref([]);
 const cityList = ref([]);
 const districtList = ref([]);
-let solutionId="";
+let solutionId = "";
 
 
 
@@ -960,6 +960,10 @@ const getSearchOrderList = () => {
 }
 
 const upgradeToHeadquarters = () => {
+  tableData.value.forEach(item => {
+    item['checked'] = false
+  })
+  dialog2Form.value = ref([])
   showMainDialog.value = true
 
 }
@@ -1003,15 +1007,15 @@ const submitDialog = () => {
     item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
     item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
     item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
-    item["id"]=""
+    item["id"] = dialog2Form.value.problemType != "" ? item["id"] : null
   })
 
   let params = {
     serviceCaseId: parseInt(caseneoId),
     details: selectData
   }
-  if(solutionId!=""){
-    params["id"]=solutionId
+  if (solutionId != "") {
+    params["id"] = solutionId
   }
   console.info("selectDataselectData", selectData)
 
@@ -1026,9 +1030,9 @@ const submitDialog = () => {
       //提交方法
       getticketsolution(params).then((res: any) => {
         console.log(res)
-        let data=res.data.data;
-        if(data!=undefined){
-          solutionId=data["id"]
+        let data = res.data.data;
+        if (data != undefined) {
+          solutionId = data["id"]
         }
       })
     }, 500);
@@ -1083,35 +1087,29 @@ const getDistrictList = () => {
 
 
 //升级到总部售后点击下一步加载订单里面的items数据
-const loadingOrderList = (row) => {
-  //let caseid = "";
+const loadingOrderList = (row) => 
+{
   let params = {
     po: row
   }
   getOrderList(params).then((res: any) => {
     if (res.data.code == "success") {
-      getOrderListById(res.data.data[0].id).then((res: any) => {
-        tableData.value = res.data.data.items
-        caseneoId = parseInt(neoid.value)//res.data.data.neoid
-        // caseid = res.data.data.neoid
+      let orderid = res.data.data[0].id;//订单id
+      let orderPo = res.data.data[0].po //订单po
+      caseneoId = parseInt(neoid.value)
+      getOrderListById(orderid).then((res: any) => {
+        let getOrderItems = res.data.data.items;
+        tableData.value = getOrderItems;
         tableData.value.forEach(item => {
           item['checked'] = false
-          item["orderId"] = formDialog.value.orderNo
+          item["orderPo"] = orderPo
         })
         getTicketSolutionBycaseId(caseneoId).then((res: any) => {
           if (res.data.code == "success") {
-            console.info("getTicketSolutionBycaseId",res)
-            console.info("caseneoId",caseneoId)
-            let rtData = res.data.details;
-            if(rtData==undefined){
-              rtData= res.data.data.details;
-            }
-            if(res.data.data!=undefined){
-              solutionId=res.data.data["id"]
-            }
-            if (rtData && rtData.length > 0) {
+            let tsDetails = res.data.data.details;
+            if (tsDetails && tsDetails.length > 0) {
               tableData.value.forEach(val => {
-                let item = rtData.find(val2 => val["id"] == val2["orderProductId"]);
+                let item = tsDetails.find(val2 => val["id"] == val2["orderProductId"]);
                 if (item) {
                   val["descriptionOfTicketProblem"] = item["descriptionOfTicketProblem"];
                   val["ticketClassification"] = item["ticketClassification"];
@@ -1119,28 +1117,21 @@ const loadingOrderList = (row) => {
                   val["responsibleSubject"] = item["responsibleSubject"];
                 }
               })
-              console.log("new Date", tableData)
+              console.log("tableData222",tableData.value)
             } else {
               console.info("details没数据")
             }
+
           } else {
-            console.info("接口请求失败")
-            proxy.$message.error("接口请求失败!");
+            proxy.$message.error("数据异常!");
           }
-        });
+        })
       })
     } else {
       proxy.$message.error("数据异常!");
     }
   })
 }
-
-
-// const handleSelectionChange = (selection) => {
-//   selectedRows.value = selection;
-//   console.log("selectedRows", selection)
-
-// }
 
 
 //跳转售后工单详情
@@ -1218,10 +1209,10 @@ const finishDeliveryOrder = () => {
   // params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   // params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
   console.log(orderDetails)
-  params["fieldJobOrderId"]=orderDetails.value[0]["id"]
-  params["contactTelephone"]=orderDetails.value[0]["contactTel"]
-  params["fieldJobContactName"]=orderDetails.value[0]["accountName__C"]
-  params["name"]=orderDetails.value[0]["accountName__C"]+"的维修派工单"
+  params["fieldJobOrderId"] = orderDetails.value[0]["id"]
+  params["contactTelephone"] = orderDetails.value[0]["contactTel"]
+  params["fieldJobContactName"] = orderDetails.value[0]["accountName__C"]
+  params["name"] = orderDetails.value[0]["accountName__C"] + "的维修派工单"
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
   addFieldJob(params).then((res: any) => {
@@ -1296,7 +1287,7 @@ const convertDistrict = (code) => {
   }
 }
 
-const orderDetails=ref({} as any)
+const orderDetails = ref({} as any)
 //获取订单列表
 const getSearchOrderOneList = (po) => {
   let params = {
@@ -1311,11 +1302,11 @@ const getSearchOrderOneList = (po) => {
   getOrderList(params).then(res => {
     let rtData = res.data;
     if (rtData.code == "success") {
-      orderDetails.value=rtData.data
-      deliveryOrderForm["fieldJobOrderId"]=rtData.data["id"]
-      deliveryOrderForm["contactTelephone"]=rtData.data["contactTel"]
-      deliveryOrderForm["fieldJobContactName"]=rtData.data["accountName__C"]
-      deliveryOrderForm["name"]=rtData.data["accountName__C"]+"的维修派工单"
+      orderDetails.value = rtData.data
+      deliveryOrderForm["fieldJobOrderId"] = rtData.data["id"]
+      deliveryOrderForm["contactTelephone"] = rtData.data["contactTel"]
+      deliveryOrderForm["fieldJobContactName"] = rtData.data["accountName__C"]
+      deliveryOrderForm["name"] = rtData.data["accountName__C"] + "的维修派工单"
     }
     else {
       proxy.$message.error(rtData?.message);

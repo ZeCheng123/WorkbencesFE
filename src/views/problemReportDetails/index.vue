@@ -153,9 +153,40 @@
           </span>
         </div>
         <template v-if="currentDialogStep == 1">
-          <span class="form_row">
+          <div class="search">
             <span class="label required">订单编号</span>
-            <!-- <el-input v-model="formDialog.orderNo" placeholder="订单编号"></el-input> -->
+            <el-input v-model="formDialog.orderNo" placeholder="订单编号"></el-input>
+          </div>
+          <div class="search">
+            <span class="label required">升级备注</span>
+            <el-input v-model="formDialog.remark" placeholder="输入自定义备注"></el-input>
+          </div>
+          <div class="search">
+            <span class="label required">客户历史售后工单</span>
+          </div>
+          <div class="table">
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="serviceTicket" :stripe="false"
+              style="width: 100%;max-height: 200px;overflow: auto;">
+              <el-table-column prop="test1" label="售后工单编号" />
+              <el-table-column prop="test2" label="经销商名称" />
+              <el-table-column prop="test3" label="专卖店名称" />
+              <el-table-column prop="test4" label="状态" />
+              <el-table-column prop="test5" label="提报人" />
+              <el-table-column prop="test6" label="描述相关字段 " />
+              <el-table-column prop="test7" label="创建时间 " />
+              <el-table-column prop="test8" label="操作">
+                <template #default="scope">
+                  <div style="display:flex;align-items:center;">
+                    {{ scope.row.ticketClassification ? (problemTypeList.find(val => val["code"] ==
+                      scope.row.ticketClassification)?.name) : "" }}
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+          <!-- <span class="form_row">
+            <span class="label required">订单编号</span>
             <el-select style="width:368px ;" v-model="formDialog.orderNo" filterable @change="" placeholder="请选择订单编号">
               <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.po" />
             </el-select>
@@ -163,7 +194,10 @@
           <span class="form_row">
             <span class="label">升级备注</span>
             <el-input v-model="formDialog.remark" placeholder="输入自定义备注"></el-input>
-          </span>
+          </span> -->
+
+
+
         </template>
         <template v-if="currentDialogStep == 2">
           <div class="desc_action">
@@ -392,7 +426,8 @@
                 <el-table-column prop="status__c" label="状态">
                   <template #default="scope">
                     <div style="display:flex;align-items:center;">
-                      {{ scope.row.status__c ? (seviceTicketStatusOptions.find(val => val["code"] == scope.row.status__c)?.name) : "" }}
+                      {{ scope.row.status__c ? (seviceTicketStatusOptions.find(val => val["code"] ==
+                        scope.row.status__c)?.name) : "" }}
                     </div>
                   </template>
                 </el-table-column>
@@ -484,6 +519,7 @@ const extralUserData = ref<any>([])
 const tableDataDispatch = ref([])
 const deliveryOrderDialog = ref(false)
 const tableData = ref([])
+const serviceTicket = ref([])
 const selectedRows = ref([])
 const currentItem = ref<any>({});
 const provinceList = ref([]);

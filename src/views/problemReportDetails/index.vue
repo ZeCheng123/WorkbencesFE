@@ -165,8 +165,8 @@
             <span class="label required">客户历史售后工单</span>
           </div>
           <div class="table">
-            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="serviceTicket" :stripe="false"
-              style="width: 100%;max-height: 200px;overflow: auto;">
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="serviceTicket"
+              :stripe="false" style="width: 100%;max-height: 200px;overflow: auto;">
               <el-table-column prop="test1" label="售后工单编号" />
               <el-table-column prop="test2" label="经销商名称" />
               <el-table-column prop="test3" label="专卖店名称" />
@@ -413,6 +413,30 @@
       </el-dialog>
     </div>
     <!-- 创建派工单 -->
+    <!-- 编辑按钮 -->
+    <div class="editcontentDialog">
+      <el-dialog v-model="editcontentDialog" title="编辑" width="40%" :show-close="false">
+        <div class="content">
+          <el-form  :model="deliveryOrderForm" :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef" label-width="90px" label-position="left">
+            <el-form-item label="负责人" prop="responsibleSubject">
+              <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="负责人" />
+            </el-form-item>
+            <el-form-item label="问题描述" prop="contactTelephone">
+              <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="问题描述" />
+            </el-form-item>
+          </el-form>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button class="cancel_btn" @click="editcontentDialog = false">取消</el-button>
+            <el-button type="primary" class="primary_btn"
+              @click="deliveryOrderNextStep">保存</el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+    </div>
     <div class="relatedDocumentsDialog">
       <el-dialog v-model="showRelatedDocumentsDialog" title="相关单据" width="80%" :show-close="false">
         <div class="content">
@@ -518,6 +542,7 @@ const orderList = ref([]);
 const extralUserData = ref<any>([])
 const tableDataDispatch = ref([])
 const deliveryOrderDialog = ref(false)
+const editcontentDialog = ref(false)
 const tableData = ref([])
 const serviceTicket = ref([])
 const selectedRows = ref([])
@@ -973,6 +998,10 @@ let deliveryOrderForm = reactive({
   address: ""
 })
 
+let editcontentDialog = reactive({
+  
+})
+
 const deliveryOrderRule = reactive({
   followerId: [
     { required: true, message: "Please input username", trigger: "blur" },
@@ -1208,20 +1237,21 @@ const submitDialog = () => {
 
 
 const initiateComments = () => {
-  ElMessageBox.prompt("请填写评论内容", "发起评论", {
-    inputPattern: /\S/,
-    inputErrorMessage: '评论内容不能为空!',
-    confirmButtonText: "确认",
-    cancelButtonText: "取消",
-  })
-    .then(({ value }) => {
-      commentList.value.push({
-        userName: "经销商",
-        text: value,
-        date: new Date().toLocaleString(),
-      })
-    })
-    .catch(() => { })
+  editcontentDialog.value = true
+  // ElMessageBox.prompt("请填写评论内容", "发起评论", {
+  //   inputPattern: /\S/,
+  //   inputErrorMessage: '评论内容不能为空!',
+  //   confirmButtonText: "确认",
+  //   cancelButtonText: "取消",
+  // })
+  //   .then(({ value }) => {
+  //     commentList.value.push({
+  //       userName: "经销商",
+  //       text: value,
+  //       date: new Date().toLocaleString(),
+  //     })
+  //   })
+  //   .catch(() => { })
 }
 
 

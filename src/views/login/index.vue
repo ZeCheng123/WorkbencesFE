@@ -25,7 +25,6 @@
 
 
 <script setup lang="ts">
-import { userInfo } from "os";
 import { ref, computed, getCurrentInstance, reactive } from "vue"
 import { sendCode,login } from '../../api/common.js'
 import { userInfoStore } from '../../store/userinfo'
@@ -67,6 +66,17 @@ const getSendCode = () =>{
 
 
 const clickBtn = () =>{
+
+
+    // // 企业微信授权接口地址
+    // var appid = "wx3c93310d99a3becf";
+    // var agentid = "1000056";
+    // var redirect_uri = encodeURIComponent("http://hkhwedi.kwesz.com.cn");
+    // var authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`;
+    // window.open(authUrl);
+
+
+  ////////////////////////////////////////////////////////
   if(!form.phone){
     proxy.$message.error("手机号不能为空!");
     return;

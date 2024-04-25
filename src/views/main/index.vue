@@ -196,7 +196,6 @@
 import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount } from "vue"
 import * as echarts from "echarts"
 const { proxy }: any = getCurrentInstance()
-
 const timer = ref(null)
 
 const chart1 = ref(null)

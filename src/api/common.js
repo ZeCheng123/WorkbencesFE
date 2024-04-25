@@ -238,3 +238,11 @@ export const login = (data)=>{
     url: 'md/api/auth/login/phone'
   })
 }
+
+export const wecom = (data) =>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: 'md/api/auth/login/wecom'
+  })
+}

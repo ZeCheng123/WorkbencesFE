@@ -525,7 +525,7 @@ import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
 import { Plus } from "@element-plus/icons-vue"
-import { getServiceCaseItem, getPickList, getOrderList, addFieldJob, getticketsolution, getOrderListById, getTicketSolutionBycaseId, getServiceticketList, getExternalUser, getFeildJobList } from '../../api/common.js'
+import { getServiceCaseItem, getPickList, getOrderList, addFieldJob, getticketsolution, getOrderListById, getTicketSolutionBycaseId, getServiceticketList, getExternalUser, getFeildJobList, getOrderListByNeoId } from '../../api/common.js'
 
 const { proxy }: any = getCurrentInstance()
 
@@ -988,7 +988,7 @@ let deliveryOrderForm = reactive({
   appointmentEndTime: "",
   haveInstallConditions: false,
   fieldJobOrderId: route.query.orderId,
-  fieldJobType__c: 2,
+  fieldJobType__c: "2",
   stage__c: 0,
   name: taskDetails.value.accountName + "的配送派工单",
   fileList: [] as any,
@@ -1116,7 +1116,7 @@ const getDetailsData = () => {
       formDialog.value["orderNo"] = currentItem.value["caseNo"]
       console.log("wenti:")
       console.log(rtData.data["caseNo"])
-      getSearchOrderOneList(rtData.data["caseNo"])
+      getSearchOrderOneList(rtData.data["orderNeoId"])
     }
     else {
       proxy.$message.error(rtData?.message);
@@ -1407,10 +1407,11 @@ const finishDeliveryOrder = () => {
   // params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   // params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
   params["serviceCaseName"] = parseInt(neoid.value);
-  params["fieldJobOrderId"] = orderDetails.value[0]["id"]
-  params["contactTelephone"] = orderDetails.value[0]["contactTel"]
-  params["fieldJobContactName"] = orderDetails.value[0]["accountName__C"]
-  params["name"] = orderDetails.value[0]["accountName__C"] + "的维修派工单"
+  params["fieldJobOrderId"] = orderDetails.value["id"]
+  params["contactTelephone"] = orderDetails.value["contactTel"]
+  params["fieldJobContactName"] = orderDetails.value["accountName__C"]
+  params["name"] = orderDetails.value["accountName__C"] + "的维修派工单"
+  params["orderNo__c"] = orderDetails.value["po"]
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
   params["status"] = 0
@@ -1488,22 +1489,13 @@ const convertDistrict = (code) => {
 
 const orderDetails = ref({} as any)
 //获取订单列表
-const getSearchOrderOneList = (po) => {
-  let params = {
-    "deliveryDate": "",
-    "status__c": "",
-    "orderType__c": "",
-    "transactionDate": "",
-    "po": po,
-    "accountName": "",
-    "accountPhone": ""
-  }
-  getOrderList(params).then(res => {
+const getSearchOrderOneList = (orderneoId) => {
+  getOrderListByNeoId(orderneoId).then(res => {
     let rtData = res.data;
     if (rtData.code == "success") {
       orderDetails.value = rtData.data
       deliveryOrderForm["fieldJobOrderId"] = rtData.data["id"]
-      deliveryOrderForm["contactTelephone"] = rtData.data["contactTel"]
+      // deliveryOrderForm["contactTelephone"] = rtData.data["contactTel"]
       deliveryOrderForm["fieldJobContactName"] = rtData.data["accountName__C"]
       deliveryOrderForm["name"] = rtData.data["accountName__C"] + "的维修派工单"
     }

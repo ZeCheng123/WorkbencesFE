@@ -104,11 +104,19 @@ export const getFieldJobByPage = (data) => {
   })
 }
 
-
+//根据id获取订单
 export const getOrderListById = (data)=>{
   return request({
     method: 'GET',
     url: '/md/api/order?id='+data
+  })
+}
+
+//根据NeoId获取订单
+export const getOrderListByNeoId = (data)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/order?neoid='+data
   })
 }
 

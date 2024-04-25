@@ -476,6 +476,30 @@
            color: red;
        }
     }
+
+    .form_row_shengji{
+        height: 32px;
+        line-height: 32px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 18px 0px;
+        .label{
+           font-family: Alibaba PuHuiTi;
+           font-size: 14px;
+           font-weight: normal;
+           color: #4E5969;
+           letter-spacing: 0px;
+           width: 80px;
+           text-align: right;
+           margin-right: 10px;
+        }
+        .required::before{
+            content: "*";
+            color: red;
+        }
+     }
+
     .desc_action{
         display: flex;
         flex-direction: column;

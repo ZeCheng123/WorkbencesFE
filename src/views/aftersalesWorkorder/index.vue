@@ -78,7 +78,7 @@
     </span>
     <span class="table">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
-        <el-table-column prop="ticketNo__c" label="售后工单编号" />
+        <el-table-column prop="name" label="售后工单编号" />
         <el-table-column prop="storeName" label="专卖店名称" />
         <el-table-column prop="productionOrderNo__c" label="生产单号" />
         <el-table-column prop="accountName" label="客户名称" />
@@ -110,7 +110,7 @@
       <el-pagination
         class="table_pagination"
         :page-size="pageConfig.pageSize"
-        :pager-count="5"
+        :pager-count="15"
         layout="total, prev, pager, next"
         :total="pageConfig.total"
         @current-change="handleCurrentChange"
@@ -231,7 +231,7 @@ const seviceTicketStatusOptions = ref([
 
 const pageConfig = ref({
 		  pageIndex: 1,
-		  pageSize: 5,
+		  pageSize: 15,
 		  total: 0
 		});
 
@@ -314,7 +314,7 @@ const getList = (isTure: boolean) => {
   console.log(form)
   const customerName = form.customerName==undefined?"":form.customerName;
   const customerPhone = form.customerPhone==undefined?"":form.customerPhone;
-  let param = {"customerName": customerName,  "customerPhone": customerPhone,  "status": form.orderStatus,  "createdTime": "",  "pageSize":5,"pageNo":pageConfig.value.pageIndex}
+  let param = {"customerName": customerName,  "customerPhone": customerPhone,  "status": form.orderStatus,  "createdTime": "",  "pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex}
 		getServiceticketPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {
@@ -332,6 +332,11 @@ const getList = (isTure: boolean) => {
 					type: 'warning'
 				})
 			}
+      pageConfig.value = {
+					pageIndex: res.data.current==undefined?1:parseInt(res.data.current),
+					pageSize: res.data.size,
+					total: res.data.total
+				} as any;
 
 		}).catch((error: any) => {
 			// 显示请求失败的提示框

@@ -209,7 +209,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="id" label="派工单编号" />
+          <el-table-column prop="caseNo" label="派工单编号" />
           <el-table-column prop="stage__c" label="状态">
              <template #default="scope">
                <span style="color: blue;">{{scope.row["stage__c"] == "0" ? "待开始" : scope.row["stage__c"] == "1" ? "进行中" : "已完成"}}</span>
@@ -1034,7 +1034,8 @@ const finishInstallationOrder = async () => {
     appointmentStartTime: installationOrderForm.appointmentStartTime,
     appointmentEndTime: installationOrderForm.appointmentEndTime,
     followerId:installationOrderForm.username,
-    address:orderData.value.customerAddress==undefined?"":orderData.value.customerAddress
+    address:orderData.value.customerAddress==undefined?"":orderData.value.customerAddress,
+    status:0
   }
     addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
@@ -1099,6 +1100,7 @@ const finishDeliveryOrder =  () => {
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
   params["name"] = orderData.value.accountName__C+"的配送派工单";
+  params["status"]=0
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
       tableDataDispatch.value.push(data);

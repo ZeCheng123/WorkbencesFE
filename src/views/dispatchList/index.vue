@@ -162,7 +162,7 @@ const filterMethodOptions = ref([
 
 const technicianTypeOption = ref([
     {
-			code: "all",
+			code: "",
 			name: "全部",
 		},
 		{

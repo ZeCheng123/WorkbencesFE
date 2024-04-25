@@ -244,10 +244,11 @@
         <div class="content">
           <el-form :model="problemReportingForm" :rules="problemReportingRule" label-width="90px" label-position="left">
             <el-form-item label="订单编号" prop="orderNo">
-              <el-select v-model="problemReportingForm.orderNo" filterable @change="onCahngeOrderNo"
+              <!-- <el-select v-model="problemReportingForm.orderNo" filterable @change="onCahngeOrderNo"
                 placeholder="请选择订单编号">
                 <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.po" />
-              </el-select>
+              </el-select> -->
+              <el-input disabled placeholder="请输入订单编号" v-model="problemReportingForm.orderNo" />
             </el-form-item>
             <el-form-item label="客户姓名" prop="customerName">
               <el-input placeholder="请输入客户姓名" v-model="problemReportingForm.customerName" />
@@ -403,43 +404,43 @@
               <el-input placeholder="请输入任务编号" v-model="ShowRelatedFieldDialogs" />
             </el-form-item>
           </el-form> -->
-          <el-descriptions direction="vertical" :column="12" :size="size" border>
-            <el-descriptions-item label="渠道分类">渠道</el-descriptions-item>
-            <el-descriptions-item label="产品分类">渠道五金</el-descriptions-item>
-            <el-descriptions-item label="订单编号">GZ0111-03528-0</el-descriptions-item>
-            <el-descriptions-item label="订单流程">渠道</el-descriptions-item>
-            <el-descriptions-item label="应收款">18100000000</el-descriptions-item>
-            <el-descriptions-item label="订货日期">2024-04-02</el-descriptions-item>
-            <el-descriptions-item label="提货日期"></el-descriptions-item>
-            <el-descriptions-item label="交期类型">标准产品类</el-descriptions-item>
-            <el-descriptions-item label="交期天数">35</el-descriptions-item>
-            <el-descriptions-item label="计划出货日期">2024-05-17</el-descriptions-item>
-            <el-descriptions-item label="总订单号"></el-descriptions-item>
-            <el-descriptions-item label="分订单号"></el-descriptions-item>
-            <el-descriptions-item label="订货分站"></el-descriptions-item>
-            <el-descriptions-item label="中心仓"></el-descriptions-item>
-            <el-descriptions-item label="货运部代号">A03</el-descriptions-item>
-            <el-descriptions-item label="货运部">恒凯</el-descriptions-item>
-            <el-descriptions-item label="销售类型">零售</el-descriptions-item>
-            <el-descriptions-item label="加急类型">正常交期</el-descriptions-item>
-            <el-descriptions-item label="包装方式">标准包装</el-descriptions-item>
-            <el-descriptions-item label="客户姓名">石昌权</el-descriptions-item>
-            <el-descriptions-item label="客户电话">18286710051</el-descriptions-item>
-            <el-descriptions-item label="客户地址" :spen="3">贵州省/毕节市/七星关区/碧阳街道/南山御景</el-descriptions-item>
-            <el-descriptions-item label="专卖店编号">GZ0111</el-descriptions-item>
-            <el-descriptions-item label="专卖店录单员">毕节录单员</el-descriptions-item>
-            <el-descriptions-item label="专卖店名">贵州毕节</el-descriptions-item>
-            <el-descriptions-item label="专卖店电话">18508575546</el-descriptions-item>
-            <el-descriptions-item label="专卖店地址">贵州省毕节市居然之家远航店二楼</el-descriptions-item>
-            <el-descriptions-item label="经销商编号">GZ0111</el-descriptions-item>
-            <el-descriptions-item label="测量人"></el-descriptions-item>
-            <el-descriptions-item label="备注"></el-descriptions-item>
-            <el-descriptions-item label="生产单号">CH027787</el-descriptions-item>
-            <el-descriptions-item label="计划下单日期"></el-descriptions-item>
-            <el-descriptions-item label="计划入库日期"></el-descriptions-item>
-            <el-descriptions-item label="实际下单日期"></el-descriptions-item>
-            <el-descriptions-item label="订单验证码">6797612100</el-descriptions-item>
-            <el-descriptions-item label="订单创建人">6205</el-descriptions-item>
+          <el-descriptions direction="vertical" :column="4" :size="size" border>
+            <!-- <el-descriptions-item label="渠道分类">渠道</el-descriptions-item>
+            <el-descriptions-item label="产品分类">渠道五金</el-descriptions-item> -->
+            <el-descriptions-item label="订单编号">{{tableData["po"]}}</el-descriptions-item>
+            <el-descriptions-item label="订单流程">{{tableData["orderFlow"]}}</el-descriptions-item>
+            <el-descriptions-item label="应收款">{{tableData["productsAmount"]}}</el-descriptions-item>
+            <el-descriptions-item label="订货日期">{{tableData["orderDate"]}}</el-descriptions-item>
+            <!-- <el-descriptions-item label="提货日期"></el-descriptions-item> -->
+            <!-- <el-descriptions-item label="交期类型">标准产品类</el-descriptions-item> -->
+            <el-descriptions-item label="交期天数">{{tableData["estimatedDeliveryDays"]}}</el-descriptions-item>
+            <el-descriptions-item label="计划出货日期">{{ tableData["planedDeliveryDate"] }}</el-descriptions-item>
+            <!-- <el-descriptions-item label="总订单号"></el-descriptions-item> -->
+            <!-- <el-descriptions-item label="分订单号"></el-descriptions-item> -->
+            <!-- <el-descriptions-item label="订货分站"></el-descriptions-item> -->
+            <!-- <el-descriptions-item label="中心仓"></el-descriptions-item> -->
+            <!-- <el-descriptions-item label="货运部代号">A03</el-descriptions-item> -->
+            <!-- <el-descriptions-item label="货运部">恒凯</el-descriptions-item> -->
+            <el-descriptions-item label="销售类型">{{ tableData["typeOfSale__c"] }}</el-descriptions-item>
+            <!-- <el-descriptions-item label="加急类型">正常交期</el-descriptions-item> -->
+            <!-- <el-descriptions-item label="包装方式">标准包装</el-descriptions-item> -->
+            <el-descriptions-item label="客户姓名">{{ tableData["accountName__C"] }}</el-descriptions-item>
+            <el-descriptions-item label="客户电话">{{ tableData["contactTel"] }}</el-descriptions-item>
+            <el-descriptions-item label="客户地址" :spen="3">{{ tableData["customerAddress"] }}</el-descriptions-item>
+            <el-descriptions-item label="专卖店编号">{{ tableData["storeNo"] }}</el-descriptions-item>
+            <!-- <el-descriptions-item label="专卖店录单员">{{ tableData["typeOfSale__c"] }}</el-descriptions-item> -->
+            <el-descriptions-item label="专卖店名">{{ tableData["storeName__c"] }}</el-descriptions-item>
+            <!-- <el-descriptions-item label="专卖店电话">{{ tableData["typeOfSale__c"] }}</el-descriptions-item>
+            <el-descriptions-item label="专卖店地址">{{ tableData["typeOfSale__c"] }}</el-descriptions-item> -->
+            <el-descriptions-item label="经销商编号">{{ tableData["distributorNo"] }}</el-descriptions-item>
+            <!-- <el-descriptions-item label="测量人"></el-descriptions-item>
+            <el-descriptions-item label="备注"></el-descriptions-item> -->
+            <el-descriptions-item label="生产单号">{{ tableData["productionOrderNo__c"] }}</el-descriptions-item>
+            <!-- <el-descriptions-item label="计划下单日期"></el-descriptions-item>
+            <el-descriptions-item label="计划入库日期"></el-descriptions-item> -->
+            <!-- <el-descriptions-item label="实际下单日期">{{ tableData["transactionDate"] }}</el-descriptions-item> -->
+            <!-- <el-descriptions-item label="订单验证码">6797612100</el-descriptions-item> -->
+            <el-descriptions-item label="订单创建人">{{ tableData["createdBy"] }}</el-descriptions-item>
           </el-descriptions>
         </div>
         <template #footer>
@@ -684,6 +685,9 @@ const getList = () => {
       otherField.value.scheduleInstallationTime=tableData.value["estimatedInstallDate"]
       otherField.value.haveInstallationConditions=tableData.value["ifConinsall__C"]
       tableDataOrderDetailsList.value = dataList.data.items
+      problemReportingForm.value["orderNo"]=tableData.value["po"]
+      problemReportingForm.value["customerName"]=tableData.value["accountName__C"]
+      problemReportingForm.value["customerPhone"]=tableData.value["contactTel"]
     } else {
       console.log("失败")
     }
@@ -867,7 +871,7 @@ const submitProblemReporting = () => {
     }
   }
   let params = {
-    caseNo: problemReportingForm.value["orderNo"],
+    orderNeoId: tableData.value["neoid"],
     caseAccountName: problemReportingForm.value["customerName"],
     caseAccountPhone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],

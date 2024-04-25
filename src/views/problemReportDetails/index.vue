@@ -153,13 +153,13 @@
           </span>
         </div>
         <template v-if="currentDialogStep == 1">
-          <div class="search">
-            <span class="label required">订单编号</span>
-            <el-input v-model="formDialog.orderNo" placeholder="订单编号"></el-input>
-          </div>
-          <div class="search">
-            <span class="label required">升级备注</span>
-            <el-input v-model="formDialog.remark" placeholder="输入自定义备注"></el-input>
+          <span class="form_row_shengji">
+            <span class="label required">订单编号:</span>
+            <el-input disabled v-model="formDialog.orderNo" placeholder="订单编号" style="width: auto;"></el-input>
+          </span>
+          <div class="form_row_shengji">
+            <span class="label required">升级备注:</span>
+            <el-input v-model="formDialog.remark" placeholder="输入自定义备注" style="width: auto;"></el-input>
           </div>
           <div class="search">
             <span class="label required">客户历史售后工单</span>
@@ -167,19 +167,18 @@
           <div class="table">
             <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="serviceTicket"
               :stripe="false" style="width: 100%;max-height: 200px;overflow: auto;">
-              <el-table-column prop="test1" label="售后工单编号" />
-              <el-table-column prop="test2" label="经销商名称" />
-              <el-table-column prop="test3" label="专卖店名称" />
-              <el-table-column prop="test4" label="状态" />
-              <el-table-column prop="test5" label="提报人" />
-              <el-table-column prop="test6" label="描述相关字段 " />
-              <el-table-column prop="test7" label="创建时间 " />
-              <el-table-column prop="test8" label="操作">
+              <el-table-column prop="name" label="售后工单编号" />
+              <el-table-column prop="distributorNo" label="经销商名称" />
+              <el-table-column prop="storeName" label="专卖店名称" />
+              <el-table-column prop="status__c" label="状态" />
+              <el-table-column prop="reporter__c" label="提报人" />
+              <el-table-column prop="problemDescription__c" label="问题描述 " />
+              <el-table-column prop="distributorDemands__c" label="经销商需求描述 " />
+              <el-table-column prop="createdTime" label="创建时间 " />
+              <el-table-column prop="operate" label="操作">
                 <template #default="scope">
-                  <div style="display:flex;align-items:center;">
-                    {{ scope.row.ticketClassification ? (problemTypeList.find(val => val["code"] ==
-                      scope.row.ticketClassification)?.name) : "" }}
-                  </div>
+                  <el-checkbox v-if="scope.row.operate==1" v-model="scope.row.operate">已绑定</el-checkbox>
+                  <el-checkbox v-else v-model="scope.row.operate">点击绑定</el-checkbox>
                 </template>
               </el-table-column>
             </el-table>
@@ -305,9 +304,9 @@
           <div class="dialog-footer">
             <el-button class="cancel_btn" @click="showMainDialog = false">取消</el-button>
             <el-button v-if="currentDialogStep == 1" @click="currentDialogStepBut" type="primary" class="primary_btn"
-              style="margin-left：50px !important">下一步</el-button>
+              style="margin-left:50px !important">下一步</el-button>
             <el-button v-if="currentDialogStep == 2" @click="submitDialog" type="primary" class="primary_btn"
-              style="margin-left：50px !important">提交</el-button>
+              style="margin-left:50px !important">提交</el-button>
           </div>
         </template>
       </el-dialog>
@@ -415,7 +414,7 @@
     <!-- 创建派工单 -->
     <!-- 编辑按钮 -->
     <div class="editcontentDialog">
-      <el-dialog v-model="editcontentDialog" title="编辑" width="40%" :show-close="false">
+      <el-dialog v-model="editServerCasecontentDialog" title="编辑" width="40%" :show-close="false">
         <div class="content">
           <el-form  :model="deliveryOrderForm" :rules="deliveryOrderRule"
             ref="deliveryOrderFormRef" label-width="90px" label-position="left">
@@ -998,9 +997,7 @@ let deliveryOrderForm = reactive({
   address: ""
 })
 
-let editcontentDialog = reactive({
-  
-})
+let editServerCasecontentDialog = ref(false)
 
 const deliveryOrderRule = reactive({
   followerId: [
@@ -1159,7 +1156,16 @@ const upgradeToHeadquarters = () => {
   })
   dialog2Form.value = ref([])
   showMainDialog.value = true
-
+  let params={orderNoeId:neoid.value}
+  getServiceticketList(params).then(res => {
+    let rtData = res.data;
+    if (rtData.code == "success") {
+      serviceTicket.value = rtData.data;
+    }
+    else {
+      proxy.$message.error(rtData?.message);
+    }
+  })
 }
 
 const changeDialogStep = (step) => {

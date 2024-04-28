@@ -596,6 +596,7 @@
     }
 }
 
+
 :deep(.showMainDialog3 .el-dialog){
     margin: 10px auto;
     height: 600px;
@@ -688,4 +689,293 @@
     font-weight: normal;
 }
 
+.showTicketSolutionDetailsDialog{
+    .step{
+        width: 100%;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        .item{
+            width: auto;
+            height: 28px;
+            display: flex;
+            box-sizing: border-box;
+            .num{
+                width: 28px;
+                height: 28px;
+                line-height: 28px;
+                border-radius: 14px;
+                background: #F2F3F5;
+                text-align: center;
+                color: #4E5969;
+                letter-spacing: 0px;
+                font-weight: normal;
+                font-size: 16px;
+                font-family: Alibaba PuHuiTi;
+                cursor: pointer;
+            }
+            .num_selected{
+                width: 28px;
+                height: 28px;
+                line-height: 28px;
+                border-radius: 14px;
+                text-align: center;
+                background: #165DFF;
+                color:#FFFFFF;
+                letter-spacing: 0px;
+                font-weight: normal;
+                font-size: 16px;
+                font-family: Alibaba PuHuiTi;
+                text-align: center;
+                cursor: pointer;
+            }
+            .name{
+                font-family: Alibaba PuHuiTi;
+                font-size: 16px;
+                font-weight: normal;
+                letter-spacing: 0px;
+                color: #4E5969;
+                height: 28px;
+                line-height: 28px;
+                margin-left: 12px;
+                position: relative;
+                .remark{
+                   position: absolute;
+                   font-family: Alibaba PuHuiTi;
+                   font-size: 12px;
+                   height: 20px;
+                   line-height: 20px;
+                   color: #86909C;
+                   left: 0;
+                   bottom: -20px;
+                   white-space: nowrap;
+                }
+            }
+        }
+    }
+    .form_row{
+       height: 32px;
+       line-height: 32px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       margin: 18px 0px;
+       .label{
+          font-family: Alibaba PuHuiTi;
+          font-size: 14px;
+          font-weight: normal;
+          color: #4E5969;
+          letter-spacing: 0px;
+          width: 80px;
+          text-align: right;
+          margin-right: 10px;
+       }
+       .required::before{
+           content: "*";
+           color: red;
+       }
+    }
 
+    .form_row_shengji{
+        height: 32px;
+        line-height: 32px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 18px 0px;
+        .label{
+           font-family: Alibaba PuHuiTi;
+           font-size: 14px;
+           font-weight: normal;
+           color: #4E5969;
+           letter-spacing: 0px;
+           width: 80px;
+           text-align: right;
+           margin-right: 10px;
+        }
+        .required::before{
+            content: "*";
+            color: red;
+        }
+     }
+
+    .desc_action{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 32px;
+        flex-direction: row;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 0px 10px;
+        margin-top: 10px;
+        .desc{
+            font-family: Alibaba PuHuiTi;
+            font-size: 16px;
+            font-weight: normal;
+            letter-spacing: 0px;
+            font-variation-settings: "opsz" auto;
+            font-feature-settings: "kern" on;
+            color: #525252;
+        }
+        .btn{
+            height: 32px;
+            line-height: 32px;
+            color: #ffffff;
+            background: #165DFF;
+            font-family: Alibaba PuHuiTi;
+            font-size: 14px;
+            font-weight: normal;
+            letter-spacing: 0px;
+            padding: 0px 20px;
+        }
+    }
+    .search{
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        box-sizing: border-box;
+        padding-left: 10px;
+    }
+    .filter_list{
+        width: 100%;
+        height: 50px;
+        box-sizing: border-box;
+        padding-left: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .responsibilityPerson{
+        width: 100%;
+        height: 50px;
+        box-sizing: border-box;
+        padding-left: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        .label{
+            font-family: Alibaba PuHuiTi;
+            font-size: 14px;
+            font-weight: normal;
+            color: #4E5969;
+            letter-spacing: 0px;
+            width: 80px;
+            text-align: right;
+            margin-right: 10px;
+         }
+         .required::before{
+             content: "*";
+             color: red;
+         }
+
+    }
+    .containerUpload{
+        width: 300px;
+        height: 200px;
+        position: absolute;
+        left: 115px;
+        bottom: 10px;
+        // display: none;
+        // float: right;
+    }
+    .table{
+        width: 100%;
+        height: 300px;
+        box-sizing: border-box;
+        padding: 0px 10px;
+    }
+    .content{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 16px;
+    }
+}
+
+:deep(.showTicketSolutionDetailsDialog .el-dialog){
+    margin: 10px auto;
+    height: 80%;
+}
+
+:deep(.showTicketSolutionDetailsDialog .el-dialog__header){
+    font-family: Alibaba PuHuiTi;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    color: #1D2129;
+}
+
+:deep(.form_row .el-input){
+    width: 366px;
+    height: 32px;
+    line-height: 32px;
+ }
+
+
+:deep(.showTicketSolutionDetailsDialog .el-input__wrapper){
+    // background: #F2F3F5;
+    height: 32px;
+    line-height: 32px;
+}
+
+
+:deep(.search .el-input__wrapper){
+    background: #ffffff;
+    width: 175px;
+    padding: 0px 11px !important;
+}
+
+:deep(.search .el-input){
+    width: 175px;
+    height: 32px;
+    line-height: 32px;
+}
+
+:deep(.filter_list .el-select__wrapper){
+    width: 175px;
+    height: 32px;
+    line-height: 32px;
+}
+
+:deep(.filter_list .el-select){
+    width: 175px;
+    height: 32px;
+    line-height: 32px;
+}
+
+:deep(.responsibilityPerson .el-select + .el-select){
+   margin-left: 12px;
+}
+
+:deep(.responsibilityPerson .el-select__wrapper){
+    width: 175px;
+    height: 32px;
+    line-height: 32px;
+}
+
+:deep(.responsibilityPerson .el-select){
+    width: 175px;
+    height: 32px;
+    line-height: 32px;
+}
+
+:deep(.responsibilityPerson .el-select + .el-select){
+   margin-left: 12px;
+}
+
+
+:deep(.showTicketSolutionDetailsDialog .el-dialog__footer){
+    text-align: center !important;
+    width: 100%;
+    position: absolute;
+    bottom: 30px;
+}
+
+
+:deep(.el-table  th.el-table__cell){
+    background: #F7F8FA !important;
+}

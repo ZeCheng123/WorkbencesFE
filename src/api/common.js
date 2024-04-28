@@ -71,6 +71,17 @@ export const getServiceCaseItem = (data) => {
   })
 }
 
+//获取问题提报分页
+export const getServiceCasePage = (data) => {
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/service-case/page',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
 
 //获取订单列表
 export const getOrderList = (data) => {
@@ -127,6 +138,7 @@ export const getPickList = (apiName)=>{
   })
 }
 
+//获取用户列表
 export const getExternalUser = (data)=>{
   return request({
     method: 'POST',
@@ -135,6 +147,7 @@ export const getExternalUser = (data)=>{
   })
 }
 
+//获取售后工单分页数据
 export const getServiceticketPage = (data)=>{
   return request({
     method: 'POST',
@@ -142,14 +155,14 @@ export const getServiceticketPage = (data)=>{
     url: '/md/api/service-ticket/page'
   })
 }
-
+//获取售后工单byId
 export const getServiceticketById = (data)=>{
   return request({
     method: 'GET',
     url: '/md/api/service-ticket?id='+data
   })
 }
-
+//获取售后工单列表
 export const getServiceticketList = (data)=>{
   return request({
     method: 'POST',
@@ -157,6 +170,16 @@ export const getServiceticketList = (data)=>{
     url: '/md/api/service-ticket/list'
   })
 }
+
+//获取创建或者更新售后工单
+export const updateOrCreateServiceticket = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/service-ticket'
+  })
+}
+
 
 // 查询售后记录处理详情
 export const getTicketSolutionById = (data)=>{
@@ -224,10 +247,10 @@ export const updateOrderData = (data)=>{
   })
 }
 
-export const getTicketSolutionBycaseId = (data)=>{
+export const getTicketSolutionByTicketId = (data)=>{
     return request({
       method: 'GET',
-      url: '/md/api/ticket-solution?caseId='+data
+      url: '/md/api/ticket-solution?ticketId='+data
     })
 }
 

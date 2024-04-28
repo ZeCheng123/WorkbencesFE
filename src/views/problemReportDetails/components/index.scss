@@ -575,10 +575,10 @@
     }
     .containerUpload{
         width: 300px;
-        height: 200px;
+        height: 10px;
         position: absolute;
         left: 115px;
-        bottom: 100px;
+        bottom: 200px;
         // display: none;
         // float: right;
     }
@@ -599,7 +599,7 @@
 
 :deep(.showMainDialog .el-dialog){
     margin: 10px auto;
-    height: 920px;
+    height: 95%;
 }
 
 :deep(.showMainDialog .el-dialog__header){
@@ -1142,5 +1142,3 @@
     justify-content: flex-start;
     align-items: center;
 }
-
-

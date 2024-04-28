@@ -47,7 +47,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">工单编号：</span>
-            <span class="value">{{ aftersalesHeaderDetails.ticketNo__c }}</span>
+            <span class="value">{{ aftersalesHeaderDetails.name }}</span>
             <span v-if="false" class="view">查看</span>
           </span>
           <span class="field">
@@ -120,7 +120,7 @@
           :stripe="false"
           style="width: 100%"
         >
-          <el-table-column prop="text1" label="售后处理记录编号" />
+          <el-table-column prop="name" label="售后处理记录编号" />
           <el-table-column prop="text2" label="生产单号" />
           <el-table-column prop="text3" label="售后审核员" />
           <el-table-column prop="text4" label="处理方式" />
@@ -136,13 +136,13 @@
           </el-table-column>
         </el-table>
       </span>
-      <el-pagination
+      <!-- <el-pagination
         class="table_pagination"
         :page-size="20"
         :pager-count="11"
         layout="total, prev, pager, next"
         :total="50"
-      />
+      /> -->
     </span>
     <span class="action_list">
       <div class="left">
@@ -208,7 +208,7 @@
               action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
               multiple
             >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <el-icon class="el-icon--upload"></el-icon>
               <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
               <template #tip>
                 <div class="el-upload__tip">
@@ -442,6 +442,110 @@
         </template>
       </el-dialog>
     </div>
+    <div class="showTicketSolutionDetailsDialog">
+      <el-dialog v-model="showTicketSolutionDetailsDialog" title="售后处理明细" width="80% " :show-close="false">
+          <!-- <div class="search">
+            <el-input v-model="formDialog.searchValue" placeholder="搜索"></el-input>
+          </div>
+          <div class="filter_list">
+            <el-select v-model="formDialog.orderType">
+              <el-option v-for="item in filterList1" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.productType">
+              <el-option v-for="item in filterList2" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.productModel">
+              <el-option v-for="item in filterList3" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.treeSpecies">
+              <el-option v-for="item in filterList4" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.paintColor">
+              <el-option v-for="item in filterList5" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="formDialog.size">
+              <el-option v-for="item in filterList6" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </div> -->
+          <div class="table">
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="ticketSoluDetailsTable" :stripe="false"
+              style="width: 100%;overflow: auto;" max-height="200">
+              <el-table-column prop="checked" label="全选" width="80px">
+                <template #default="scope">
+                  <el-checkbox v-model="scope.row.checked" />
+                </template>
+              </el-table-column>
+              <!-- <el-table-column type="selection" width="55" /> -->
+              <el-table-column prop="orderPo" label="订单编号" />
+              <el-table-column prop="sku" label="详单编号" />
+              <el-table-column prop="category1" label="产品大类" />
+              <el-table-column prop="fscProductModel" label="产品型号" />
+              <el-table-column prop="treeSpecies__c" label="树种" />
+              <el-table-column prop="paintColor__c" label="油漆颜色 " />
+              <el-table-column prop="fscProductSpec" label="尺寸 " />
+              <el-table-column prop="ticketClassification" label="问题大类">
+                <template #default="scope">
+                  <div style="display:flex;align-items:center;">
+                    {{ scope.row.ticketClassification ? (problemTypeList.find(val => val["code"] ==
+                      scope.row.ticketClassification)?.name) : "" }}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="ticketProblem" label="售后问题 ">
+                <template #default="scope">
+                  <div style="display:flex;align-items:center;">
+                    {{ scope.row.ticketProblem ? (afterSalesIssuesList.find(val => val["code"] ==
+                      scope.row.ticketProblem)?.name) : "" }}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="" label="责任人 " />
+              <el-table-column prop="descriptionOfTicketProblem" label="问题描述 " />
+            </el-table>
+          </div>
+          <div class="responsibilityPerson">
+            <span class="label required">问题大类</span>
+            <el-select v-model="dialog2Form.problemType" placeholder="">
+              <el-option v-for="item in problemTypeList" :key="item.code" :label="item.name" :value="item.code" />
+            </el-select>
+            <span class="label required">售后问题</span>
+            <el-select multiple collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
+              <el-option v-for="item in afterSalesIssuesList" :key="item.code" :label="item.name" :value="item.code" />
+            </el-select>
+            <span class="label required">责任人</span>
+            <el-input v-model="dialog2Form.responsiblePerson" style="width: 240px" placeholder="请输入责任人" />
+          </div>
+          <div class="responsibilityPerson">
+            <span class="label required">问题描述</span>
+            <el-input v-model="dialog2Form.problemDesc" style="width: 440px" :rows="2" type="textarea"
+              placeholder="请输入问题描述" />
+          </div>
+          <div class="responsibilityPerson">
+            <span class="label">上传文件</span>
+          </div>
+          <div class="containerUpload">
+            <span class="item">
+              <el-upload name="files" :on-success="handleUploaded" class="upload" drag
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" multiple>
+                <!-- <el-icon class="el-icon--upload"><upload-filled /></el-icon> -->
+                <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
+                <template #tip>
+                  <div class="el-upload__tip">
+                    jpg/png files with a size less than 500kb
+                  </div>
+                </template>
+              </el-upload>
+            </span>
+          </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button class="cancel_btn" @click="showTicketSolutionDetailsDialog = false">取消</el-button>
+            <el-button @click="submitDialog" type="primary" class="primary_btn"
+              style="margin-left:50px !important">提交</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -450,13 +554,16 @@
 import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
-import { getServiceticketById,getTicketSolutionById } from "../../api/common";
+import { getOrderListByNeoId, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution } from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
 const currentStep = ref(4)
 
 const route = useRoute()
+
+//售后处理明细弹出窗
+const showTicketSolutionDetailsDialog = ref(false)
 
 const commentList = ref<any>([
 ])
@@ -717,6 +824,8 @@ const getDetail = (isTure: boolean) => {
 			let data = res.data.data
 			if (data!=undefined) {
 				aftersalesHeaderDetails.value = data
+        changeStep(aftersalesHeaderDetails.value["status__c"])
+        getTicketSolutionData();
 				if(isTure)
 				{
 					ElMessage({
@@ -742,13 +851,14 @@ const getDetail = (isTure: boolean) => {
 }
 
 const getTicketSolutionData = () =>{
-   getTicketSolutionById(route.query.id).then((res : any) => {
+  getTicketSolutionByTicketId(aftersalesHeaderDetails.value["neoId"]).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
 				let tableData = data;
+        ticketSolutionDetials.value = tableData["details"];
+        ticketSoluDetailsTable.value=tableData["details"];
         delete tableData["details"];
-        ticketSolutionTable.value = [tableData];
-        ticketSolutionDetials.value = data;
+        ticketSolutionTable.value = [tableData];        
 			} else {
 			   console.log("获取数据失败!");
 			}
@@ -764,10 +874,123 @@ const getTicketSolutionData = () =>{
 }
 
 const viewDetails = (row) =>{
-  showMainDialog3.value = true
+  loadingOrderList()
+  showTicketSolutionDetailsDialog.value = true
 }
 
+const fileIdList = ref<any>([])
+const handleUploaded = (rep) => {
+  fileIdList.value = fileIdList.value.concat(rep.data.map(item => item.fileId))
+}
+//售后处理明细table
+const ticketSoluDetailsTable=ref([])
+const multipleTableRef = ref()
+const multipleSelection = ref([])
+//经销商填写售后处理描述
+dialog2Form.value = ref({})
+const handleSelectionChange = (val) => {
+  console.info("选择的数据：", val)
+  multipleSelection.value = val
+}
 
+//售后处理明细中的产品明细和订单产品数据组合
+const loadingOrderList = () => {
+  getOrderListByNeoId(aftersalesHeaderDetails.value["orderNeoId"]).then((res: any) => {
+    if (res.data.code == "success") {
+      let orderPo = res.data.data.po //订单po
+        let getOrderItems = res.data.data.items;
+        ticketSoluDetailsTable.value.forEach(item => {
+          item['checked'] = false
+          item["orderPo"] = orderPo
+        })
+            if (getOrderItems && getOrderItems.length > 0) {
+              ticketSoluDetailsTable.value.forEach(val => {
+                let item = getOrderItems.find(val2 => val["orderProductId"] == val2["id"]);
+                if (item) {
+                  val["productionOrderNo__c"] = item["productionOrderNo__c"];
+                  val["quantity"] = item["quantity"];
+                  val["name"] = item["name"];
+                  val["productName"] = item["productName"];
+                  val["color__c"] = item["color__c"];
+                  val["treeSpecies__c"] = item["treeSpecies__c"];
+                  val["fscProductSpec"] = item["fscProductSpec"];
+                  val["fscProductModel"] = item["fscProductModel"];
+                  val["category1"] = item["category1"];
+                }
+              })
+              console.log("tableData222", tableData.value)
+            } else {
+              console.info("details没数据")
+            }
+    } else {
+      proxy.$message.error("数据异常!");
+    }
+  })
+}
+//升级到总部售后提交按钮
+const submitDialog = () => {
+  console.info("fileIdfileId", fileIdList)
+  const selectData = ticketSoluDetailsTable.value.filter(item => item.checked)
+
+  console.info("过滤：", selectData["id"])
+  if (selectData.length <= 0) {
+    proxy.$message.error("必须勾选数据!");
+    return;
+  }
+  let selectDataClone=JSON.parse(JSON.stringify(selectData));
+  selectDataClone.forEach(item => {
+    item["picture"] = fileIdList.value //图片id
+    item["treeSpecies"] = item["treeSpecies__c"] //树种
+    item["category"] = item["category1"] //产品大类
+    item["paintColor"] = item["paintColor__c"] //油漆颜色
+    item["ticketClassification"] = dialog2Form.value.problemType //问题大类
+    item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
+    item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
+    item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
+  })
+
+  let params = {
+    id:ticketSolutionTable.value[0]["id"],
+    serviceTicket:aftersalesHeaderDetails.value["id"],
+    serviceTicketId: parseInt(ticketSolutionTable.value[0]["serviceTicketId"]),
+    serviceCaseId:parseInt(ticketSolutionTable.value[0]["serviceCaseId"]),
+    details: selectDataClone
+  }
+  console.info("selectDataselectData", selectData)
+
+  // dialog2Form.value["details"] = selectData
+  if (!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues || !dialog2Form.value.responsiblePerson || !dialog2Form.value.problemDesc) {
+    proxy.$message.error("必填选项不能为空!");
+  } else {    
+    setTimeout(() => {
+      // params["caseVo"] = "234234234"
+      //提交方法
+      getticketsolution(params).then((res: any) => {
+        let data = res.data.data;
+        if(res.data.code=='success' && data!=undefined){
+          selectData.forEach(item => {
+            item["picture"] = fileIdList.value //图片id
+            item["treeSpecies"] = item["treeSpecies__c"] //树种
+            item["category"] = item["category1"] //产品大类
+            item["paintColor"] = item["paintColor__c"] //油漆颜色
+            item["ticketClassification"] = dialog2Form.value.problemType //问题大类
+            item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
+            item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
+            item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
+          })
+          proxy.$message.success("提交成功")
+        }else{
+          proxy.$message.warning("提交失败，请重试")
+        }
+      }).catch((error: any) => {
+        ElMessage({
+          message: '系统异常,提交失败',
+          type: 'error'
+        });
+    })
+    }, 500);
+  }
+}
 </script>
 
 <style lang="scss" scoped>

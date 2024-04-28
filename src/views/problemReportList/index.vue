@@ -16,7 +16,10 @@
             <el-input placeholder="输入客户名称" v-model="form.customerName" />
           </el-form-item>
           <el-form-item label="客户电话">
-            <el-input placeholder="请输入客户电话" v-model="form.customerPhone"/>
+            <el-input
+              placeholder="请输入客户电话"
+              v-model="form.customerPhone"
+            />
           </el-form-item>
         </el-form>
         <el-form
@@ -46,12 +49,20 @@
               />
             </el-select>
           </el-form-item>
-          <span style="width:336px;height:32px"></span>
+          <span style="width: 336px; height: 32px"></span>
         </el-form>
       </span>
       <span class="right">
-        <el-button type="primary" @click="getTableDataList" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
-        <el-button type="primary" @click="resetting()" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
+        <el-button type="primary" @click="getTableDataList" class="search_btn"
+          ><template #icon>
+            <img src="@/assets/images/search.png" alt="" /> </template
+          >查询</el-button
+        >
+        <el-button type="primary" @click="resetting()" class="reset_btn"
+          ><template #icon>
+            <img src="@/assets/images/reset.png" alt="" /> </template
+          >重置</el-button
+        >
       </span>
     </span>
     <span class="table_header">
@@ -62,19 +73,41 @@
         </span>
       </span>
       <span class="right">
-        <el-button @click="OpenProblemReportingDialog" type="primary" class="search_btn"><template #icon> <img src="@/assets/images/plus.png" alt=""> </template>新建</el-button>
-        <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/download.png" alt=""> </template>下载</el-button>
+        <el-button
+          @click="OpenProblemReportingDialog"
+          type="primary"
+          class="search_btn"
+          ><template #icon>
+            <img src="@/assets/images/plus.png" alt="" /> </template
+          >新建</el-button
+        >
+        <el-button type="primary" class="reset_btn"
+          ><template #icon>
+            <img src="@/assets/images/download.png" alt="" /> </template
+          >下载</el-button
+        >
       </span>
     </span>
     <span class="table">
-      <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
+      <el-table
+        class="table_content"
+        :data="tableData"
+        :stripe="false"
+        style="width: 100%"
+      >
         <el-table-column prop="caseNo" label="问题编号" />
         <el-table-column prop="name" label="客户姓名" />
         <el-table-column prop="problemDescription" label="问题描述" />
         <el-table-column prop="complaintSourceC" label="来源">
-           <template #default="scope">
-            <div style="display: flex; align-items: center;">
-              {{scope.row.sourceOfProblem ? (caseSource.find(val => val["code"] == scope.row.sourceOfProblem)?.name) : ""}}
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              {{
+                scope.row.sourceOfProblem
+                  ? caseSource.find(
+                      (val) => val["code"] == scope.row.sourceOfProblem
+                    )?.name
+                  : ""
+              }}
             </div>
           </template>
         </el-table-column>
@@ -82,8 +115,14 @@
         <el-table-column prop="createdTime" label="创建时间" />
         <el-table-column prop="caseStatus" label="问题状态">
           <template #default="scope">
-            <div style="display: flex; align-items: center;">
-              {{scope.row.caseStatus ? (caseStatus.find(val => val["code"] == scope.row.caseStatus)?.name) : ""}}
+            <div style="display: flex; align-items: center">
+              {{
+                scope.row.caseStatus
+                  ? caseStatus.find(
+                      (val) => val["code"] == scope.row.caseStatus
+                    )?.name
+                  : ""
+              }}
             </div>
           </template>
         </el-table-column>
@@ -106,9 +145,10 @@
       <el-pagination
         class="table_pagination"
         :page-size="pageConfig.pageSize"
-        :pager-count="5"
+        :pager-count="pageConfig.pageSize"
         layout="total, prev, pager, next"
         :total="pageConfig.total"
+        @current-change="handleCurrentChange"
       />
     </span>
     <div class="problemReportingDialog">
@@ -118,7 +158,7 @@
         width="80%"
         :show-close="false"
       >
-                <span class="step">
+        <span class="step">
           <span class="item">
             <span
               :class="currentProblemReportingStep == 1 ? 'num_selected' : 'num'"
@@ -148,7 +188,12 @@
             label-position="left"
           >
             <el-form-item label="订单编号" prop="orderNo">
-              <el-select v-model="problemReportingForm.orderNo" filterable @change="onCahngeOrderNo" placeholder="请选择订单编号">
+              <el-select
+                v-model="problemReportingForm.orderNo"
+                filterable
+                @change="onCahngeOrderNo"
+                placeholder="请选择订单编号"
+              >
                 <el-option
                   v-for="item in orderList"
                   :key="item.po"
@@ -169,7 +214,7 @@
                 v-model="problemReportingForm.customerPhone"
               />
             </el-form-item>
-             <el-form-item label="问题描述" class="customLayout" prop="desc">
+            <el-form-item label="问题描述" class="customLayout" prop="desc">
               <el-input
                 v-model="problemReportingForm.desc"
                 :rows="5"
@@ -179,7 +224,7 @@
                 show-word-limit
               />
             </el-form-item>
-             <el-form-item label="上传图片" class="custom_upload">
+            <el-form-item label="上传图片" class="custom_upload">
               <el-upload
                 :on-success="handleSuccess"
                 :on-remove="handleDelete"
@@ -193,7 +238,7 @@
                 :show-file-list="true"
                 v-model:file-list="problemReportingForm.fileList"
               >
-              <el-icon><Plus /></el-icon>
+                <el-icon><Plus /></el-icon>
               </el-upload>
             </el-form-item>
           </el-form>
@@ -220,30 +265,35 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
-import { Plus } from "@element-plus/icons-vue"
-import {getServiceCaseList, getOrderList,createServiceCase } from '../../api/common.js'
+import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue";
+import { Plus } from "@element-plus/icons-vue";
+import {
+  getServiceCaseList,
+  getOrderList,
+  createServiceCase,
+  getServiceCasePage,
+} from "../../api/common.js";
 
 const { proxy }: any = getCurrentInstance();
 
 const pageConfig = ref({
-  pageIndex: 0,
-  pageSize: 100,
-  total: 0
+  pageIndex: 1,
+  pageSize: 15,
+  total: 0,
 });
 
 const headers = ref({
-    Content: "application/json",
-    Authorization: ``, // Here you can add your token
-    isImage: "true",
-    needFileId: "true",
-    "Trace-Id": "",
-})
+  Content: "application/json",
+  Authorization: ``, // Here you can add your token
+  isImage: "true",
+  needFileId: "true",
+  "Trace-Id": "",
+});
 
 const uploadData = ref({
-    files: [],
-    name: "files"
-})
+  files: [],
+  name: "files",
+});
 
 const form = reactive({
   problemNo: "",
@@ -251,62 +301,69 @@ const form = reactive({
   customerPhone: "",
   filterMethod: "",
   createDate: [],
-  tableData:[],
+  tableData: [],
   orderStatus: "",
-})
+});
 
 const filterMethodOptions = ref([
   {
     value: "all",
     label: "全部",
   },
-])
+]);
 
 const orderStatusOptions = ref([
   {
     value: "all",
     label: "全部",
   },
-])
+]);
 
 const caseSource = ref([
   {
-    name:"配送技工",code:"1"
+    name: "配送技工",
+    code: "1",
   },
   {
-    name:"安装技工",code:"2"
+    name: "安装技工",
+    code: "2",
   },
   {
-    name:"终端用户",code:"3"
+    name: "终端用户",
+    code: "3",
   },
   {
-    name:"经销商",code:"4"
-  }
-])
+    name: "经销商",
+    code: "4",
+  },
+]);
 
 const caseStatus = ref([
   {
-    name:"待分配",code:"1"
+    name: "全部",
+    code: "",
   },
   {
-    name:"待处理",code:"2"
+    name: "待处理",
+    code: "1",
   },
   {
-    name:"处理中",code:"3"
+    name: "已受理",
+    code: "2",
   },
   {
-    name:"待回复",code:"4"
+    name: "处理中",
+    code: "3",
   },
   {
-    name:"已完成",code:"5"
-  }
-])
+    name: "已完成",
+    code: "4",
+  },
+]);
 
-const showProblemReportingDialog = ref(false)
+const showProblemReportingDialog = ref(false);
 
-
-const currentProblemReportingStep = ref(1)
-
+const currentProblemReportingStep = ref(1);
 
 const problemReportingForm = ref({
   orderNo: "",
@@ -315,7 +372,7 @@ const problemReportingForm = ref({
   desc: "",
   fileList: [],
   filePath: [],
-})
+});
 
 const problemReportingRule = ref({
   customerName: [
@@ -324,42 +381,43 @@ const problemReportingRule = ref({
   customerPhone: [
     { required: true, message: "客户电话不能为空！", trigger: "blur" },
   ],
-  desc: [
-     { required: true, message: "问题描述不能为空！", trigger: "blur" },
-  ]
-})
+  desc: [{ required: true, message: "问题描述不能为空！", trigger: "blur" }],
+});
 
 const tableData = ref([]);
 
 const orderList = ref([]);
 
-
-onMounted(() =>{
+onMounted(() => {
   setTimeout(() => {
-      getTableDataList();
-      getSearchOrderList();
+    getTableDataList();
+    getSearchOrderList();
   }, 500);
-})
+});
 
-
-const viewDetails = (row) =>{
+const viewDetails = (row) => {
   let id = row["id"];
   let neoid = row["neoid"];
-  let getParams="id="+id
-  if(neoid!=undefined){
-    getParams=getParams+"&neoid="+neoid
+  let getParams = "id=" + id;
+  if (neoid != undefined) {
+    getParams = getParams + "&neoid=" + neoid;
   }
   proxy.$router.push(`/problem_report_details?${getParams}`);
-}
+};
 
 const OpenProblemReportingDialog = () => {
-  showProblemReportingDialog.value = true
-}
+  showProblemReportingDialog.value = true;
+};
 
 const submitProblemReporting = () => {
-  console.log("problemReportingForm",problemReportingForm.value)
-  for(let key in problemReportingForm.value){
-    if(key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm.value[key] == ""){
+  console.log("problemReportingForm", problemReportingForm.value);
+  for (let key in problemReportingForm.value) {
+    if (
+      key != "orderNo" &&
+      key != "fileList" &&
+      key != "filePath" &&
+      problemReportingForm.value[key] == ""
+    ) {
       proxy.$message.error("必填字段不能为空!");
       return;
     }
@@ -373,11 +431,11 @@ const submitProblemReporting = () => {
     problemDescription: problemReportingForm.value["desc"],
     picture: problemReportingForm.value["filePath"],
     caseStatus: "1",
-    questionType:1
-  }
-  createServiceCase(params).then(res =>{
+    questionType: 1,
+  };
+  createServiceCase(params).then((res) => {
     let rtData = res.data;
-    if(rtData.code == "success"){
+    if (rtData.code == "success") {
       problemReportingForm.value = {
         orderNo: "",
         customerName: "",
@@ -386,104 +444,110 @@ const submitProblemReporting = () => {
         fileList: [],
         filePath: [],
       } as any;
-      showProblemReportingDialog.value = false
+      showProblemReportingDialog.value = false;
       proxy.$message.success("提交成功!");
       getTableDataList();
+    } else {
+      proxy.$message.error(rtData?.message);
     }
-    else{
-      proxy.$message.error(rtData?.message)
-    }
-  })
-}
+  });
+};
 
 //查询按钮方法
-const getTableDataList = () =>{
+const getTableDataList = () => {
   let params = {
-    caseStatus: "",
-    caseNo: form.problemNo !=null?form.problemNo.trim():form.problemNo,
-    name: form.customerName !=null? form.customerName.trim():form.customerName
-  }
-  getServiceCaseList(params).then(res =>{
+    "caseStatus": form.orderStatus == undefined ? "" : form.orderStatus,
+    "caseNo": form.problemNo == undefined ? "" : form.problemNo,
+    "accountName":form.customerName == undefined ? "" : form.customerName,
+    "accountPhone":form.customerPhone == undefined ? "" : form.customerPhone,
+    "from": form.createDate==undefined?"":form.createDate[0],
+		"to":form.createDate==undefined?"":form.createDate[1],
+    "pageSize":pageConfig.value.pageSize,
+    "pageNo":pageConfig.value.pageIndex,
+  };
+  getServiceCasePage(params).then((res) => {
     let rtData = res.data;
-    if(rtData.code == "success"){
+    if (rtData.code == "success") {
       tableData.value = rtData.data;
       pageConfig.value = {
-        pageIndex: 0,
-        pageSize: 100,
-        total: rtData.data.length
+        pageIndex: res.data.current == undefined ? 1 : parseInt(res.data.current),
+        pageSize: res.data.size,
+        total: res.data.total,
       } as any;
-    }
-    else{
+    } else {
       proxy.$message.error(rtData?.message);
       tableData.value = [];
       pageConfig.value = {
-        pageIndex: 0,
-        pageSize: 100,
-        total: 0
+        pageIndex: 1,
+        pageSize: 15,
+        total: 0,
       } as any;
     }
-  })
-}
+  });
+};
 
-const getSearchOrderList = () =>{
+const getSearchOrderList = () => {
   let params = {
-    "deliveryDate": "",
-    "status__c": "",
-    "orderType__c": "",
-    "transactionDate": "",
-    "po": "",
-    "accountName": "",
-    "accountPhone": ""
-  }
-  getOrderList(params).then(res =>{
+    deliveryDate: "",
+    status__c: "",
+    orderType__c: "",
+    transactionDate: "",
+    po: "",
+    accountName: "",
+    accountPhone: "",
+  };
+  getOrderList(params).then((res) => {
     let rtData = res.data;
-    if(rtData.code == "success"){
+    if (rtData.code == "success") {
       orderList.value = rtData.data;
-    }
-    else{
+    } else {
       proxy.$message.error(rtData?.message);
     }
-  })
-}
+  });
+};
 
 const onCahngeOrderNo = (event) => {
-  let item = orderList.value.find(val => val["po"] == event);
-  if(item){
+  let item = orderList.value.find((val) => val["po"] == event);
+  if (item) {
     problemReportingForm.value["customerName"] = item["accountName"];
     problemReportingForm.value["customerPhone"] = item["accountPhone"];
   }
-}
+};
 
 const handleSuccess = (res) => {
   console.log(res);
-  if(res.code == "success"){
-    let path = res.data.map(val => val["fileId"]); 
-    problemReportingForm.value["filePath"] = problemReportingForm.value["filePath"].concat(path)
+  if (res.code == "success") {
+    let path = res.data.map((val) => val["fileId"]);
+    problemReportingForm.value["filePath"] =
+      problemReportingForm.value["filePath"].concat(path);
 
-    console.log(problemReportingForm.value["filePath"])
+    console.log(problemReportingForm.value["filePath"]);
   }
-}
-    
+};
+
 const handleDelete = (res) => {
   var resopnse = res["response"];
   console.log(resopnse);
-}
+};
 
 const beforeUpload = (file) => {
-  uploadData.value["files"] = [file]
-}
+  uploadData.value["files"] = [file];
+};
 //重置按钮
 const resetting = () => {
-  console.log("aaaa")
-  form.problemNo = null
-  form.customerName = null
-  form.customerPhone = null
-  form.filterMethod = null
-  form.createDate = []
-  form.orderStatus = null
-  getTableDataList()
+  console.log("aaaa");
+  form.problemNo = null;
+  form.customerName = null;
+  form.customerPhone = null;
+  form.filterMethod = null;
+  form.createDate = [];
+  form.orderStatus = null;
+  getTableDataList();
+};
+const handleCurrentChange = (val: number) => {
+  pageConfig.value.pageIndex=val;
+  getTableDataList();
 }
-
 </script>
 
 <style lang="scss" scoped>

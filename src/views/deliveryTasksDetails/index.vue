@@ -1101,6 +1101,7 @@ const finishDeliveryOrder =  () => {
   params["goodsPicture"] = params.filePath;
   params["name"] = orderData.value.accountName__C+"的配送派工单";
   params["status"]=0
+  params["orderNo__c"] = orderData.value["po"]
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
       tableDataDispatch.value.push(data);

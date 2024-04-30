@@ -20,6 +20,8 @@ export default {
                 if(rtData.code == "success"){
                     let data = rtData.data || {};
                     console.log(data);
+                    localStorage.setItem("token",data["token"]);
+                    sessionStorage.setItem("token",data["token"]);
                     // userinfoStore.setUserInfo(data);
                 }
                 resolve(true)

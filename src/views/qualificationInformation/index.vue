@@ -136,7 +136,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive } from "vue"
+import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 
 const { proxy }: any = getCurrentInstance()
 
@@ -218,6 +218,13 @@ const tableData = ref([
 const changeStep = (step) => {
   currentStep.value = step
 }
+
+onMounted(() =>{
+
+})
+
+
+
 </script>
 
 <style lang="scss" scoped>

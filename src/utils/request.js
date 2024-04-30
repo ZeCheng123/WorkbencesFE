@@ -8,7 +8,8 @@ const request = axios.create({
 request.interceptors.request.use(function (config) {
   const userinfo = userInfoStore().getUserInfo();
   // 统一设置用户身份 token
-  let token = userinfo.token ;
+  // let token = userinfo.token ;
+  let token = localStorage.getItem("token") || sessionStorage.getItem("token");
   if (token) {
     config.headers["Authorization"] = token;
   }

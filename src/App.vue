@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%; height: calc(100% - 16px);" ref="mainElement">
-    <div class="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login'">
+    <div class="nav_list" id="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login'">
        <ul>
           <li v-for="(record, index) in routes" :key="index" @click="clickNav(record,index)" >
              <template v-if="index == 0"><img  src="@/assets/images/main_icon.png" alt=""></template>
@@ -20,8 +20,26 @@ const { proxy }: any = getCurrentInstance()
 
 const routes = ref([]);
 
+
 const mainElement = ref<HTMLDivElement | null>(null);
 
+
+const style = ref<any>({
+  width: "1920",
+  height: "1080",
+  transform: "scaleY(1) scaleX(1) translate(-50%, -50%)"
+})
+
+const getScale = () => {
+   const w = window.innerWidth / style.value.width;
+   const h = window.innerHeight / style.value.height;
+   return {x:w,y:h};
+}
+
+const setScale = () =>{
+  let scale = getScale();
+  style.value.transform = "scaleY(" + scale.y + ") scaleX(" + scale.x + ") translate(-50%, -50%)";
+}
 
 
 // 实时监听路由变化
@@ -78,6 +96,72 @@ watch(() => proxy.$route,
       }
     );
 
+// onMounted(() =>{
+//   nextTick(() =>{
+//     if(mainElement.value)
+//     {
+//       const standardScale = (("100%") as any) / (("100%") as any);
+//       window.addEventListener("resize", _.debounce(function (){
+//         if(proxy.$route.path!="/login"){
+//           const docHeight = document.body.clientHeight;
+//           const docWidth = document.body.clientWidth;
+//           if(docWidth < 1680)
+//           {
+//             const currentSacle = docHeight / docWidth;
+//             let [scale, translate]:any = [0,0];
+//             if(currentSacle < standardScale){
+//               // 以高度计算
+//               scale = docHeight / 1080;
+//               const shouleWidth = 1920 * scale;
+//               const offsetWidth = docWidth - shouleWidth;
+//               translate = offsetWidth > 0 ? `translate(${offsetWidth / 2}px, 0)` : "";
+//             }
+//             else{
+//               // 以宽度计算
+//               scale = (docWidth-20) / 1920;
+//               const shouleHeight = 1080 * scale;
+//               const offsetHeight = docHeight - shouleHeight;
+//               translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
+//             }
+//             mainElement.value.style.cssText = `
+//               transform: scale(${scale}) ${translate};transform-origin: top left;
+//               min-width: 1920px;
+//               min-height: 1080px;
+//             `;
+//           }
+//           else{
+//             if(mainElement.value){
+//               mainElement.value.style.cssText = "width: 100%; height: calc(100% - 16px)";
+//             }
+//           }
+//           let appEl = document.getElementById("app");
+//           if(appEl && proxy.$route.path!="/main"){
+//             appEl.style.cssText = `padding: 0px 16px 16px 16px;`
+//           }
+//         }
+//         else{
+//           let appEl = document.getElementById("app");
+//           mainElement.value.style.cssText = `width: 100%; height: 100%`;
+//           if(appEl){
+//             appEl.style.cssText = `padding: 0px 0px 0px 0px;`
+//           }
+//         }
+//       },0));
+//       if(document.createEvent){
+//         var event = document.createEvent("HTMLEvents");
+//         event.initEvent("resize",true,true);
+//         window.dispatchEvent(event);
+//       }
+//       else if(typeof Event === 'function')
+//       {
+//         window.dispatchEvent(new Event('resize'));
+//       }
+//     }
+
+//   })
+// })
+
+
 onMounted(() =>{
   nextTick(() =>{
     if(mainElement.value)
@@ -118,14 +202,14 @@ onMounted(() =>{
           }
           let appEl = document.getElementById("app");
           if(appEl && proxy.$route.path!="/main"){
-            appEl.style.cssText = `padding: 0px 16px 16px 16px`
+            appEl.style.cssText = `padding: 0px 16px 16px 16px;`
           }
         }
         else{
           let appEl = document.getElementById("app");
           mainElement.value.style.cssText = `width: 100%; height: 100%`;
           if(appEl){
-            appEl.style.cssText = `padding: 0px 0px 0px 0px`
+            appEl.style.cssText = `padding: 0px 0px 0px 0px;`
           }
         }
       },0));
@@ -144,6 +228,7 @@ onMounted(() =>{
 })
 
 
+
 const clickNav = (item,index) =>{
   if(index != routes.value.length - 1)
   {
@@ -159,8 +244,9 @@ const clickNav = (item,index) =>{
 <style scoped lang="scss">
 .nav_list{
   width:100%;
-  height: 25px;
-  margin: 8px 0px;
+  height: 40px;
+  display: flex;
+  align-items: center;
   ul{
     list-style: none;
     width: 100%;

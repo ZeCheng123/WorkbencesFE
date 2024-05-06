@@ -226,7 +226,7 @@ export const getExternalUserList = (data)=>{
   return request({
     method: 'POST',
     data:data,
-    url: '/md/api/admin/external-user/list'
+    url: '/md/api/admin/external-user/page'
   })
 }
 

@@ -10,7 +10,7 @@
           label-position="left"
         >
           <el-form-item label="人员类型">
-            <el-select v-model="form.userType" placeholder="请选择人员类型">
+            <el-select v-model="form.userType" placeholder="请选择人员类型" clearable>
               <el-option
                 v-for="item in userTypeOptions"
                 :key="item.code"
@@ -107,11 +107,14 @@
         </el-table-column>
       </el-table>
       <el-pagination
+        :pager-count-format="pagerCountFormat"
+        @current-change="handleCurrentChange"
         class="table_pagination"
         :page-size="pageConfig.pageSize"
         layout="total, prev, pager, next"
         :total="pageConfig.total"
-      />
+      >
+      </el-pagination>
     </span>
   </div>
   <div class="showDialog">
@@ -222,13 +225,13 @@ const formRef = ref();
 const showDialog = ref(false);
 
 const form = ref({
-  userType: 1,
+  userType: "",
   name: "",
   phone: "",
 })
 
 const dialogForm = ref({
-    userType: 1,
+    userType: "1",
     name: "",
     phone: "",
     status: 1,
@@ -305,14 +308,14 @@ const getDataTable = () => {
     userType: form.value.userType,
     name: form.value.name,
     phone: form.value.phone,
-    // pageNo: pageConfig.value.pageIndex,
-    // pageSize: pageConfig.value.pageSize
+    pageNo: pageConfig.value.pageIndex,
+    pageSize: pageConfig.value.pageSize
   }
   getExternalUserList(params)
     .then((res: any) => {
       let dataList = res.data
       if (dataList.code == "success") {
-        pageConfig.value.total = dataList.data.length;
+        pageConfig.value.total = dataList.total;
         tableData.value = dataList.data
         ElMessage({
           message: "查询成功!",
@@ -334,7 +337,7 @@ const getDataTable = () => {
 
 const resetForm = () => {
   form.value = {
-    userType: 1,
+    userType: "",
     name: "",
     phone: "",
   } as any
@@ -411,9 +414,15 @@ const comfirmAdd = () =>{
 }
 
 const editPersonel = (item) =>{
-  dialogForm.value = item;
+  let newItem = JSON.parse(JSON.stringify(item));
+  dialogForm.value = newItem;
   operationType.value = "edit";
   showDialog.value = true
+}
+
+const handleCurrentChange = (pageIndex) =>{
+  pageConfig.value.pageIndex = pageIndex;
+  getDataTable();
 }
 
 </script>

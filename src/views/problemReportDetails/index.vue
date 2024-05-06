@@ -159,6 +159,9 @@
       <el-button class="btn"
         >{{ relatedDocumentsDispatchList.length }}个派工单</el-button
       >
+      <el-button class="btn"
+        >{{ serviceCaseAttachment.length }}个附件</el-button
+      >      
       <span class="view" @click="showRelatedDocumentsDialogClick"
         >点击查看</span
       >
@@ -950,7 +953,7 @@
                 :data="serviceCaseAttachment"
                 :stripe="false"
                 style="width: 100%"
-                max-height="100"
+                max-height="150"
               >
                 <el-table-column prop="picNo" label="附件编号" />
                 <el-table-column prop="type" label="类型" />
@@ -1700,7 +1703,7 @@ const getDetailsData = () => {
           picture.push(baseUrl + item);
         });
         serviceCaseAttachment.value.push({
-          picNo: currentItem.value["goodsPicture"].join(","),
+          picNo: currentItem.value["picture"].join(","),
           type: "问题提报图片",
           picture: picture,
         });

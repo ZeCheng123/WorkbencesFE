@@ -1177,7 +1177,8 @@ const submitProblemReporting = () => {
     problemDescription: problemReportingForm["desc"],
     picture: problemReportingForm["filePath"],
     caseStatus: "1",
-    questionType:1
+    questionType:1,
+    complaintSourceC:4
   }
   createServiceCase(params).then(res =>{
     let rtData = res.data;

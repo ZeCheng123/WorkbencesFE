@@ -57,9 +57,9 @@
           <template #default="scope">
             <div style="display: flex; align-items: center">
               {{
-                scope.row.sourceOfProblem
+                scope.row.complaintSourceC
                 ? caseSource.find(
-                  (val) => val["code"] == scope.row.sourceOfProblem
+                  (val) => val["code"] == scope.row.complaintSourceC
                 )?.name
                 : ""
               }}

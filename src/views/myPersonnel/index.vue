@@ -98,20 +98,26 @@
         <el-table-column prop="distributorNo" label="经销商编号" />
         <el-table-column prop="distributorName" label="经销商名称" />
         <el-table-column prop="createdTime" label="创建时间" />
+        <el-table-column prop="userType" label="操作" width="80px">
+          <template #default="scope">
+            <div style="display: flex; align-items: center; color: #165dff; cursor: pointer;" @click="editPersonel(scope.row)">
+              编辑
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         class="table_pagination"
-        :page-size="20"
-        :pager-count="11"
+        :page-size="pageConfig.pageSize"
         layout="total, prev, pager, next"
-        :total="1000"
+        :total="pageConfig.total"
       />
     </span>
   </div>
   <div class="showDialog">
       <el-dialog
         v-model="showDialog"
-        title="新增人员"
+        :title="operationType == 'add' ? '新增人员' : '编辑人员'"
         width="60%"
         :show-close="false"
       >
@@ -205,6 +211,12 @@ import { ElMessage, ElMessageBox } from "element-plus"
 
 const { proxy }: any = getCurrentInstance()
 
+const pageConfig = ref({
+  pageIndex: 1,
+  pageSize: 20,
+  total: 0
+})
+
 const formRef = ref();
 
 const showDialog = ref(false);
@@ -253,6 +265,7 @@ const dialogFormRule = ref({
   ],
 })
 
+
 const userTypeOptions = ref([
   {
     code: 1,
@@ -281,6 +294,8 @@ const userStatusOptions = ref([
 
 const tableData = ref([])
 
+const operationType = ref("add");
+
 onMounted(() => {
   getDataTable()
 })
@@ -290,11 +305,14 @@ const getDataTable = () => {
     userType: form.value.userType,
     name: form.value.name,
     phone: form.value.phone,
+    // pageNo: pageConfig.value.pageIndex,
+    // pageSize: pageConfig.value.pageSize
   }
   getExternalUserList(params)
     .then((res: any) => {
       let dataList = res.data
       if (dataList.code == "success") {
+        pageConfig.value.total = dataList.data.length;
         tableData.value = dataList.data
         ElMessage({
           message: "查询成功!",
@@ -323,6 +341,7 @@ const resetForm = () => {
 }
 
 const addMember = () =>{
+  operationType.value = "add";
   showDialog.value = true
 }
 
@@ -347,6 +366,9 @@ const comfirmAdd = () =>{
   formRef.value.validate(valid => {
     if (valid) {
       let params = dialogForm.value;
+      if(operationType.value == "edit"){
+        delete params["createdTime"]
+      }
       // params["createdTime"] = new Date().toLocaleString();
       addExternalUser(params)
       .then((res: any) => {
@@ -366,7 +388,7 @@ const comfirmAdd = () =>{
           } as any;
           showDialog.value = false;
           ElMessage({
-            message: "新增成功!",
+            message: operationType.value == "add" ? "新增成功!" : "编辑成功!",
             type: "success",
           })
           setTimeout(() => {
@@ -379,13 +401,19 @@ const comfirmAdd = () =>{
       .catch((error: any) => {
         // 显示请求失败的提示框
         ElMessage({
-          message: "新增失败!",
+          message: operationType.value == "add" ? "新增失败!" : "编辑失败!",
           type: "error",
         })
         console.error("新增失败:", error)
       })
     }
   });
+}
+
+const editPersonel = (item) =>{
+  dialogForm.value = item;
+  operationType.value = "edit";
+  showDialog.value = true
 }
 
 </script>

@@ -113,7 +113,7 @@
         </span>
       </span>
     </span>
-    <span class="service_evaluation_list">
+    <!-- <span class="service_evaluation_list">
       <span class="table_title">服务评价</span>
       <span class="table_content">
         <el-table
@@ -143,7 +143,7 @@
           </el-table-column>
         </el-table>
       </span>
-    </span>
+    </span> -->
     <span class="dispatch_attachment_list">
       <span class="table_title">派工附件</span>
       <span class="table_content">
@@ -162,8 +162,8 @@
                 style="margin-right: 5px;width: 50px;"
                 :src="image"
                 :preview-src-list="row.goodsPicture"></el-image>
-        </template>
-      </template>
+              </template>
+            </template>
           </el-table-column>
           
           <!-- <el-table-column prop="text4" label="操作" width="80px">

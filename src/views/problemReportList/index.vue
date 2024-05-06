@@ -57,9 +57,9 @@
           <template #default="scope">
             <div style="display: flex; align-items: center">
               {{
-                scope.row.sourceOfProblem
+                scope.row.complaintSourceC
                 ? caseSource.find(
-                  (val) => val["code"] == scope.row.sourceOfProblem
+                  (val) => val["code"] == scope.row.complaintSourceC
                 )?.name
                 : ""
               }}
@@ -356,6 +356,7 @@ const submitProblemReporting = () => {
     picture: problemReportingForm.value["filePath"],
     caseStatus: "1",
     questionType: 1,
+    caseSource:11
   };
   createServiceCase(params).then((res) => {
     let rtData = res.data;

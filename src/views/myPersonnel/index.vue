@@ -93,9 +93,9 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="storeNo" label="门店编号" />
+        <!-- <el-table-column prop="storeNo" label="门店编号" />
         <el-table-column prop="storeName" label="门店名称"> </el-table-column>
-        <el-table-column prop="distributorNo" label="经销商编号" />
+        <el-table-column prop="distributorNo" label="经销商编号" /> -->
         <el-table-column prop="distributorName" label="经销商名称" />
         <el-table-column prop="createdTime" label="创建时间" />
         <el-table-column prop="userType" label="操作" width="80px">
@@ -178,14 +178,14 @@
                 <el-input placeholder="请输入经销商名称" v-model="dialogForm.distributorName"/>
               </el-form-item>
             </div>
-            <div class="custom-row">
+            <!-- <div class="custom-row">
               <el-form-item label="总代编码">              
                 <el-input placeholder="请输入总代编码" v-model="dialogForm.generalAgentNo"/>
               </el-form-item>
               <el-form-item label="总代名称">              
                 <el-input placeholder="请输入总代名称" v-model="dialogForm.generalAgentName"/>
               </el-form-item>
-            </div>
+            </div> -->
 
           </el-form>
         </div>

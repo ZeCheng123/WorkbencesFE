@@ -269,7 +269,8 @@
             >
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #default="scope">
-                  <el-checkbox v-model="scope.row.checked" />
+                  <el-checkbox v-if="scope.row.operate==false" disabled v-model="scope.row.checked" />
+                  <el-checkbox v-if="scope.row.operate==true" v-model="scope.row.checked" />
                 </template>
               </el-table-column>
               <el-table-column prop="name" label="售后工单编号">

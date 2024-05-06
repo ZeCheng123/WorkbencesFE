@@ -879,7 +879,8 @@ const submitProblemReporting = () => {
     picture: problemReportingForm.value["fileId"],
     name:problemReportingForm.value["customerName"]+"订单",
     caseStatus: "1",
-    questionType:"1"
+    questionType:"1",
+    caseSource:11
   }
   createServiceCase(params).then(res => {
     let rtData = res.data;

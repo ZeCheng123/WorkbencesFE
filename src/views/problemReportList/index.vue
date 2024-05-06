@@ -356,6 +356,7 @@ const submitProblemReporting = () => {
     picture: problemReportingForm.value["filePath"],
     caseStatus: "1",
     questionType: 1,
+    caseSource:11
   };
   createServiceCase(params).then((res) => {
     let rtData = res.data;

@@ -459,7 +459,7 @@ import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
-import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase, getServiceticketPage, getServiceticketList, updateOrderData } from '../../api/common.js'
+import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase, getServiceticketPage, getServiceticketList, updateOrderData, getFeildJobList } from '../../api/common.js'
 
 
 const { proxy }: any = getCurrentInstance()
@@ -668,10 +668,8 @@ onMounted(() => {
   setTimeout(() => {
     getList();
     postRelateList();
-    postServiceCaseList();
-    //getSearchOrderList();
-    postfieldjobeList();
-  }, 1000);
+    postServiceCaseList();   
+  }, 100);
 })
 
 
@@ -688,6 +686,7 @@ const getList = () => {
       problemReportingForm.value["orderNo"]=tableData.value["po"]
       problemReportingForm.value["customerName"]=tableData.value["accountName__C"]
       problemReportingForm.value["customerPhone"]=tableData.value["contactTel"]
+      postfieldjobeList(tableData.value["neoid"]);
     } else {
       console.log("失败")
     }
@@ -804,27 +803,29 @@ const getServiceticketData = (isTure: boolean) => {
 }
 
 //派工单
-const postfieldjobeList = () => {
-  getFieldJob(route.query.id).then((res: any) => {
+const postfieldjobeList = (orderNeoId) => {
+  if(orderNeoId==undefined){
+    return;
+  }
+  let params={"fieldJobOrderId":orderNeoId} 
+  getFeildJobList(params).then((res: any) => {
     let dataList = res.data
     if (dataList.code == "success") {
       // relatedDocumentsProblemReportingList.value = dataList.data
-      if (dataList.data && typeof dataList.data === 'object') {
-        let dataArray = [{
-          id: dataList.data.id,
-          stage__c: dataList.data.stage__c,
-          fieldJobType__c: dataList.data.fieldJobType__c,
-          updatedTime: dataList.data.updatedTime,
-          entityType: dataList.data.entityType,
-          followerName: dataList.data.followerName,
-          caseNo:dataList.data.caseNo
-        }]
+      if (dataList.data && dataList.data.length>0) {
+        // let dataArray = [{
+        //   id: dataList.data.id,
+        //   stage__c: dataList.data.stage__c,
+        //   fieldJobType__c: dataList.data.fieldJobType__c,
+        //   updatedTime: dataList.data.updatedTime,
+        //   entityType: dataList.data.entityType,
+        //   followerName: dataList.data.followerName,
+        //   caseNo:dataList.data.caseNo
+        // }]
         // 赋值给 relatedDocumentsProblemReportingList
-        relatedDocumentsDispatchList.value = dataArray
-        console.log("dataArray", dataArray)
+        relatedDocumentsDispatchList.value = dataList.data
+        //console.log("dataArray", dataArray)
       }
-
-
     } else {
       console.log("失败")
     }

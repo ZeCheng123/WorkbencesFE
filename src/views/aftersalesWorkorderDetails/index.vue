@@ -62,11 +62,11 @@
         <span class="row_field">
           <span class="field">
             <span class="label">订单编号：</span>
-            <span class="value"></span>
+            <span class="value">{{orderDetails.po}}</span>
           </span>
           <span class="field">
             <span class="label">服务工单：</span>
-            <span class="value">{{ aftersalesHeaderDetails.serviceCase__c }}</span>
+            <span class="value">{{ problemDetails.caseNo}}</span>
           </span>
           <span class="field">
             <span class="label">所有人：</span>
@@ -505,12 +505,12 @@
           </div>
           <div class="responsibilityPerson">
             <span class="label required">问题大类</span>
-            <el-select v-model="dialog2Form.problemType" placeholder="">
+            <el-select v-model="dialog2Form.problemType" placeholder="" @change="handleProblemTypeChange">
               <el-option v-for="item in problemTypeList" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <span class="label required">售后问题</span>
             <el-select multiple collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
-              <el-option v-for="item in afterSalesIssuesList" :key="item.code" :label="item.name" :value="item.code" />
+              <el-option v-for="item in afterSalesIssuesListForSelect" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <span class="label required">责任人</span>
             <el-input v-model="dialog2Form.responsiblePerson" style="width: 240px" placeholder="请输入责任人" />
@@ -554,7 +554,7 @@
 import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
-import { getOrderListByNeoId, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution } from "../../api/common";
+import { getOrderListByNeoId, getServiceCaseItem, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution } from "../../api/common";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -564,6 +564,10 @@ const route = useRoute()
 
 //售后处理明细弹出窗
 const showTicketSolutionDetailsDialog = ref(false)
+//订单明细
+const orderDetails=ref({} as any)
+//问题提报明细
+const problemDetails=ref({} as any)
 
 const commentList = ref<any>([
 ])
@@ -601,6 +605,25 @@ const afterSalesIssuesList = ref<any>([
   {code:"10",name:"消费者使用不当"},
   {code:"11",name:"产品丢失"}
 ])
+
+const afterSalesIssuesListForSelect = ref([] as any);
+const afterSalesIssuesListWithType = ref<any>({
+  "1": [
+    { code: "1", name: "店面测量师漏单" },
+    { code: "2", name: "店面测量师量错" },
+    { code: "3", name: "店里设计师漏分解" },
+    { code: "4", name: "店里设计师分解错" },
+    { code: "5", name: "店里设计不合理" },
+    { code: "6", name: "店里下单员漏单" },
+    { code: "7", name: "店里下单员下错" },
+    { code: "8", name: "店里安装师问题" },
+    { code: "9", name: "消费者补单" },
+    { code: "10", name: "消费者使用不当" },
+    { code: "11", name: "产品丢失" }
+  ],
+  "2": [{ code: "12", name: "公司问题" }],
+  "3": [{ code: "13", name: "物流问题" }]
+});
 
 const poductTypeList = ref<any>([
   {code:"1",  name:"墙板"},
@@ -826,6 +849,7 @@ const getDetail = (isTure: boolean) => {
 				aftersalesHeaderDetails.value = data
         changeStep(aftersalesHeaderDetails.value["status__c"])
         getTicketSolutionData();
+        getOrderData();
 				if(isTure)
 				{
 					ElMessage({
@@ -873,6 +897,47 @@ const getTicketSolutionData = () =>{
 		});
 }
 
+const getOrderData = () =>{
+  getOrderListByNeoId(aftersalesHeaderDetails.value["orderNeoId"]).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+				orderDetails.value=data      
+			} else {
+        console.log("无对应数据!");
+			}
+
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
+}
+
+const getProblemData = () =>{
+  let params={
+    id:"",
+    neoid:aftersalesHeaderDetails.value["serviceCase__c"]
+  }
+  getServiceCaseItem(params).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+				problemDetails.value=data      
+			} else {
+        console.log("无对应数据!");
+			}
+
+		}).catch((error: any) => {
+			// 显示请求失败的提示框
+			ElMessage({
+				message: '请求数据失败，请重试',
+				type: 'error'
+			});
+			console.error('请求数据失败:', error);
+		});
+}
 const viewDetails = (row) =>{
   loadingOrderList()
   showTicketSolutionDetailsDialog.value = true
@@ -991,6 +1056,10 @@ const submitDialog = () => {
     }, 500);
   }
 }
+const handleProblemTypeChange = (problemType) => {
+  afterSalesIssuesListForSelect.value =
+    afterSalesIssuesListWithType.value[problemType];
+};
 </script>
 
 <style lang="scss" scoped>

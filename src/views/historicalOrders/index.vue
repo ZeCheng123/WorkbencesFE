@@ -63,6 +63,7 @@
         <el-table-column prop="storeName__c" label="专卖店名称" />
         <el-table-column prop="storeNo" label="专卖店编号" />
         <el-table-column prop="accountName__C" label="客户名称" />
+        <el-table-column prop="customerAddress" label="客户地址" />
         <el-table-column prop="productionOrderNo__c" label="生产单号" />
         <el-table-column prop="createdTime" label="创建时间" />
 				<el-table-column prop="status__c" label="状态" >

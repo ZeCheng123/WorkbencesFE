@@ -19,7 +19,7 @@
         </span>
         <span class="item">
           <span
-            @click="currentStep = 4"
+            @click="currentStepToPeiSong"
             :class="currentStep == 4 ? 'num_selected' : 'num'"
             >3</span
           >
@@ -171,7 +171,7 @@
       </span>
     </span>
     <span class="related_item_invoice">
-      <span class="table_title">相关项>发货单</span>
+      <span class="table_title">相关项>包装清单</span>
       <span class="table_content">
         <el-table :data="tableDataInvoice" :stripe="false" style="width: 100%" height="100">
           <el-table-column prop="id" label="操作" width="160px">
@@ -360,6 +360,8 @@
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
               />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
@@ -368,15 +370,17 @@
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
               />
             </el-form-item>
-            <el-form-item label="是否具备安装条件" class="check_item">
+            <!-- <el-form-item label="是否具备安装条件" class="check_item">
               <span>
                 <el-checkbox
                   v-model="deliveryOrderForm.haveInstallConditions"
                 ></el-checkbox>
               </span>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
           <el-form
             v-if="currentDeliveryOrderStep == 2"
@@ -553,6 +557,8 @@
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
+                ::default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
               />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
@@ -561,6 +567,8 @@
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
               />
             </el-form-item>
             <el-form-item label="安装小组">
@@ -763,8 +771,9 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase} from "../../api/common";
+import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase, updateTask} from "../../api/common";
 import { AnyARecord } from "dns";
+import { update } from "lodash";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -773,6 +782,8 @@ const { proxy }: any = getCurrentInstance()
 const currentStep2 = ref(4)
 
 const commentList = ref<any>([])
+
+const defaultStartTime  = new Date();
 
 const route = useRoute()
 const taskid = route.query.id
@@ -1025,7 +1036,7 @@ const finishInstallationOrder = async () => {
     priority: installationOrderForm.priority,
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
-    fieldJobOrderId: route.query.orderId,
+    fieldJobOrderId: orderData.value.neoid,
     name:orderData.value.accountName__C+"的安装派工单",
     type: "安装派工",
     fieldJobType__c:1,
@@ -1035,7 +1046,8 @@ const finishInstallationOrder = async () => {
     appointmentEndTime: installationOrderForm.appointmentEndTime,
     followerId:installationOrderForm.username,
     address:orderData.value.customerAddress==undefined?"":orderData.value.customerAddress,
-    status:0
+    status:0,
+    source__c:1
   }
     addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
@@ -1102,6 +1114,8 @@ const finishDeliveryOrder =  () => {
   params["name"] = orderData.value.accountName__C+"的配送派工单";
   params["status"]=0
   params["orderNo__c"] = orderData.value["po"]
+  params["source__c"]=1
+  params["fieldJobOrderId"]=orderData.value.neoid
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
       tableDataDispatch.value.push(data);
@@ -1208,7 +1222,7 @@ onMounted(()=>{
   // getFieldJobByGet(true,fieldJobNeoId)
   getOrderByOne(false,orderId)
   getExtralUserData(false)
-  getFieldList(false,orderId)
+  // getFieldList(false,orderId)
 })
 
 const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
@@ -1269,7 +1283,8 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
 			if (data!=undefined) {
         orderData.value = data
         problemReportingForm.orderNo=orderData.value.po
-        tableDataOrder.value.push(data)        
+        tableDataOrder.value.push(data)
+        getFieldList(false,orderData.value.neoid)        
 				if(showMsg)
 				{
 					ElMessage({
@@ -1437,7 +1452,43 @@ const onCahngeUserSelectForProblemReport = (event) => {
   }
 }
 
+const currentStepToPeiSong=()=>{
+  if(currentStep.value>=4){
+    proxy.$message.warning("配送已完成，无法点击配送")
+    return;
+  }
+  ElMessageBox.confirm(
+    '确认到货后，再进行派单?',
+    '配送',
+    {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      let params={
+        id:taskDetails.value.taskid,
+        status:3
+      }
+      updateTask(params).then((res:any)=>{
+        if(res.data.code="success"){
+          currentStep.value=4
+        }
+      })
+    })
+    .catch(() => {
+      // ElMessage({
+      //   type: 'info',
+      //   message: 'Delete canceled',
+      // })
+    })
+}
 
+//日期控件不能选择小于当前日期的时间
+const disabledPastDate=(time:any)=>{
+  return time.getTime()< Date.now()-24*60*60*1000
+}
 </script>
 
 <style lang="scss" scoped>

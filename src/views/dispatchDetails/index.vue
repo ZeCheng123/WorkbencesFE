@@ -162,8 +162,8 @@
                 style="margin-right: 5px;width: 50px;"
                 :src="image"
                 :preview-src-list="row.goodsPicture"></el-image>
-        </template>
-      </template>
+              </template>
+            </template>
           </el-table-column>
           
           <!-- <el-table-column prop="text4" label="操作" width="80px">

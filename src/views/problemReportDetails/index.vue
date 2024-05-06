@@ -1,30 +1,59 @@
 <template>
   <div class="main">
     <span class="header">
-      <span class="title"><span>问题提报状态</span><el-button class="btn" @click="upgradeToHeadquarters">升级到总部
-          (售后)</el-button></span>
+      <span class="title"
+        ><span>问题提报状态</span
+        ><el-button class="btn" @click="upgradeToHeadquarters"
+          >升级到总部 (售后)</el-button
+        ></span
+      >
       <span class="step">
         <span class="item">
-          <span :class="currentItem['caseStatus'] == 1 ? 'num_selected' : 'num'">1</span>
-          <span :class="currentItem['caseStatus'] >= 1 ? 'name_selected' : 'name'">待处理</span>
+          <span :class="currentItem['caseStatus'] == 1 ? 'num_selected' : 'num'"
+            >1</span
+          >
+          <span
+            :class="currentItem['caseStatus'] >= 1 ? 'name_selected' : 'name'"
+            >待处理</span
+          >
         </span>
         <span class="item">
-          <span :class="currentItem['caseStatus'] == 2 ? 'num_selected' : 'num'">2</span>
-          <span :class="currentItem['caseStatus'] >= 2 ? 'name_selected' : 'name'">已受理</span>
+          <span :class="currentItem['caseStatus'] == 2 ? 'num_selected' : 'num'"
+            >2</span
+          >
+          <span
+            :class="currentItem['caseStatus'] >= 2 ? 'name_selected' : 'name'"
+            >已受理</span
+          >
         </span>
         <span class="item">
-          <span :class="currentItem['caseStatus'] == 3 ? 'num_selected' : 'num'">3</span>
-          <span :class="currentItem['caseStatus'] >= 3 ? 'name_selected' : 'name'">处理中</span>
+          <span :class="currentItem['caseStatus'] == 3 ? 'num_selected' : 'num'"
+            >3</span
+          >
+          <span
+            :class="currentItem['caseStatus'] >= 3 ? 'name_selected' : 'name'"
+            >处理中</span
+          >
         </span>
         <span class="item">
-          <span :class="currentItem['caseStatus'] == 4 ? 'num_selected' : 'num'">4</span>
-          <span :class="currentItem['caseStatus'] >= 4 ? 'name_selected' : 'name'">已完成</span>
+          <span
+            @click="completeServiceCase"
+            :class="currentItem['caseStatus'] == 4 ? 'num_selected' : 'num'"
+            >4</span
+          >
+          <span
+            :class="currentItem['caseStatus'] >= 4 ? 'name_selected' : 'name'"
+            >已完成</span
+          >
         </span>
       </span>
     </span>
     <span class="problem_report_info">
-      <span class="title">问题提报详情<span class="titleDateTime">{{ caseStatus <= 2 && caseStatus > 0 ?
-        formatTime(remainingSeconds) : "" }}</span></span>
+      <span class="title"
+        >问题提报详情<span class="titleDateTime">{{
+          caseStatus <= 2 && caseStatus > 0 ? formatTime(remainingSeconds) : ""
+        }}</span></span
+      >
       <span class="main_field">
         <span class="row_field">
           <span class="field">
@@ -38,7 +67,9 @@
           </span>
           <span class="field">
             <span class="label">问题类别：</span>
-            <span class="value">{{ currentItem["questionType"] == "1" ? "售后保修" : "投诉建议" }}</span>
+            <span class="value">{{
+              currentItem["questionType"] == "1" ? "售后保修" : "投诉建议"
+            }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -75,14 +106,21 @@
           </span>
           <span class="field">
             <span class="label">来源：</span>
-            <span class="value">{{ currentItem["complaintSourceC"] ? (complaintSource.find(val => val["code"] ==
-              currentItem["complaintSourceC"])?.name) : "" }}</span>
+            <span class="value">{{
+              currentItem["complaintSourceC"]
+                ? complaintSource.find(
+                    (val) => val["code"] == currentItem["complaintSourceC"]
+                  )?.name
+                : ""
+            }}</span>
           </span>
         </span>
         <span class="row_field">
           <span class="field">
             <span class="label">省份：</span>
-            <span class="value">{{ convertProvince(currentItem["province"]) }}</span>
+            <span class="value">{{
+              convertProvince(currentItem["province"])
+            }}</span>
           </span>
           <span class="field">
             <span class="label">城市：</span>
@@ -90,7 +128,9 @@
           </span>
           <span class="field">
             <span class="label">区：</span>
-            <span class="value">{{ convertDistrict(currentItem["district"]) }}</span>
+            <span class="value">{{
+              convertDistrict(currentItem["district"])
+            }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -111,18 +151,35 @@
     </span>
     <span class="related_documents">
       <span class="title">相关单据</span>
-      <el-button class="btn">{{ relatedDocumentsAftersalesWorkorderList.length }}个售后工单</el-button>
-      <el-button class="btn">{{ relatedDocumentsDispatchList.length }}个派工单</el-button>
-      <span class="view" @click="showRelatedDocumentsDialogClick">点击查看</span>
+      <el-button class="btn"
+        >{{
+          relatedDocumentsAftersalesWorkorderList.length
+        }}个售后工单</el-button
+      >
+      <el-button class="btn"
+        >{{ relatedDocumentsDispatchList.length }}个派工单</el-button
+      >
+      <span class="view" @click="showRelatedDocumentsDialogClick"
+        >点击查看</span
+      >
     </span>
     <span class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span class="initiate_comments" @click="initiateComments">发起评论</span>
+        <span class="initiate_comments" @click="initiateComments"
+          >发起评论</span
+        >
       </div>
       <div class="right">
-        <el-button type="primary" @click="editServiceCase" class="primary_btn">编辑</el-button>
-        <el-button type="primary" @click="createDeliveryOrder" class="primary_btn">创建派工单</el-button>
+        <el-button type="primary" @click="editServiceCase" class="primary_btn"
+          >编辑</el-button
+        >
+        <el-button
+          type="primary"
+          @click="createDeliveryOrder"
+          class="primary_btn"
+          >创建派工单</el-button
+        >
       </div>
     </span>
     <div class="comment" v-for="item in commentList" :key="item.date">
@@ -136,23 +193,43 @@
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
     <div class="showMainDialog">
-      <el-dialog v-model="showMainDialog" title="升级到总部 (售后)" width="80% " :show-close="false">
+      <el-dialog
+        v-model="showMainDialog"
+        title="升级到总部 (售后)"
+        width="80% "
+        :show-close="false"
+      >
         <div class="step">
           <span class="item">
-            <span @click="changeDialogStep(1)" :class="currentDialogStep == 1 ? 'num_selected' : 'num'">1</span>
-            <span class="name">确认问题订单
+            <span
+              @click="changeDialogStep(1)"
+              :class="currentDialogStep == 1 ? 'num_selected' : 'num'"
+              >1</span
+            >
+            <span class="name"
+              >确认问题订单
               <span class="remark">选择或确认问题订单</span>
             </span>
           </span>
           <span class="item">
-            <span @click="changeDialogStep(2)" :class="currentDialogStep == 2 ? 'num_selected' : 'num'">2</span>
-            <span class="name">完善必填信息
+            <span
+              @click="changeDialogStep(2)"
+              :class="currentDialogStep == 2 ? 'num_selected' : 'num'"
+              >2</span
+            >
+            <span class="name"
+              >完善必填信息
               <span class="remark">完善问题描述与处理方式</span>
             </span>
           </span>
           <span class="item">
-            <span @click="changeDialogStep(3)" :class="currentDialogStep == 3 ? 'num_selected' : 'num'">3</span>
-            <span class="name">提交升级
+            <span
+              @click="changeDialogStep(3)"
+              :class="currentDialogStep == 3 ? 'num_selected' : 'num'"
+              >3</span
+            >
+            <span class="name"
+              >提交升级
               <span class="remark">提交售后至总部</span>
             </span>
           </span>
@@ -160,26 +237,49 @@
         <template v-if="currentDialogStep == 1">
           <span class="form_row_shengji">
             <span class="label required">订单编号:</span>
-            <el-input disabled v-model="formDialog.orderNo" placeholder="订单编号" style="width: auto;"></el-input>
+            <el-input
+              disabled
+              v-model="formDialog.orderNo"
+              placeholder="订单编号"
+              style="width: auto"
+            ></el-input>
           </span>
           <div class="form_row_shengji">
             <span class="label required">经销商需求描述:</span>
-            <el-input v-model="formDialog.remark" placeholder="输入升级描述" style="width: auto;"></el-input>
+            <el-input
+              v-model="formDialog.remark"
+              placeholder="输入升级描述"
+              style="width: auto"
+            ></el-input>
           </div>
           <div class="search">
             <span class="label required">客户历史售后工单</span>
           </div>
           <div class="table">
-            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="serviceTicket"
-              :stripe="false" style="width: 100%;overflow: auto;" max-height="400">
+            <el-table
+              ref="multipleTableRef"
+              :selection-change="handleSelectionChange"
+              :data="serviceTicket"
+              :stripe="false"
+              style="width: 100%; overflow: auto"
+              max-height="400"
+            >
+              <el-table-column prop="checked" label="全选" width="80px">
+                <template #default="scope">
+                  <el-checkbox v-model="scope.row.checked" />
+                </template>
+              </el-table-column>
               <el-table-column prop="name" label="售后工单编号">
                 <template #default="scope">
-                  <div style="
-                        display: flex;
-                        align-items: center;
-                        color: #165dff;
-                        cursor: pointer;
-                      " @click="handleView(scope.row)">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      color: #165dff;
+                      cursor: pointer;
+                    "
+                    @click="handleView(scope.row)"
+                  >
                     {{ scope.row.name }}
                   </div>
                 </template>
@@ -188,30 +288,50 @@
               <el-table-column prop="storeName" label="专卖店名称" />
               <el-table-column prop="status__c" label="状态">
                 <template #default="scope">
-                  <div style="display:flex;align-items:center;">
-                    {{ scope.row.status__c ? (seviceTicketStatusOptions.find(val => val["code"] ==
-                      scope.row.status__c)?.name) : "" }}
+                  <div style="display: flex; align-items: center">
+                    {{
+                      scope.row.status__c
+                        ? seviceTicketStatusOptions.find(
+                            (val) => val["code"] == scope.row.status__c
+                          )?.name
+                        : ""
+                    }}
                   </div>
                 </template>
               </el-table-column>
               <el-table-column prop="reporter__c" label="提报人" />
               <el-table-column prop="problemDescription__c" label="问题描述 " />
-              <el-table-column prop="distributorDemands__c" label="经销商需求描述 " />
+              <el-table-column
+                prop="distributorDemands__c"
+                label="经销商需求描述 "
+              />
               <el-table-column prop="createdTime" label="创建时间 " />
               <el-table-column prop="operate" label="操作">
                 <template #default="scope">
-                  <el-checkbox disabled v-if="scope.row.operate" v-model="scope.row.operate" :value="scope.row.operate"
-                    style="--el-disabled-text-color:#FF8127;
-                    --el-checkbox-disabled-checked-icon-color: white;
-                    --el-checkbox-disabled-checked-input-fill: #FF8127;
-                    --el-checkbox-text-color: #ff8127;">已绑定</el-checkbox>
+                  <el-checkbox
+                    disabled
+                    v-if="scope.row.operate"
+                    v-model="scope.row.operate"
+                    :value="scope.row.operate"
+                    style="
+                      --el-disabled-text-color: #ff8127;
+                      --el-checkbox-disabled-checked-icon-color: white;
+                      --el-checkbox-disabled-checked-input-fill: #ff8127;
+                      --el-checkbox-text-color: #ff8127;
+                    "
+                    >已绑定</el-checkbox
+                  >
                   <!-- <el-checkbox v-else v-model="scope.row.operate">点击绑定</el-checkbox> -->
-                  <div v-else style="
-                        display: flex;
-                        align-items: center;
-                        color: #165dff;
-                        cursor: pointer;
-                      " @click="bindServiceTicket(scope.row)">
+                  <div
+                    v-else
+                    style="
+                      display: flex;
+                      align-items: center;
+                      color: #165dff;
+                      cursor: pointer;
+                    "
+                    @click="bindServiceTicket(scope.row, false)"
+                  >
                     点击绑定
                   </div>
                 </template>
@@ -229,45 +349,90 @@
             <span class="label">升级备注</span>
             <el-input v-model="formDialog.remark" placeholder="输入自定义备注"></el-input>
           </span> -->
-
-
-
         </template>
         <template v-if="currentDialogStep == 2">
           <div class="desc_action">
             <span class="desc">搜索和选择/批量编辑问题产品</span>
             <span class="action">
-              <el-button style="display:none;" class="btn" @click="openDialog2(1)">完善问题描述</el-button>
-              <el-button style="display:none;" class="btn" @click="openDialog2(2)">定义处理方式</el-button>
+              <el-button
+                style="display: none"
+                class="btn"
+                @click="openDialog2(1)"
+                >完善问题描述</el-button
+              >
+              <el-button
+                style="display: none"
+                class="btn"
+                @click="openDialog2(2)"
+                >定义处理方式</el-button
+              >
             </span>
           </div>
           <div class="search">
-            <el-input v-model="formDialog.searchValue" placeholder="搜索"></el-input>
+            <el-input
+              v-model="formDialog.searchValue"
+              placeholder="搜索"
+            ></el-input>
           </div>
           <div class="filter_list">
             <el-select v-model="formDialog.orderType">
-              <el-option v-for="item in filterList1" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option
+                v-for="item in filterList1"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
             <el-select v-model="formDialog.productType">
-              <el-option v-for="item in filterList2" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option
+                v-for="item in filterList2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
             <el-select v-model="formDialog.productModel">
-              <el-option v-for="item in filterList3" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option
+                v-for="item in filterList3"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
             <el-select v-model="formDialog.treeSpecies">
-              <el-option v-for="item in filterList4" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option
+                v-for="item in filterList4"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
             <el-select v-model="formDialog.paintColor">
-              <el-option v-for="item in filterList5" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option
+                v-for="item in filterList5"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
             <el-select v-model="formDialog.size">
-              <el-option v-for="item in filterList6" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option
+                v-for="item in filterList6"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </div>
           <div class="table">
             <!-- style="width: 100%;max-height: 200px;overflow: auto; -->
-            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData" :stripe="false"
-              style="width: 100%;max-height: 200px;overflow: auto;">
+            <el-table
+              ref="multipleTableRef"
+              :selection-change="handleSelectionChange"
+              :data="tableData"
+              :stripe="false"
+              style="width: 100%; overflow: auto" max-height="200"
+            >
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #default="scope">
                   <el-checkbox v-model="scope.row.checked" />
@@ -283,48 +448,96 @@
               <el-table-column prop="fscProductSpec" label="尺寸 " />
               <el-table-column prop="ticketClassification" label="问题大类">
                 <template #default="scope">
-                  <div style="display:flex;align-items:center;">
-                    {{ scope.row.ticketClassification ? (problemTypeList.find(val => val["code"] ==
-                      scope.row.ticketClassification)?.name) : "" }}
+                  <div style="display: flex; align-items: center">
+                    {{
+                      scope.row.ticketClassification
+                        ? problemTypeList.find(
+                            (val) =>
+                              val["code"] == scope.row.ticketClassification
+                          )?.name
+                        : ""
+                    }}
                   </div>
                 </template>
               </el-table-column>
               <el-table-column prop="ticketProblem" label="售后问题 ">
                 <template #default="scope">
-                  <div style="display:flex;align-items:center;">
-                    {{ scope.row.ticketProblem ? (afterSalesIssuesList.find(val => val["code"] ==
-                      scope.row.ticketProblem)?.name) : "" }}
+                  <div style="display: flex; align-items: center">
+                    {{
+                      scope.row.ticketProblem
+                        ? afterSalesIssuesList.find(
+                            (val) => val["code"] == scope.row.ticketProblem
+                          )?.name
+                        : ""
+                    }}
                   </div>
                 </template>
               </el-table-column>
               <el-table-column prop="" label="责任人 " />
-              <el-table-column prop="descriptionOfTicketProblem" label="问题描述 " />
+              <el-table-column
+                prop="descriptionOfTicketProblem"
+                label="问题描述 "
+              />
             </el-table>
           </div>
           <div class="responsibilityPerson">
             <span class="label required">问题大类</span>
-            <el-select v-model="dialog2Form.problemType" placeholder="">
-              <el-option v-for="item in problemTypeList" :key="item.code" :label="item.name" :value="item.code" />
+            <el-select
+              v-model="dialog2Form.problemType"
+              placeholder=""
+              @change="handleProblemTypeChange"
+            >
+              <el-option
+                v-for="item in problemTypeList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              />
             </el-select>
             <span class="label required">售后问题</span>
-            <el-select multiple collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
-              <el-option v-for="item in afterSalesIssuesList" :key="item.code" :label="item.name" :value="item.code" />
+            <el-select
+              multiple
+              collapse-tags
+              v-model="dialog2Form.afterSalesIssues"
+              placeholder=""
+            >
+              <el-option
+                v-for="item in afterSalesIssuesListForSelect"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              />
             </el-select>
             <span class="label required">责任人</span>
-            <el-input v-model="dialog2Form.responsiblePerson" style="width: 240px" placeholder="请输入责任人" />
+            <el-input
+              v-model="dialog2Form.responsiblePerson"
+              style="width: 240px"
+              placeholder="请输入责任人"
+            />
           </div>
           <div class="responsibilityPerson">
             <span class="label required">问题描述</span>
-            <el-input v-model="dialog2Form.problemDesc" style="width: 440px" :rows="2" type="textarea"
-              placeholder="请输入问题描述" />
+            <el-input
+              v-model="dialog2Form.problemDesc"
+              style="width: 440px"
+              :rows="2"
+              type="textarea"
+              placeholder="请输入问题描述"
+            />
           </div>
           <div class="responsibilityPerson">
             <span class="label">上传文件</span>
           </div>
           <div class="containerUpload">
             <span class="item">
-              <el-upload name="files" :on-success="handleUploaded" class="upload" drag
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" multiple>
+              <el-upload
+                name="files"
+                :on-success="handleUploaded"
+                class="upload"
+                drag
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                multiple
+              >
                 <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                 <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
                 <template #tip>
@@ -338,11 +551,25 @@
         </template>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="showMainDialog = false">取消</el-button>
-            <el-button v-if="currentDialogStep == 1" @click="currentDialogStepBut" type="primary" class="primary_btn"
-              style="margin-left:50px !important">下一步</el-button>
-            <el-button v-if="currentDialogStep == 2" @click="submitDialog" type="primary" class="primary_btn"
-              style="margin-left:50px !important">提交</el-button>
+            <el-button class="cancel_btn" @click="showMainDialog = false"
+              >取消</el-button
+            >
+            <el-button
+              v-if="currentDialogStep == 1"
+              @click="currentDialogStepBut"
+              type="primary"
+              class="primary_btn"
+              style="margin-left: 50px !important"
+              >下一步</el-button
+            >
+            <el-button
+              v-if="currentDialogStep == 2"
+              @click="submitDialog"
+              type="primary"
+              class="primary_btn"
+              style="margin-left: 50px !important"
+              >提交</el-button
+            >
           </div>
         </template>
       </el-dialog>
@@ -350,68 +577,141 @@
 
     <!-- 创建派工单 -->
     <div class="deliveryOrderDialog">
-      <el-dialog v-model="deliveryOrderDialog" title="新建配送派工单" width="80%" :show-close="false">
+      <el-dialog
+        v-model="deliveryOrderDialog"
+        title="新建配送派工单"
+        width="80%"
+        :show-close="false"
+      >
         <div class="step">
           <span class="item">
-            <span @click="changeDeliveryOrderStep(1)"
-              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'">1</span>
-            <span :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'">选择配送司机
+            <span
+              @click="changeDeliveryOrderStep(1)"
+              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'"
+              >1</span
+            >
+            <span
+              :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
+              >选择配送司机
               <span class="remark">选择配送货品的司机</span>
             </span>
           </span>
           <span class="item">
-            <span @click="changeDeliveryOrderStep(2)"
-              :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'">2</span>
-            <span :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'">输入派工单注意事项
+            <span
+              @click="changeDeliveryOrderStep(2)"
+              :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'"
+              >2</span
+            >
+            <span
+              :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'"
+              >输入派工单注意事项
               <span class="remark">如有,请填写关键备注</span>
             </span>
           </span>
           <span class="item">
-            <span @click="changeDeliveryOrderStep(3)"
-              :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'">3</span>
-            <span :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'">完成创建
+            <span
+              @click="changeDeliveryOrderStep(3)"
+              :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'"
+              >3</span
+            >
+            <span
+              :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'"
+              >完成创建
               <span class="remark">等待司机配送</span>
             </span>
           </span>
         </div>
         <div class="content">
-          <el-form v-if="currentDeliveryOrderStep == 1" :model="deliveryOrderForm" :rules="deliveryOrderRule"
-            ref="deliveryOrderFormRef" label-width="90px" label-position="left">
+          <el-form
+            v-if="currentDeliveryOrderStep == 1"
+            :model="deliveryOrderForm"
+            :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef"
+            label-width="90px"
+            label-position="left"
+          >
             <el-form-item label="人员名称" prop="followerId">
-              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery"
-                placeholder="查找或输入服务人员姓名">
-                <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
+              <el-select
+                v-model="deliveryOrderForm.followerId"
+                @change="onCahngeUserSelectForDelivery"
+                placeholder="查找或输入服务人员姓名"
+              >
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
               </el-select>
-              <span class="custom_item"><img src="@/assets/images/add.png" alt="" /></span>
+              <span class="custom_item"
+                ><img src="@/assets/images/add.png" alt=""
+              /></span>
             </el-form-item>
             <el-form-item label="联系方式" prop="contactTelephone">
-              <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="查找或输入配送司机手机号码" />
+              <el-input
+                v-model="deliveryOrderForm.contactTelephone"
+                placeholder="查找或输入配送司机手机号码"
+              />
             </el-form-item>
 
             <el-form-item label="预约开始" prop="appointmentStartTime">
-              <el-date-picker v-model="deliveryOrderForm.appointmentStartTime" type="datetime" placeholder="日期/时间"
-                value-format="YYYY-MM-DD HH:mm:ss" />
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentStartTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
+              />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
-              <el-date-picker v-model="deliveryOrderForm.appointmentEndTime" type="datetime" placeholder="日期/时间"
-                value-format="YYYY-MM-DD HH:mm:ss" />
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentEndTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
+              />
             </el-form-item>
-            <el-form-item label="是否具备安装条件" class="check_item">
+            <!-- <el-form-item label="是否具备安装条件" class="check_item">
               <span>
                 <el-checkbox v-model="deliveryOrderForm.haveInstallConditions"></el-checkbox>
               </span>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
-          <el-form v-if="currentDeliveryOrderStep == 2" :model="deliveryOrderForm" :rules="deliveryOrderRule"
-            ref="deliveryOrderFormRef" label-width="90px" label-position="left">
+          <el-form
+            v-if="currentDeliveryOrderStep == 2"
+            :model="deliveryOrderForm"
+            :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef"
+            label-width="90px"
+            label-position="left"
+          >
             <el-form-item label="优先级" prop="priority">
-              <el-select v-model="deliveryOrderForm.priority" placeholder="选择优先级">
-                <el-option v-for="item in priority" :key="item.code" :label="item.name" :value="item.code" />
+              <el-select
+                v-model="deliveryOrderForm.priority"
+                placeholder="选择优先级"
+              >
+                <el-option
+                  v-for="item in priority"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="派工类型" prop="fieldJobType__c">
-              <el-select v-model="deliveryOrderForm.fieldJobType__c" placeholder="选择派工类型">
-                <el-option v-for="item in dispatchType" :key="item.code" :label="item.name" :value="item.code" />
+              <el-select
+                v-model="deliveryOrderForm.fieldJobType__c"
+                placeholder="选择派工类型"
+              >
+                <el-option
+                  v-for="item in dispatchType"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
               </el-select>
               <!-- <el-input
                 disabled
@@ -420,15 +720,29 @@
               /> -->
             </el-form-item>
             <el-form-item label="派工单备注" class="customLayout">
-              <el-input v-model="deliveryOrderForm.remark" :rows="5" type="textarea" maxlength="500"
-                placeholder="请填写派工单备注" show-word-limit />
+              <el-input
+                v-model="deliveryOrderForm.remark"
+                :rows="5"
+                type="textarea"
+                maxlength="500"
+                placeholder="请填写派工单备注"
+                show-word-limit
+              />
             </el-form-item>
             <el-form-item label="上传图片" class="custom_upload">
-              <el-upload :on-success="handleSuccessDelivery" :on-remove="handleDeleteDelivery" :auto-upload="true"
-                :data="uploadDataDelivery" :headers="headers" :before-upload="beforeUploadDelivery"
-                v-model:file-list="deliveryOrderForm.fileList" class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
-                list-type="picture-card">
+              <el-upload
+                :on-success="handleSuccessDelivery"
+                :on-remove="handleDeleteDelivery"
+                :auto-upload="true"
+                :data="uploadDataDelivery"
+                :headers="headers"
+                :before-upload="beforeUploadDelivery"
+                v-model:file-list="deliveryOrderForm.fileList"
+                class="avatar-uploader"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :show-file-list="true"
+                list-type="picture-card"
+              >
                 <el-icon class="avatar-uploader-icon">
                   <Plus />
                 </el-icon>
@@ -438,11 +752,23 @@
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="deliveryOrderDialog = false">取消</el-button>
-            <el-button v-if="currentDeliveryOrderStep == 1" type="primary" class="primary_btn"
-              @click="deliveryOrderNextStep">下一步</el-button>
-            <el-button v-if="currentDeliveryOrderStep == 2" type="primary" class="primary_btn"
-              @click="finishDeliveryOrder">完成</el-button>
+            <el-button class="cancel_btn" @click="deliveryOrderDialog = false"
+              >取消</el-button
+            >
+            <el-button
+              v-if="currentDeliveryOrderStep == 1"
+              type="primary"
+              class="primary_btn"
+              @click="deliveryOrderNextStep"
+              >下一步</el-button
+            >
+            <el-button
+              v-if="currentDeliveryOrderStep == 2"
+              type="primary"
+              class="primary_btn"
+              @click="finishDeliveryOrder"
+              >完成</el-button
+            >
           </div>
         </template>
       </el-dialog>
@@ -450,58 +776,109 @@
     <!-- 创建派工单 -->
     <!-- 编辑问题描述及负责人按钮 -->
     <div class="editcontentDialog">
-      <el-dialog v-model="editServerCasecontentDialog" title="编辑" width="40%" :show-close="false">
+      <el-dialog
+        v-model="editServerCasecontentDialog"
+        title="编辑"
+        width="40%"
+        :show-close="false"
+      >
         <div class="content">
-          <el-form :model="editFollowerAndPDescriptForm" :rules="editFollowerAndPDescriptFormRule"
-            ref="deditFollowerAndPDescriptFormRef" label-width="90px" label-position="left">
+          <el-form
+            :model="editFollowerAndPDescriptForm"
+            :rules="editFollowerAndPDescriptFormRule"
+            ref="deditFollowerAndPDescriptFormRef"
+            label-width="90px"
+            label-position="left"
+          >
             <el-form-item label="负责人" prop="followerId">
-              <el-select v-model="editFollowerAndPDescriptForm.followerId" @change="onCahngeUserSelectForEditServiceCase"
-                placeholder="请选择负责人">
-                <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
+              <el-select
+                v-model="editFollowerAndPDescriptForm.followerId"
+                @change="onCahngeUserSelectForEditServiceCase"
+                placeholder="请选择负责人"
+              >
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
               </el-select>
             </el-form-item>
-            <el-form-item label="问题描述" prop="problemDescription__c">
-              <el-input v-model="editFollowerAndPDescriptForm.problemDescription__c" placeholder="请输入经销商处理结论" />
+            <el-form-item
+              label="经销商处理结论"
+              prop="processingProcessAndResults"
+            >
+              <el-input
+                v-model="
+                  editFollowerAndPDescriptForm.processingProcessAndResults
+                "
+                placeholder="请输入经销商处理结论"
+              />
             </el-form-item>
           </el-form>
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="editServerCasecontentDialog = false">取消</el-button>
-            <el-button type="primary" class="primary_btn" @click="SaveServiceData">保存</el-button>
+            <el-button
+              class="cancel_btn"
+              @click="editServerCasecontentDialog = false"
+              >取消</el-button
+            >
+            <el-button
+              type="primary"
+              class="primary_btn"
+              @click="SaveServiceData"
+              >保存</el-button
+            >
           </div>
         </template>
       </el-dialog>
-
     </div>
     <!-- 相关单据数据table -->
     <div class="relatedDocumentsDialog">
-      <el-dialog v-model="showRelatedDocumentsDialog" title="相关单据" width="80%" :show-close="false">
+      <el-dialog
+        v-model="showRelatedDocumentsDialog"
+        title="相关单据"
+        width="80%"
+        :show-close="false"
+      >
         <div class="content">
           <span class="tableItem">
             <span class="tableTitle"> 1. 售后工单 </span>
             <span class="tableContent">
-              <el-table :data="relatedDocumentsAftersalesWorkorderList" :stripe="false" style="width: 100%">
+              <el-table
+                :data="relatedDocumentsAftersalesWorkorderList"
+                :stripe="false"
+                style="width: 100%"
+              >
                 <el-table-column prop="name" label="售后工单编号" />
                 <el-table-column prop="serviceTicketType__c" label="类别" />
                 <el-table-column prop="text3" label="负责人" />
                 <el-table-column prop="status__c" label="状态">
                   <template #default="scope">
-                    <div style="display:flex;align-items:center;">
-                      {{ scope.row.status__c ? (seviceTicketStatusOptions.find(val => val["code"] ==
-                        scope.row.status__c)?.name) : "" }}
+                    <div style="display: flex; align-items: center">
+                      {{
+                        scope.row.status__c
+                          ? seviceTicketStatusOptions.find(
+                              (val) => val["code"] == scope.row.status__c
+                            )?.name
+                          : ""
+                      }}
                     </div>
                   </template>
                 </el-table-column>
                 <el-table-column prop="updatedTime" label="修改时间" />
                 <el-table-column label="操作" width="80px">
                   <template #default="scope">
-                    <div style="
+                    <div
+                      style="
                         display: flex;
                         align-items: center;
                         color: #165dff;
                         cursor: pointer;
-                      " @click="handleView(scope.row)">
+                      "
+                      @click="handleView(scope.row)"
+                    >
                       查看
                     </div>
                   </template>
@@ -512,36 +889,84 @@
           <span class="tableItem">
             <span class="tableTitle"> 2. 派工单 </span>
             <span class="tableContent">
-              <el-table :data="relatedDocumentsDispatchList" :stripe="false" style="width: 100%">
+              <el-table
+                :data="relatedDocumentsDispatchList"
+                :stripe="false"
+                style="width: 100%"
+              >
                 <el-table-column prop="caseNo" label="派工单编号" />
                 <el-table-column prop="fieldJobType__c" label="类别">
                   <template #default="scope">
-                    <div style="display:flex;align-items:center;">
-                      {{ scope.row.fieldJobType__c ? (technicianTypeOption.find(val => val["code"] ==
-                        scope.row.fieldJobType__c)?.name) : "配送派工单" }}
+                    <div style="display: flex; align-items: center">
+                      {{
+                        scope.row.fieldJobType__c
+                          ? technicianTypeOption.find(
+                              (val) => val["code"] == scope.row.fieldJobType__c
+                            )?.name
+                          : "配送派工单"
+                      }}
                     </div>
                   </template>
                 </el-table-column>
                 <el-table-column prop="followerName" label="负责人" />
                 <el-table-column prop="status" label="状态">
                   <template #default="scope">
-                    <div style="display:flex;align-items:center;color:blue">
-                      {{ scope.row.stage__c ? (dispatchWorkerStatusOption.find(val => val["code"] ==
-                        scope.row.stage__c)?.name) : "待开始" }}
+                    <div
+                      style="display: flex; align-items: center; color: blue"
+                    >
+                      {{
+                        scope.row.stage__c
+                          ? dispatchWorkerStatusOption.find(
+                              (val) => val["code"] == scope.row.stage__c
+                            )?.name
+                          : "待开始"
+                      }}
                     </div>
                   </template>
                 </el-table-column>
                 <el-table-column prop="updatedTime" label="修改时间" />
                 <el-table-column label="操作" width="80px">
                   <template #default="scope">
-                    <div style="
+                    <div
+                      style="
                         display: flex;
                         align-items: center;
                         color: #165dff;
                         cursor: pointer;
-                      " @click="dispatch(scope.row)">
+                      "
+                      @click="dispatch(scope.row)"
+                    >
                       查看
                     </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </span>
+          </span>
+          <span class="tableItem">
+            <span class="tableTitle"> 3. 问题提报附件 </span>
+            <span class="tableContent">
+              <el-table
+                :data="serviceCaseAttachment"
+                :stripe="false"
+                style="width: 100%"
+                max-height="100"
+              >
+                <el-table-column prop="picNo" label="附件编号" />
+                <el-table-column prop="type" label="类型" />
+                <el-table-column prop="text3" label="附件链接">
+                  <template #default="{ row }">
+                    <template
+                      v-for="(image, index) in row.picture"
+                      :key="index"
+                    >
+                      <el-image
+                        style="margin-right: 5px; width: 50px"
+                        :src="image"
+                        :preview-src-list="row.picture"
+                      >
+                      </el-image>
+                    </template>
                   </template>
                 </el-table-column>
               </el-table>
@@ -550,7 +975,12 @@
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button type="primary" class="primary_btn" @click="showRelatedDocumentsDialog = false">返回</el-button>
+            <el-button
+              type="primary"
+              class="primary_btn"
+              @click="showRelatedDocumentsDialog = false"
+              >返回</el-button
+            >
           </div>
         </template>
       </el-dialog>
@@ -560,40 +990,59 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
-import { ElMessage, ElMessageBox, ElLoading } from "element-plus"
-import { useRoute } from "vue-router"
-import { Plus } from "@element-plus/icons-vue"
-import { getServiceCaseItem, getPickList, getOrderList, addFieldJob, getticketsolution, getOrderListById, getServiceticketList, getExternalUser, getFeildJobList, getOrderListByNeoId, updateOrCreateServiceticket, getTicketSolutionByTicketId, createServiceCase, getServiceticketById } from '../../api/common.js'
-import moment from 'moment';
+import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue";
+import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
+import { useRoute } from "vue-router";
+import { Plus } from "@element-plus/icons-vue";
+import {
+  getServiceCaseItem,
+  getPickList,
+  getOrderList,
+  addFieldJob,
+  getticketsolution,
+  getOrderListById,
+  getServiceticketList,
+  getExternalUser,
+  getFeildJobList,
+  getOrderListByNeoId,
+  updateOrCreateServiceticket,
+  getTicketSolutionByTicketId,
+  createServiceCase,
+  getServiceticketById,
+} from "../../api/common.js";
+import moment from "moment";
 
-const { proxy }: any = getCurrentInstance()
-
-const commentList = ref<any>([])
-const currentDeliveryOrderStep = ref(1)
-const route = useRoute()
-const id = ref(route.query.id)
-const neoid = ref<any>(route.query.neoid)
-let caseneoId = null
-const taskStatus = route.query.status != null ? parseInt(route.query.status.toString(), 0) + 1 : 1
-const showRelatedDocumentsDialog = ref(false)
+const { proxy }: any = getCurrentInstance();
+const defaultStartTime = new Date();
+const commentList = ref<any>([]);
+const currentDeliveryOrderStep = ref(1);
+const route = useRoute();
+const id = ref(route.query.id);
+const neoid = ref<any>(route.query.neoid);
+let caseneoId = null;
+const taskStatus =
+  route.query.status != null
+    ? parseInt(route.query.status.toString(), 0) + 1
+    : 1;
+const showRelatedDocumentsDialog = ref(false);
 const orderList = ref([]);
-const extralUserData = ref<any>([])
-const tableDataDispatch = ref([])
-const deliveryOrderDialog = ref(false)
-const editcontentDialog = ref(false)
-const editServerCasecontentDialog = ref(false)
-const tableData = ref([])
-const serviceTicket = ref([])
-const selectedRows = ref([])
+const extralUserData = ref<any>([]);
+const tableDataDispatch = ref([]);
+const deliveryOrderDialog = ref(false);
+const editcontentDialog = ref(false);
+const editServerCasecontentDialog = ref(false);
+const tableData = ref([]);
+const serviceTicket = ref([]);
+const selectedRows = ref([]);
 const currentItem = ref<any>({});
 const provinceList = ref([]);
 const cityList = ref([]);
 const districtList = ref([]);
 let solutionId = "";
-let remainingSeconds = ref<number>()
-let caseStatus = 0
-let timeout = ""
+let remainingSeconds = ref<number>();
+let caseStatus = 0;
+let timeout = "";
+const serviceCaseAttachment = ref([] as any);
 // 显示遮罩层
 // const loadingInstance = ElLoading.service({ fullscreen: true,lock: true,
 //     text: '等待数据同步完成',
@@ -602,7 +1051,6 @@ let timeout = ""
 let loadingInstance = null;
 //新增售后工单被销售易同步标识
 let isSynced = false;
-
 
 const formDialog = ref<any>({
   orderNo: "",
@@ -614,8 +1062,7 @@ const formDialog = ref<any>({
   treeSpecies: "1",
   paintColor: "1",
   size: "1",
-})
-
+});
 
 const dialog2Form = ref<any>({
   serviceTicketId: 0,
@@ -629,36 +1076,36 @@ const dialog2Form = ref<any>({
   badType: "",
   qualityIndicator1: "",
   qualityIndicator2: "",
-  handleWay: ""
-})
+  handleWay: "",
+});
 
-const filterList1 = ref([{ label: "全部订单", value: "1" }])
+const filterList1 = ref([{ label: "全部订单", value: "1" }]);
 
-const filterList2 = ref([{ label: "产品大类", value: "1" }])
+const filterList2 = ref([{ label: "产品大类", value: "1" }]);
 
-const filterList3 = ref([{ label: "产品型号", value: "1" }])
+const filterList3 = ref([{ label: "产品型号", value: "1" }]);
 
-const filterList4 = ref([{ label: "树种", value: "1" }])
+const filterList4 = ref([{ label: "树种", value: "1" }]);
 
-const filterList5 = ref([{ label: "油漆颜色", value: "1" }])
+const filterList5 = ref([{ label: "油漆颜色", value: "1" }]);
 
-const filterList6 = ref([{ label: "尺寸", value: "1" }])
-
+const filterList6 = ref([{ label: "尺寸", value: "1" }]);
 
 ///图片上传组合数组
-const fileIdList = ref<any>([])
+const fileIdList = ref<any>([]);
 const handleUploaded = (rep) => {
-  fileIdList.value = fileIdList.value.concat(rep.data.map(item => item.fileId))
-}
+  fileIdList.value = fileIdList.value.concat(
+    rep.data.map((item) => item.fileId)
+  );
+};
 
-
-const multipleTableRef = ref()
-const multipleSelection = ref([])
+const multipleTableRef = ref();
+const multipleSelection = ref([]);
 
 const handleSelectionChange = (val) => {
-  console.info("选择的数据：", val)
-  multipleSelection.value = val
-}
+  console.info("选择的数据：", val);
+  multipleSelection.value = val;
+};
 
 const tableDataOrderDetials = ref([
   {
@@ -693,7 +1140,7 @@ const tableDataOrderDetials = ref([
     text5: "2021-02-28 10:30:50",
     text6: "",
   },
-])
+]);
 
 const tableDataServiceEvaluation = ref([
   {
@@ -704,13 +1151,13 @@ const tableDataServiceEvaluation = ref([
     text5: "2021-02-28 10:30:50",
     text6: "",
   },
-])
+]);
 
 const problemTypeList = ref<any>([
   { code: "1", name: "经销商问题" },
   { code: "2", name: "公司问题" },
-  { code: "3", name: "物流问题" }
-])
+  { code: "3", name: "物流问题" },
+]);
 
 const afterSalesIssuesList = ref<any>([
   { code: "1", name: "店面测量师漏单" },
@@ -723,8 +1170,29 @@ const afterSalesIssuesList = ref<any>([
   { code: "8", name: "店里安装师问题" },
   { code: "9", name: "消费者补单" },
   { code: "10", name: "消费者使用不当" },
-  { code: "11", name: "产品丢失" }
-])
+  { code: "11", name: "产品丢失" },
+  { code: "12", name: "公司问题" },
+  { code: "13", name: "物流问题" },
+]);
+
+const afterSalesIssuesListForSelect = ref([] as any);
+const afterSalesIssuesListWithType = ref<any>({
+  "1": [
+    { code: "1", name: "店面测量师漏单" },
+    { code: "2", name: "店面测量师量错" },
+    { code: "3", name: "店里设计师漏分解" },
+    { code: "4", name: "店里设计师分解错" },
+    { code: "5", name: "店里设计不合理" },
+    { code: "6", name: "店里下单员漏单" },
+    { code: "7", name: "店里下单员下错" },
+    { code: "8", name: "店里安装师问题" },
+    { code: "9", name: "消费者补单" },
+    { code: "10", name: "消费者使用不当" },
+    { code: "11", name: "产品丢失" }
+  ],
+  "2": [{ code: "12", name: "公司问题" }],
+  "3": [{ code: "13", name: "物流问题" }]
+});
 
 const poductTypeList = ref<any>([
   { code: "1", name: "墙板" },
@@ -742,8 +1210,8 @@ const poductTypeList = ref<any>([
   { code: "13", name: "雕花件" },
   { code: "14", name: "色板" },
   { code: "15", name: "整单" },
-  { code: "16", name: "入户门" }
-])
+  { code: "16", name: "入户门" },
+]);
 
 const componentTypeList = ref<any>([
   { code: "1", name: "边梃" },
@@ -790,8 +1258,8 @@ const componentTypeList = ref<any>([
   { code: "42", name: "色板" },
   { code: "43", name: "整单" },
   { code: "44", name: "修补漆" },
-  { code: "45", name: "入户门扇" }
-])
+  { code: "45", name: "入户门扇" },
+]);
 
 const badTypeList = ref<any>([
   { code: "1", name: "消费者" },
@@ -818,15 +1286,15 @@ const badTypeList = ref<any>([
   { code: "22", name: "长虫" },
   { code: "23", name: "过质保期" },
   { code: "24", name: "变色" },
-  { code: "25", name: "入户门问题" }
-])
+  { code: "25", name: "入户门问题" },
+]);
 
-const aftersalesHeaderDetails = ref<any>({})
+const aftersalesHeaderDetails = ref<any>({});
 const qualityIndicator1List = ref<any>([
   { code: "1", name: "订单分解错" },
   { code: "2", name: "订单漏分解" },
-  { code: "3", name: "变形" }
-])
+  { code: "3", name: "变形" },
+]);
 
 const qualityIndicator2List = ref<any>([
   { code: "1", name: "漏备注" },
@@ -834,35 +1302,36 @@ const qualityIndicator2List = ref<any>([
   { code: "3", name: "配件漏分解" },
   { code: "4", name: "五金漏分解" },
   { code: "5", name: "孔位漏分解" },
+]);
 
-])
+const handleWayList = ref<any>([
+  {
+    label: "处理方式",
+    value: "1",
+  },
+]);
 
-const handleWayList = ref<any>([{
-  label: "处理方式",
-  value: "1"
-}])
-
-const relatedDocumentsDispatchList = ref([])
+const relatedDocumentsDispatchList = ref([]);
 
 const complaintSource = ref([
   { code: "1", name: "配送技工" },
   { code: "2", name: "安装技工" },
   { code: "3", name: "终端用户" },
   { code: "4", name: "经销商" },
-])
+]);
 
 const dispatchType = ref([
   { code: "0", name: "配送派工" },
   { code: "1", name: "安装派工" },
   { code: "2", name: "维修" },
-])
+]);
 
 const priority = ref([
   { code: "1", name: "最高" },
   { code: "2", name: "高" },
   { code: "3", name: "中" },
   { code: "4", name: "低" },
-])
+]);
 
 const technicianTypeOption = ref([
   {
@@ -877,7 +1346,7 @@ const technicianTypeOption = ref([
     code: "2",
     name: "维修派工单",
   },
-])
+]);
 
 const dispatchWorkerStatusOption = ref([
   {
@@ -892,12 +1361,12 @@ const dispatchWorkerStatusOption = ref([
     code: "2",
     name: "已完成",
   },
-])
+]);
 
 const seviceTicketStatusOptions = ref([
   {
     code: "",
-    name: "全部"
+    name: "全部",
   },
   // },
   // {
@@ -975,32 +1444,29 @@ const seviceTicketStatusOptions = ref([
   {
     code: "8",
     name: "结束",
-  }
-])
+  },
+]);
 
+const currentDialogStep = ref(1);
 
-const currentDialogStep = ref(1)
+const showMainDialog = ref(false);
 
-const showMainDialog = ref(false)
+const showMainDialog2 = ref(false);
 
-const showMainDialog2 = ref(false)
-
-const dialogType = ref(1)
-
-
+const dialogType = ref(1);
 
 const createDeliveryOrder = () => {
-  deliveryOrderDialog.value = true
-}
+  deliveryOrderDialog.value = true;
+};
 
 const uploadDataDelivery = ref({
   files: [],
-  name: "files"
-})
+  name: "files",
+});
 
 const beforeUploadDelivery = (file) => {
-  uploadDataDelivery.value["files"] = [file]
-}
+  uploadDataDelivery.value["files"] = [file];
+};
 
 const filterList = ref({
   value1: "1",
@@ -1008,13 +1474,12 @@ const filterList = ref({
   value3: "1",
   value4: "1",
   value5: "1",
-  value6: "1"
-})
-
+  value6: "1",
+});
 
 const deliveryOrderNextStep = () => {
-  currentDeliveryOrderStep.value = 2
-}
+  currentDeliveryOrderStep.value = 2;
+};
 
 const taskDetails = ref({
   taskid: route.query.id,
@@ -1025,8 +1490,8 @@ const taskDetails = ref({
   distributorName: route.query.distributorName,
   followerName: route.query.followerName,
   createdTime: route.query.createdTime,
-  createdBy: route.query.createdBy
-})
+  createdBy: route.query.createdBy,
+});
 
 let deliveryOrderForm = reactive({
   fieldJobContactName: "",
@@ -1044,8 +1509,9 @@ let deliveryOrderForm = reactive({
   fileList: [] as any,
   filePath: [] as any,
   followerId: null,
-  address: ""
-})
+  address: "",
+  source__c: 1,
+});
 
 const deliveryOrderRule = reactive({
   followerId: [
@@ -1054,7 +1520,9 @@ const deliveryOrderRule = reactive({
   fieldJobContactName: [
     { required: true, message: "Please input username", trigger: "blur" },
   ],
-  contactTelephone: [{ required: true, message: "Please input phone", trigger: "blur" }],
+  contactTelephone: [
+    { required: true, message: "Please input phone", trigger: "blur" },
+  ],
   priority: [
     { required: true, message: "Please input priority", trigger: "blur" },
   ],
@@ -1072,39 +1540,37 @@ const deliveryOrderRule = reactive({
       trigger: "blur",
     },
   ],
-})
+});
 
 const handleDeleteDelivery = (res) => {
   var resopnse = res["response"];
-}
+};
 
 const handleSuccessDelivery = (res) => {
   if (res.code == "success") {
-    let path = res.data.map(val => val["fileId"]);
+    let path = res.data.map((val) => val["fileId"]);
     if (path[0]) {
-      deliveryOrderForm["filePath"].push(path[0])
+      deliveryOrderForm["filePath"].push(path[0]);
     }
   }
-}
+};
 
 let editFollowerAndPDescriptForm = reactive({
-  problemDescription__c: "",
-  followerId: null
-})
+  processingProcessAndResults: "",
+  followerId: null,
+});
 
 const editFollowerAndPDescriptFormRule = reactive({
-  followerId: [
-    { required: true, message: "请选择负责人", trigger: "blur" },
-  ],
-  problemDescription__c: [
+  followerId: [{ required: true, message: "请选择负责人", trigger: "blur" }],
+  processingProcessAndResults: [
     { required: true, message: "请输入经销商处理结论", trigger: "blur" },
   ],
-})
+});
 
 const uploadData = ref({
   files: [],
-  name: "files"
-})
+  name: "files",
+});
 
 const headers = ref({
   Content: "application/json",
@@ -1112,83 +1578,81 @@ const headers = ref({
   isImage: "true",
   needFileId: "true",
   "Trace-Id": "",
-})
+});
 
 const getExtralUserData = (showMsg: boolean) => {
-
-  let params = { "userType": 1, "name": "", "phone": "" };
+  let params = { userType: 1, name: "", phone: "" };
   getExternalUser(params).then((res: any) => {
-    let data = res.data.data
+    let data = res.data.data;
     if (data != undefined && data.length > 0) {
-      extralUserData.value = data
+      extralUserData.value = data;
       if (showMsg) {
         ElMessage({
-          message: '查询成功',
-          type: 'success'
-        })
+          message: "查询成功",
+          type: "success",
+        });
       }
     } else {
       if (showMsg) {
         ElMessage({
-          message: '获取数据失败',
-          type: 'error'
-        })
+          message: "获取数据失败",
+          type: "error",
+        });
       }
-
     }
-  })
-}
+  });
+};
 
 const onCahngeUserSelectForEditServiceCase = (event) => {
-  let item = extralUserData.value.find(val => val["id"] == event);
+  let item = extralUserData.value.find((val) => val["id"] == event);
   if (item) {
     // editFollowerAndPDescriptForm["followerId"] = item["id"];
     editFollowerAndPDescriptForm["follower"] = item["neoId"];
     editFollowerAndPDescriptForm["followerName"] = item["name"];
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
-}
+};
 
 const onCahngeUserSelectForDelivery = (event) => {
-  let item = extralUserData.value.find(val => val["id"] == event);
+  let item = extralUserData.value.find((val) => val["id"] == event);
   if (item) {
     deliveryOrderForm["fieldJobContactName"] = item["name"];
     deliveryOrderForm["contactTelephone"] = item["phone"];
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
-}
+};
 
 const SaveServiceData = () => {
   let params = {
     followerId: editFollowerAndPDescriptForm["followerId"],
     follower: editFollowerAndPDescriptForm["follower"],
     followerName: editFollowerAndPDescriptForm["followerName"],
-    problemDescription: editFollowerAndPDescriptForm["problemDescription__c"],
+    processingProcessAndResults:
+      editFollowerAndPDescriptForm["processingProcessAndResults"],
     id: id.value,
     questionType: currentItem.value["questionType"],
-    name: currentItem.value["name"]
-  }
+    name: currentItem.value["name"],
+  };
   createServiceCase(params).then((res) => {
     let resData = res.data;
-    if (resData.code == 'success' && resData.data != undefined) {
-      currentItem.value["followerName"] = editFollowerAndPDescriptForm["followerName"]
-      currentItem.value["problemDescription"] = editFollowerAndPDescriptForm["problemDescription__c"]
-      Object.keys(editFollowerAndPDescriptForm).forEach(key => {
-        if (key !== "followerId") editFollowerAndPDescriptForm[key] = '';
+    if (resData.code == "success" && resData.data != undefined) {
+      currentItem.value["followerName"] =
+        editFollowerAndPDescriptForm["followerName"];
+      currentItem.value["processingProcessAndResults"] =
+        editFollowerAndPDescriptForm["processingProcessAndResults"];
+      Object.keys(editFollowerAndPDescriptForm).forEach((key) => {
+        if (key !== "followerId") editFollowerAndPDescriptForm[key] = "";
         if (key == "followerId") editFollowerAndPDescriptForm[key] = null;
       });
-      proxy.$message.success("保存成功")
+      proxy.$message.success("保存成功");
     } else {
-      proxy.$message.warning("保存失败")
+      proxy.$message.warning("保存失败");
     }
-  })
-}
-const relatedDocumentsProblemReportingList = ref([
+  });
+};
+const relatedDocumentsProblemReportingList = ref([]);
 
-])
-
-const relatedDocumentsAftersalesWorkorderList = ref([])
-
+const relatedDocumentsAftersalesWorkorderList = ref([]);
 
 onMounted(() => {
   getDetailsData();
@@ -1196,10 +1660,10 @@ onMounted(() => {
   getCityList();
   getDistrictList();
   getSearchOrderList();
-  getExtralUserData(false)
-  postfieldjobeList()//相关派工单记录
-  postserviceticketList()//相关售后工单记录
-})
+  getExtralUserData(false);
+  postfieldjobeList(); //相关派工单记录
+  postserviceticketList(); //相关售后工单记录
+});
 
 const otherMethod = () => {
   getDetailsData();
@@ -1207,41 +1671,60 @@ const otherMethod = () => {
   getCityList();
   getDistrictList();
   getSearchOrderList();
-  getExtralUserData(false)
-  postfieldjobeList()//相关派工单记录
-  postserviceticketList()//相关售后工单记录
+  getExtralUserData(false);
+  postfieldjobeList(); //相关派工单记录
+  postserviceticketList(); //相关售后工单记录
 };
-
 
 //问题提报详情
 const getDetailsData = () => {
-  getServiceCaseItem({ id: id.value, neoid: neoid.value == undefined ? "" : neoid.value }).then(res => {
+  getServiceCaseItem({
+    id: id.value,
+    neoid: neoid.value == undefined ? "" : neoid.value,
+  }).then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
       currentItem.value = rtData.data;
-      formDialog.value["orderNo"] = currentItem.value["caseNo"]
-      caseStatus = currentItem.value["caseStatus"]
-      if (caseStatus === 2) {
-        let dealerAcceptanceTime = currentItem.value["dealerAcceptanceTime"] //初始时间
-        let initialTime = new Date(dealerAcceptanceTime).getTime();
-        let endTime = initialTime + (24 * 60 * 60 * 1000); // 结束时间（24小时后）
-        remainingSeconds = ref(Math.floor((endTime - Date.now()) / 1000));// 剩余秒数
-        startTimer(remainingSeconds, endTime)
+      formDialog.value["orderNo"] = currentItem.value["caseNo"];
+      caseStatus = currentItem.value["caseStatus"];
+      editFollowerAndPDescriptForm["processingProcessAndResults"] =
+        currentItem.value["processingProcessAndResults"];
+      var baseUrl =
+        "https://sh.mengtian.com.cn:9595/md/api/common/file/direct-download?fileId=";
+      if (
+        currentItem.value["picture"] != undefined &&
+        currentItem.value["picture"].length > 0
+      ) {
+        var picture = [] as any;
+        currentItem.value["picture"].forEach((item) => {
+          picture.push(baseUrl + item);
+        });
+        serviceCaseAttachment.value.push({
+          picNo: currentItem.value["goodsPicture"].join(","),
+          type: "问题提报图片",
+          picture: picture,
+        });
       }
-      getSearchOrderOneList(rtData.data["orderNeoId"])
-    }
-    else {
+      if (caseStatus === 2) {
+        let dealerAcceptanceTime = currentItem.value["dealerAcceptanceTime"]; //初始时间
+        let initialTime = new Date(dealerAcceptanceTime).getTime();
+        let endTime = initialTime + 24 * 60 * 60 * 1000; // 结束时间（24小时后）
+        remainingSeconds = ref(Math.floor((endTime - Date.now()) / 1000)); // 剩余秒数
+        startTimer(remainingSeconds, endTime);
+      }
+      getSearchOrderOneList(rtData.data["orderNeoId"]);
+    } else {
       proxy.$message.error(rtData?.message);
     }
-  })
-}
+  });
+};
 
 const startTimer = (remainingSeconds, endTime) => {
   const interval = setInterval(() => {
     remainingSeconds.value = Math.floor((endTime - Date.now()) / 1000);
     if (remainingSeconds.value <= 0) {
       clearInterval(interval);
-      timeout = "已受理阶段大于24小时"
+      timeout = "已受理阶段大于24小时";
     }
   }, 1000);
 };
@@ -1250,86 +1733,110 @@ const formatTime = (seconds) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = seconds % 60;
-  return timeout ? timeout : `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  return timeout
+    ? timeout
+    : `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 };
 
 const changeDeliveryOrderStep = (step) => {
-  currentDeliveryOrderStep.value = step
-}
+  currentDeliveryOrderStep.value = step;
+};
 
 //获取订单列表
 const getSearchOrderList = () => {
   let params = {
-    "deliveryDate": "",
-    "status__c": "",
-    "orderType__c": "",
-    "transactionDate": "",
-    "po": "",
-    "accountName": "",
-    "accountPhone": ""
-  }
-  getOrderList(params).then(res => {
+    deliveryDate: "",
+    status__c: "",
+    orderType__c: "",
+    transactionDate: "",
+    po: "",
+    accountName: "",
+    accountPhone: "",
+  };
+  getOrderList(params).then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
       orderList.value = rtData.data;
-    }
-    else {
+    } else {
       proxy.$message.error(rtData?.message);
     }
-  })
-}
+  });
+};
 
 const upgradeToHeadquarters = () => {
-  tableData.value.forEach(item => {
-    item['checked'] = false
-  })
-  dialog2Form.value = ref([])
-  showMainDialog.value = true
-  let params = { orderNoeId: currentItem.value["orderNeoId"] }
-  getServiceticketList(params).then(res => {
+  tableData.value.forEach((item) => {
+    item["checked"] = false;
+  });
+  if (
+    currentItem.value["orderNeoId"] == undefined ||
+    currentItem.value["orderNeoId"].toString().length <= 0
+  ) {
+    proxy.$message.warning("此问题提报未绑定订单，无法升级售后!");
+    return;
+  }
+  dialog2Form.value = ref([]);
+  showMainDialog.value = true;
+
+  let params = { orderNoeId: currentItem.value["orderNeoId"] };
+  getServiceticketList(params).then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
-      rtData.data.forEach(item => {
+      rtData.data.forEach((item) => {
         if (item["serviceCaseNeoId"] == currentItem.value["neoid"]) {
-          item["operate"] = true
+          item["operate"] = true;
         } else {
-          item["operate"] = false
+          item["operate"] = false;
         }
       });
       serviceTicket.value = rtData.data;
-    }
-    else {
+      serviceTicket.value.forEach((item) => {
+        item["checked"] = false;
+      });
+    } else {
       proxy.$message.error(rtData?.message);
     }
-  })
-}
+  });
+};
 
 const changeDialogStep = (step) => {
-  currentDialogStep.value = step
-}
+  currentDialogStep.value = step;
+};
 
 const openDialog2 = (type) => {
-  dialogType.value = type
-  showMainDialog.value = false
-  showMainDialog2.value = true
-}
+  dialogType.value = type;
+  showMainDialog.value = false;
+  showMainDialog2.value = true;
+};
 
 //升级售后的时候有没有选订单号
 const currentDialogStepBut = () => {
-  ElMessageBox.confirm(
-    '是否新建售后工单?',
-    '新建售后工单',
-    {
-      confirmButtonText: '是',
-      cancelButtonText: '否',
-      type: 'warning',
-    }
-  )
+  const selectData = serviceTicket.value.filter(
+    (item) => item.checked && item.operate
+  );
+  let msgBoxText = "是否新建售后工单?";
+  let msgBoxTitle = "新建售后工单";
+  if (selectData.length > 1) {
+    proxy.$message.warning("只能勾选一条已绑定的售后工单");
+    return;
+  }
+  if (selectData.length == 1) {
+    msgBoxText = "是否对所选售后工单进行编辑?";
+    msgBoxTitle = "编辑售后工单";
+  }
+  ElMessageBox.confirm(msgBoxText, msgBoxTitle, {
+    confirmButtonText: "是",
+    cancelButtonText: "否",
+    type: "warning",
+  })
     .then(() => {
-      if (!formDialog.value.remark) {
+      if (!formDialog.value.remark && selectData.length <= 0) {
         proxy.$message.error("经销商需求描述不能为空!");
+      } else if (selectData.length == 1) {
+        bindServiceTicket(selectData[0], true);
       } else {
-        bindServiceTicket(null)
+        bindServiceTicket(null, false);
       }
     })
     .catch(() => {
@@ -1337,14 +1844,13 @@ const currentDialogStepBut = () => {
       //   type: 'info',
       //   message: 'Delete canceled',
       // })
-    })
-
-}
+    });
+};
 
 //升级到总部售后提交按钮
 const submitDialog = () => {
-  console.info("fileIdfileId", fileIdList)
-  const selectData = tableData.value.filter(item => item.checked)
+  console.info("fileIdfileId", fileIdList);
+  const selectData = tableData.value.filter((item) => item.checked);
 
   // console.info("过滤：", selectData["id"])
   if (selectData.length <= 0) {
@@ -1352,61 +1858,80 @@ const submitDialog = () => {
     return;
   }
   let selectDataClone = JSON.parse(JSON.stringify(selectData));
-  selectDataClone.forEach(item => {
-    item["picture"] = fileIdList.value //图片id
-    item["orderProductId"] = item["id"] //订单明细
-    item["treeSpecies"] = item["treeSpecies__c"] //树种
-    item["category"] = item["category1"] //产品大类
-    item["paintColor"] = item["paintColor__c"] //油漆颜色
-    item["ticketClassification"] = dialog2Form.value.problemType //问题大类
-    item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
-    item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
-    item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
-    item["id"] = solutionId != "" ? item["id"] : null
-  })
-
+  selectDataClone.forEach((item) => {
+    item["picture"] = fileIdList.value; //图片id
+    item["orderProductId"] = item["id"]; //订单明细
+    item["treeSpecies"] = item["treeSpecies__c"]; //树种
+    item["category"] = item["category1"]; //产品大类
+    item["paintColor"] = item["paintColor__c"]; //油漆颜色
+    item["ticketClassification"] = dialog2Form.value.problemType; //问题大类
+    item["ticketProblem"] = dialog2Form.value.afterSalesIssues; //售后问题
+    item["personLiable"] = dialog2Form.value.responsiblePerson; //责任主体
+    item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc; //问题描述
+    item["id"] = solutionId != "" ? item["solutionDetailsId"] : null;
+  });
   let params = {
     serviceTicket: curItemServiceTicket.value["id"],
     serviceTicketId: curItemServiceTicket.value["neoId"],
     serviceCaseId: parseInt(currentItem.value["neoid"]),
-    details: selectDataClone
-  }
+    details: selectDataClone,
+  };
   if (solutionId != "") {
-    params["id"] = solutionId
+    params["id"] = solutionId;
   }
-  console.info("selectDataselectData", selectData)
+  console.info("selectDataselectData", selectData);
 
   // dialog2Form.value["details"] = selectData
-  if (!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues || !dialog2Form.value.responsiblePerson || !dialog2Form.value.problemDesc) {
+  if (
+    !dialog2Form.value.problemType ||
+    !dialog2Form.value.afterSalesIssues ||
+    !dialog2Form.value.responsiblePerson ||
+    !dialog2Form.value.problemDesc
+  ) {
     proxy.$message.error("必填选项不能为空!");
   } else {
     proxy.$message.success("提交成功!");
     setTimeout(() => {
-      showMainDialog.value = false
-      currentDialogStep.value = 1
+      showMainDialog.value = false;
+      currentDialogStep.value = 1;
       // params["caseVo"] = "234234234"
       //提交方法
       getticketsolution(params).then((res: any) => {
-        console.log(res)
+        console.log(res);
         let data = res.data.data;
         if (data != undefined) {
-          solutionId = data["id"]
-          selectData.forEach(item => {
-            item["picture"] = fileIdList.value //图片id
-            item["ticketClassification"] = dialog2Form.value.problemType //问题大类
-            item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
-            item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
-            item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
-          })
+          solutionId = data["id"];
+          // selectData.forEach((item) => {
+          //   item["picture"] = fileIdList.value; //图片id
+          //   item["ticketClassification"] = dialog2Form.value.problemType; //问题大类
+          //   item["ticketProblem"] = dialog2Form.value.afterSalesIssues; //售后问题
+          //   item["personLiable"] = dialog2Form.value.responsiblePerson; //责任主体
+          //   item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc; //问题描述
+          // });
+          let tsDetails = data.details;
+          if (tsDetails && tsDetails.length > 0) {
+              selectData.forEach((val) => {
+                let item = tsDetails.find(
+                  (val2) => val["id"] == val2["orderProductId"]
+                );
+                if (item) {
+                  val["descriptionOfTicketProblem"] =
+                    item["descriptionOfTicketProblem"];
+                  val["ticketClassification"] = item["ticketClassification"];
+                  val["ticketProblem"] = item["ticketProblem"];
+                  val["responsibleSubject"] = item["responsibleSubject"];
+                  val["solutionDetailsId"]=item["id"]
+                }
+              });
+            }
         }
-      })
+      });
     }, 500);
   }
-}
-
+};
 
 const initiateComments = () => {
-  editcontentDialog.value = true
+  editcontentDialog.value = true;
   // ElMessageBox.prompt("请填写评论内容", "发起评论", {
   //   inputPattern: /\S/,
   //   inputErrorMessage: '评论内容不能为空!',
@@ -1421,7 +1946,7 @@ const initiateComments = () => {
   //     })
   //   })
   //   .catch(() => { })
-}
+};
 
 const editServiceCase = () => {
   if (currentItem.value["caseStatus"] == "5") {
@@ -1429,172 +1954,187 @@ const editServiceCase = () => {
     return;
   }
   //找出是否存在状态>=问题提报的售后工单，如果存在不允许编辑
-  let matchAfterSalesData = relatedDocumentsAftersalesWorkorderList.value.filter(item => parseInt(item["status__c"]) >= 2)
+  let matchAfterSalesData =
+    relatedDocumentsAftersalesWorkorderList.value.filter(
+      (item) => parseInt(item["status__c"]) >= 2
+    );
   if (matchAfterSalesData.length > 0) {
     proxy.$message.warning("存在处理中的售后工单,不允许修改");
     return;
   }
-  editServerCasecontentDialog.value = true
-}
+  editServerCasecontentDialog.value = true;
+};
 
 const getProvinceList = () => {
-  getPickList("province").then(res => {
+  getPickList("province").then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
       provinceList.value = rtData.data;
     }
-  })
-}
+  });
+};
 
 const getCityList = () => {
-  getPickList("city").then(res => {
+  getPickList("city").then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
       cityList.value = rtData.data;
     }
-  })
-}
+  });
+};
 
 const getDistrictList = () => {
-  getPickList("district").then(res => {
+  getPickList("district").then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
       districtList.value = rtData.data;
     }
-  })
-}
-
+  });
+};
 
 //升级到总部售后点击下一步加载订单里面的items数据
 const loadingOrderList = (row) => {
   let params = {
-    po: row
-  }
+    po: row,
+  };
   getOrderList(params).then((res: any) => {
     if (res.data.code == "success") {
-      let orderid = res.data.data[0].id;//订单id
-      let orderPo = res.data.data[0].po //订单po
-      caseneoId = parseInt(curItemServiceTicket.value["neoId"])
+      let orderid = res.data.data[0].id; //订单id
+      let orderPo = res.data.data[0].po; //订单po
+      caseneoId = parseInt(curItemServiceTicket.value["neoId"]);
       getOrderListById(orderid).then((res: any) => {
         let getOrderItems = res.data.data.items;
         tableData.value = getOrderItems;
-        tableData.value.forEach(item => {
-          item['checked'] = false
-          item["orderPo"] = orderPo
-        })
+        tableData.value.forEach((item) => {
+          item["checked"] = false;
+          item["orderPo"] = orderPo;
+        });
         getTicketSolutionByTicketId(caseneoId).then((res: any) => {
           if (res.data.code == "success" && res.data.data != undefined) {
             solutionId = res.data.data["id"];
             let tsDetails = res.data.data.details;
             if (tsDetails && tsDetails.length > 0) {
-              tableData.value.forEach(val => {
-                let item = tsDetails.find(val2 => val["id"] == val2["orderProductId"]);
+              tableData.value.forEach((val) => {
+                let item = tsDetails.find(
+                  (val2) => val["id"] == val2["orderProductId"]
+                );
                 if (item) {
-                  val["descriptionOfTicketProblem"] = item["descriptionOfTicketProblem"];
+                  val["descriptionOfTicketProblem"] =
+                    item["descriptionOfTicketProblem"];
                   val["ticketClassification"] = item["ticketClassification"];
                   val["ticketProblem"] = item["ticketProblem"];
                   val["responsibleSubject"] = item["responsibleSubject"];
+                  val["solutionDetailsId"]=item["id"]
                 }
-              })
-              console.log("tableData222", tableData.value)
+              });
+              console.log("tableData222", tableData.value);
             } else {
-              console.info("details没数据")
+              console.info("details没数据");
             }
-
           }
-        })
-      })
+        });
+      });
     } else {
       proxy.$message.error("数据异常!");
     }
-  })
-}
+  });
+};
 
-const curItemServiceTicket = ref({} as any)
-const bindServiceTicket = (row) => {
-  if (!formDialog.value.remark) {
+const curItemServiceTicket = ref({} as any);
+const bindServiceTicket = (row, editOrNot) => {
+  if (!formDialog.value.remark && !editOrNot) {
     proxy.$message.error("经销商需求备注不能为空!");
     return;
   }
   let params = {};
   let createOrNot = true;
-  if (row != undefined) {//绑定选择的售后工单
+  if (row != undefined) {
+    //绑定选择的售后工单
     params = {
-      "id": row.id,
-      "neoId": row.neoId,
-      "serviceCase__c": currentItem.value["neoid"],
-      "serviceCaseNeoId": currentItem.value["neoid"],
-      "distributorDemands__c": formDialog.value.remark
-    }
+      id: row.id,
+      neoId: row.neoId,
+      serviceCase__c: currentItem.value["neoid"],
+      serviceCaseNeoId: currentItem.value["neoid"],
+      distributorDemands__c: formDialog.value.remark,
+    };
     createOrNot = false;
-  } else {//创建新的售后工单
+  } else {
+    //创建新的售后工单
     params = {
-      "serviceCase__c": currentItem.value["neoid"],
-      "serviceCaseNeoId": currentItem.value["neoid"],
-      "distributorDemands__c": formDialog.value.remark,
-      "problemDescription__c": currentItem.value["problemDescription"],
-      "customerPhone__c": currentItem.value["phone"],
-      "accountName": currentItem.value["caseAccountName"],
-      "customerAddress__c": currentItem.value["address"],
-      "accountNeoId": currentItem.value["caseAccountId"],
-      "distributorNeoId": currentItem.value["distributorNeoId"],
-      "distributorName": currentItem.value["distributorName"],
-      "distributorNo": orderDetails.value["distributorNo"],
-      "storeNeoId": currentItem.value["storeNeoId"],
-      "storeName": currentItem.value["storeName"],
-      "storeNo": orderDetails.value["storeNo"],
-      "status__c": "1",
-      "reporter__c": currentItem.value["externalUserName"],
-      "reporterPhone__c": currentItem.value["externalUserPhone"],
-      "ticketSource__c": "1",
-      "orderNeoId": orderDetails.value["neoid"],
-      "orderType__c": orderDetails.value["orderType__c"],
-      "productionOrderNo__c": orderDetails.value["productionOrderNo__c"],
-      "region__c": orderDetails.value["region__c"]
-    }
+      serviceCase__c: currentItem.value["neoid"],
+      serviceCaseNeoId: currentItem.value["neoid"],
+      distributorDemands__c: formDialog.value.remark,
+      problemDescription__c: currentItem.value["problemDescription"],
+      customerPhone__c: currentItem.value["phone"],
+      accountName: currentItem.value["caseAccountName"],
+      customerAddress__c: currentItem.value["address"],
+      accountNeoId: currentItem.value["caseAccountId"],
+      distributorNeoId: currentItem.value["distributorNeoId"],
+      distributorName: currentItem.value["distributorName"],
+      distributorNo: orderDetails.value["distributorNo"],
+      storeNeoId: currentItem.value["storeNeoId"],
+      storeName: currentItem.value["storeName"],
+      storeNo: orderDetails.value["storeNo"],
+      status__c: "1",
+      reporter__c: currentItem.value["externalUserName"],
+      reporterPhone__c: currentItem.value["externalUserPhone"],
+      ticketSource__c: "1",
+      orderNeoId: orderDetails.value["neoid"],
+      orderType__c: orderDetails.value["orderType__c"],
+      productionOrderNo__c: orderDetails.value["productionOrderNo__c"],
+      region__c: orderDetails.value["region__c"],
+    };
   }
-  updateOrCreateServiceticket(params).then((res) => {
-    let serviceTicketRes = res.data;
-    if (serviceTicketRes.code == "success" && serviceTicketRes.data != undefined && serviceTicketRes.data["id"] != undefined) {
-      if (createOrNot) {
-        checkSyncStatusForServiceTicket(serviceTicketRes.data["id"])
-      } else {
-        row["operate"] = true
-        curItemServiceTicket.value = row
-        currentDialogStep.value = 2
-        loadingOrderList(formDialog.value.orderNo)
-        if (currentItem.value["caseStatus"] === 2) {
-        let paramsTime = {
-          id:currentItem.value["id"],
-          questionType: currentItem.value["questionType"],
-          name: currentItem.value["name"],
-          caseStatus: 3,
-          dealerProcessingTime: moment().format('YYYY-MM-DD HH:mm:ss')
+  updateOrCreateServiceticket(params)
+    .then((res) => {
+      let serviceTicketRes = res.data;
+      if (
+        serviceTicketRes.code == "success" &&
+        serviceTicketRes.data != undefined &&
+        serviceTicketRes.data["id"] != undefined
+      ) {
+        if (createOrNot) {
+          checkSyncStatusForServiceTicket(serviceTicketRes.data["id"]);
+        } else {
+          row["operate"] = true;
+          curItemServiceTicket.value = row;
+          currentDialogStep.value = 2;
+          loadingOrderList(formDialog.value.orderNo);
+          if (currentItem.value["caseStatus"] === 2) {
+            let paramsTime = {
+              id: currentItem.value["id"],
+              questionType: currentItem.value["questionType"],
+              name: currentItem.value["name"],
+              caseStatus: 3,
+              dealerProcessingTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+            };
+            processingTime(paramsTime);
+            setTimeout(() => {
+              otherMethod();
+            }, 100);
+          }
         }
-        processingTime(paramsTime)
-        setTimeout(() => {
-          otherMethod()
-        }, 100);
+        if(!editOrNot){
+          ElMessage({
+            message: "绑定售后工单成功",
+            type: "success",
+          });
+        }
+        
+      } else {
+        ElMessage({
+          message: "绑定售后工单失败,请重试",
+          type: "error",
+        });
       }
-      }
-      
+    })
+    .catch((error: any) => {
       ElMessage({
-        message: '绑定售后工单成功',
-        type: 'success'
+        message: "绑定售后工单失败,请重试",
+        type: "error",
       });
-    } else {
-      ElMessage({
-        message: '绑定售后工单失败,请重试',
-        type: 'error'
-      });
-    }
-  }).catch((error: any) => {
-    ElMessage({
-      message: '绑定售后工单失败,请重试',
-      type: 'error'
     });
-  })
-}
+};
 
 //在创建售后工单后需要检查创建的售后工单是否被销售易同步只有同步后才有neoid
 const checkSyncStatusForServiceTicket = (id) => {
@@ -1603,235 +2143,301 @@ const checkSyncStatusForServiceTicket = (id) => {
   showLoading();
 
   // 发起查询请求
-  getServiceticketById(id).then(response => {
-    if (response.data.code == "success" && response.data.data.neoId != undefined) {
-      // 数据已被同步成功
-      isSynced = true;
-      curItemServiceTicket.value = response.data.data
-      curItemServiceTicket.value["operate"] = true
-      serviceTicket.value.push(curItemServiceTicket.value)
-      // 隐藏loading遮罩层
-      loadingInstance.close();
-      currentDialogStep.value = 2
-      loadingOrderList(formDialog.value.orderNo)
-    } else {
-      // 数据未被同步成功，继续间隔1秒查询
-      setTimeout(() => {
-        checkSyncStatusForServiceTicket(id);
-      }, 1000);
-    }
-  })
-    .catch(error => {
-      console.error('Error checking sync status:', error);
+  getServiceticketById(id)
+    .then((response) => {
+      if (
+        response.data.code == "success" &&
+        response.data.data.neoId != undefined
+      ) {
+        // 数据已被同步成功
+        isSynced = true;
+        curItemServiceTicket.value = response.data.data;
+        curItemServiceTicket.value["operate"] = true;
+        serviceTicket.value.push(curItemServiceTicket.value);
+        // 隐藏loading遮罩层
+        loadingInstance.close();
+        currentDialogStep.value = 2;
+        loadingOrderList(formDialog.value.orderNo);
+      } else {
+        // 数据未被同步成功，继续间隔1秒查询
+        setTimeout(() => {
+          checkSyncStatusForServiceTicket(id);
+        }, 1000);
+      }
+    })
+    .catch((error) => {
+      console.error("Error checking sync status:", error);
       // 隐藏loading遮罩层
       // hideLoading();
     });
-}
+};
 
 const showLoading = () => {
   if (loadingInstance == null) {
     loadingInstance = ElLoading.service({
-      fullscreen: true, lock: true,
-      text: '等待数据同步完成',
-      background: 'rgba(0, 0, 0, 0.7)',
+      fullscreen: true,
+      lock: true,
+      text: "等待数据同步完成",
+      background: "rgba(0, 0, 0, 0.7)",
     });
   }
-}
+};
 //相关单据售后工单
 const postserviceticketList = () => {
   let params = {
-    serviceCaseNeoId: neoid.value
-  }
-  getServiceticketList(params).then((res: any) => {
-
-    let JobList = res.data.data;
-    if (res.data.code == "success") {
-      relatedDocumentsAftersalesWorkorderList.value = JobList;
-    }
-  }).catch((error: any) => {
-    ElMessage({
-      message: '请求数据失败，请重试',
-      type: 'error'
+    serviceCaseNeoId: neoid.value,
+  };
+  getServiceticketList(params)
+    .then((res: any) => {
+      let JobList = res.data.data;
+      if (res.data.code == "success") {
+        relatedDocumentsAftersalesWorkorderList.value = JobList;
+      }
+    })
+    .catch((error: any) => {
+      ElMessage({
+        message: "请求数据失败，请重试",
+        type: "error",
+      });
     });
-  })
-}
+};
 
 //跳转售后工单详情
 const handleView = (row) => {
   proxy.$router.push({
-    path: "/aftersales_workorder_details", query: {
-      id: row.id
-    }
+    path: "/aftersales_workorder_details",
+    query: {
+      id: row.id,
+    },
   });
-
-}
+};
 
 //相关单据派工单
 const postfieldjobeList = () => {
   let params = {
-    serviceCaseNeoId: neoid.value
-  }
-  getFeildJobList(params).then((res: any) => {
-
-    let JobList = res.data.data;
-    if (res.data.code == "success") {
-      relatedDocumentsDispatchList.value = JobList;
-    }
-  }).catch((error: any) => {
-    ElMessage({
-      message: '请求数据失败，请重试',
-      type: 'error'
+    serviceCaseNeoId: neoid.value,
+  };
+  getFeildJobList(params)
+    .then((res: any) => {
+      let JobList = res.data.data;
+      if (res.data.code == "success") {
+        relatedDocumentsDispatchList.value = JobList;
+      }
+    })
+    .catch((error: any) => {
+      ElMessage({
+        message: "请求数据失败，请重试",
+        type: "error",
+      });
     });
-  })
-}
+};
 
 //跳转派工单详情
 const dispatch = (row) => {
   proxy.$router.push({
-    path: "/dispatch_details", query: {
-      id: row.id
-    }
+    path: "/dispatch_details",
+    query: {
+      id: row.id,
+    },
   });
-}
+};
 
 //相关单据点击查看
 const showRelatedDocumentsDialogClick = () => {
-  showRelatedDocumentsDialog.value = true
-}
-
+  showRelatedDocumentsDialog.value = true;
+  postfieldjobeList(); //相关派工单记录
+  postserviceticketList(); //相关售后工单记录
+};
 
 const finishDeliveryOrder = () => {
   let params = deliveryOrderForm;
-  params["fieldJobContactName"] = taskDetails.value.accountName == undefined ? "" : taskDetails.value.accountName.toString();
+  params["fieldJobContactName"] =
+    taskDetails.value.accountName == undefined
+      ? ""
+      : taskDetails.value.accountName.toString();
   // params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   // params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
   params["serviceCaseName"] = parseInt(neoid.value);
-  params["fieldJobOrderId"] = orderDetails.value["id"]
-  params["contactTelephone"] = orderDetails.value["contactTel"]
-  params["fieldJobContactName"] = orderDetails.value["accountName__C"]
-  params["name"] = orderDetails.value["accountName__C"] + "的维修派工单"
-  params["orderNo__c"] = orderDetails.value["po"]
+  params["fieldJobOrderId"] = orderDetails.value["neoid"];
+  params["contactTelephone"] = orderDetails.value["contactTel"];
+  params["fieldJobContactName"] = orderDetails.value["accountName__C"];
+  params["name"] = orderDetails.value["accountName__C"] + "的维修派工单";
+  params["orderNo__c"] = orderDetails.value["po"];
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
-  params["status"] = 0
-  addFieldJob(params).then((res: any) => {
-    let data = res.data.data;
-    tableDataDispatch.value.push(data);
-    if (data != undefined) {
-      if (currentItem.value["caseStatus"] === 2) {
-        let paramsTime = {
-          id:currentItem.value["id"],
-          questionType: currentItem.value["questionType"],
-          name: currentItem.value["name"],
-          caseStatus: 3,
-          dealerProcessingTime: moment().format('YYYY-MM-DD HH:mm:ss')
+  params["status"] = 0;
+  addFieldJob(params)
+    .then((res: any) => {
+      let data = res.data.data;
+      tableDataDispatch.value.push(data);
+      if (data != undefined) {
+        if (currentItem.value["caseStatus"] === 2) {
+          let paramsTime = {
+            id: currentItem.value["id"],
+            questionType: currentItem.value["questionType"],
+            name: currentItem.value["name"],
+            caseStatus: 3,
+            dealerProcessingTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          };
+          processingTime(paramsTime);
+          setTimeout(() => {
+            otherMethod();
+          }, 500);
         }
-        processingTime(paramsTime)
-        setTimeout(() => {
-          otherMethod()
-        }, 500);
+        ElMessage({
+          message: "新增派工单成功",
+          type: "success",
+        });
+      } else {
+        ElMessage({
+          message: "新增派工单失败",
+          type: "error",
+        });
       }
+      Object.keys(deliveryOrderForm).forEach((key) => {
+        if (
+          !key.includes("type") &&
+          !key.includes("haveInstallConditions") &&
+          key !== "fieldJobOrderId" &&
+          key !== "fieldJobType__c" &&
+          key !== "stage__c" &&
+          key !== "name"
+        )
+          deliveryOrderForm[key] = "";
+        if (key === "haveInstallConditions") deliveryOrderForm[key] = false;
+        if (key == "fileList" || key == "filePath") deliveryOrderForm[key] = [];
+      });
+    })
+    .catch((error: any) => {
+      // 显示请求失败的提示框
       ElMessage({
-        message: '新增派工单成功',
-        type: 'success'
-      })
-    } else {
-      ElMessage({
-        message: '新增派工单失败',
-        type: 'error'
-      })
-
-    }
-    Object.keys(deliveryOrderForm).forEach(key => {
-      if (!key.includes("type") && !key.includes("haveInstallConditions") && key !== "fieldJobOrderId" && key !== "fieldJobType__c" && key !== "stage__c" && key !== "name") deliveryOrderForm[key] = '';
-      if (key === "haveInstallConditions") deliveryOrderForm[key] = false;
-      if (key == "fileList" || key == "filePath") deliveryOrderForm[key] = [];
+        message: "请求新增派工单失败，请重试",
+        type: "error",
+      });
+      Object.keys(deliveryOrderForm).forEach((key) => {
+        if (
+          key !== "type" &&
+          key !== "haveInstallConditions" &&
+          key !== "fieldJobOrderId" &&
+          key !== "fieldJobType__c" &&
+          key !== "stage__c" &&
+          key !== "name"
+        )
+          deliveryOrderForm[key] = "";
+        if (key == "haveInstallConditions") deliveryOrderForm[key] = false;
+        if (key == "fileList" || key == "filePath") deliveryOrderForm[key] = [];
+      });
+      console.error("请求新增派工单失败:", error);
     });
-  }).catch((error: any) => {
-    // 显示请求失败的提示框
-    ElMessage({
-      message: '请求新增派工单失败，请重试',
-      type: 'error'
-    });
-    Object.keys(deliveryOrderForm).forEach(key => {
-      if (key !== "type" && key !== "haveInstallConditions" && key !== "fieldJobOrderId" && key !== "fieldJobType__c" && key !== "stage__c" && key !== "name") deliveryOrderForm[key] = '';
-      if (key == "haveInstallConditions") deliveryOrderForm[key] = false;
-      if (key == "fileList" || key == "filePath") deliveryOrderForm[key] = [];
-    });
-    console.error('请求新增派工单失败:', error);
-  });
-  deliveryOrderDialog.value = false
+  deliveryOrderDialog.value = false;
   // proxy.$message.success("派工单创建完成!")
-  currentDeliveryOrderStep.value = 1
+  currentDeliveryOrderStep.value = 1;
   // currentStep.value = 5
-}
+};
 
 //问题提报时间处理
 const processingTime = (params) => {
   createServiceCase(params).then((res) => {
     let resData = res.data;
-    if (resData.code == 'success' && resData.data != undefined) {
-      console.info("更新成功")
+    if (resData.code == "success" && resData.data != undefined) {
+      console.info("更新成功");
     } else {
-      console.info("更新失败")
+      console.info("更新失败");
     }
-  })
-
-}
-
+  });
+};
 
 const convertProvince = (code) => {
-  let item = provinceList.value.find(val => val["optionCode"] == code);
+  let item = provinceList.value.find((val) => val["optionCode"] == code);
   if (code && item) {
     return item["optionLabel"];
-
-  }
-  else {
+  } else {
     return "";
   }
-}
+};
 
 const convertCity = (code) => {
-  let item = cityList.value.find(val => val["optionCode"] == code);
+  let item = cityList.value.find((val) => val["optionCode"] == code);
   if (code && item) {
     return item["optionLabel"];
-  }
-  else {
+  } else {
     return "";
   }
-}
+};
 
 const convertDistrict = (code) => {
-  let item = districtList.value.find(val => val["optionCode"] == code)
+  let item = districtList.value.find((val) => val["optionCode"] == code);
   if (code && item) {
     return item["optionLabel"];
-  }
-  else {
+  } else {
     return "";
   }
-}
+};
 
-const orderDetails = ref({} as any)
+const orderDetails = ref({} as any);
 //获取订单列表
 const getSearchOrderOneList = (orderneoId) => {
   if (orderneoId == undefined) {
-    return
+    return;
   }
-  getOrderListByNeoId(orderneoId).then(res => {
+  getOrderListByNeoId(orderneoId).then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
-      orderDetails.value = rtData.data
-      deliveryOrderForm["fieldJobOrderId"] = rtData.data["id"]
+      orderDetails.value = rtData.data;
+      deliveryOrderForm["fieldJobOrderId"] = rtData.data["id"];
       // deliveryOrderForm["contactTelephone"] = rtData.data["contactTel"]
-      deliveryOrderForm["fieldJobContactName"] = rtData.data["accountName__C"]
-      deliveryOrderForm["name"] = rtData.data["accountName__C"] + "的维修派工单"
-      formDialog.value["orderNo"] = orderDetails.value["po"]
-    }
-    else {
+      deliveryOrderForm["fieldJobContactName"] = rtData.data["accountName__C"];
+      deliveryOrderForm["name"] =
+        rtData.data["accountName__C"] + "的维修派工单";
+      formDialog.value["orderNo"] = orderDetails.value["po"];
+    } else {
       proxy.$message.error(rtData?.message);
     }
-  })
-}
+  });
+};
+
+//日期控件不能选择小于当前日期的时间
+const disabledPastDate = (time: any) => {
+  return time.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+};
+
+const completeServiceCase = () => {
+  if (currentItem.value["caseStatus"] == 4) {
+    proxy.$message.warning("当前服务工单已完成!");
+    return;
+  }
+  if (
+    currentItem.value["processingProcessAndResults"] == undefined ||
+    currentItem.value["processingProcessAndResults"] == ""
+  ) {
+    proxy.$message.warning("处理结论不能为空，请先编辑处理结论");
+    return;
+  }
+  let params = {
+    caseStatus: 4,
+    id: id.value,
+    questionType: currentItem.value["questionType"],
+    name: currentItem.value["name"],
+  };
+  createServiceCase(params)
+    .then((res) => {
+      let resData = res.data;
+      if (resData.code == "success" && resData.data != undefined) {
+        currentItem.value["caseStatus"] = 4;
+        proxy.$message.success("服务工单完成");
+      } else {
+        proxy.$message.warning("服务工单完成失败,请重试");
+      }
+    })
+    .catch((error: any) => {
+      proxy.$message.error("服务工单完成失败,系统异常");
+      console.log("服务工单完成状态更新:", error);
+    });
+};
+const handleProblemTypeChange = (problemType) => {
+  afterSalesIssuesListForSelect.value =
+    afterSalesIssuesListWithType.value[problemType];
+};
 </script>
 
 <style lang="scss" scoped>

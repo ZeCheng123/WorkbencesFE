@@ -52,8 +52,7 @@
       <span class="title"
         >问题提报详情<span class="titleDateTime">{{
           caseStatus <= 2 && caseStatus > 0 ? formatTime(remainingSeconds) : ""
-        }}</span></span
-      >
+        }}</span></span>
       <span class="main_field">
         <span class="row_field">
           <span class="field">

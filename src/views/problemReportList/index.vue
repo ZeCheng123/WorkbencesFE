@@ -118,7 +118,7 @@
             <el-form-item label="订单编号" prop="orderNo">
               <el-select v-model="problemReportingForm.orderNo" filterable @change="onCahngeOrderNo"
                 placeholder="请选择订单编号">
-                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.po" />
+                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid" />
               </el-select>
             </el-form-item>
             <el-form-item label="提报人姓名" prop="customerName">
@@ -347,16 +347,19 @@ const submitProblemReporting = () => {
     }
   }
   let params = {
-    caseNo: problemReportingForm.value["orderNo"],
+    orderNeoId: problemReportingForm.value["orderNo"],
     // orderNeoId: problemReportingForm.value["orderNo"],
-    name: problemReportingForm.value["customerName"],
+    // name: problemReportingForm.value["customerName"]+"-"+problemReportingForm.value["desc"],
+    customerName:problemReportingForm.value["customerName"],
     // caseAccountId: problemReportingForm.value["customerName"],
     phone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],
     picture: problemReportingForm.value["filePath"],
     caseStatus: "1",
     questionType: 1,
-    caseSource:11
+    caseSource:11,
+    clientCaseStatusC:1,
+    complaintSourceC:4
   };
   createServiceCase(params).then((res) => {
     let rtData = res.data;

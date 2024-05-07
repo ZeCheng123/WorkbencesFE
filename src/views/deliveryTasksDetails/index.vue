@@ -1169,16 +1169,18 @@ const submitProblemReporting = () => {
     }
   }
   let params = {
-    caseNo: problemReportingForm["orderNo"],
+    orderNeoId: orderData.value.neoid,
     // orderNeoId: problemReportingForm.value["orderNo"],
-    name: problemReportingForm["customerName"],
+    customerName: problemReportingForm["customerName"],
     // caseAccountId: problemReportingForm.value["customerName"],
     phone: problemReportingForm["customerPhone"],
     problemDescription: problemReportingForm["desc"],
     picture: problemReportingForm["filePath"],
     caseStatus: "1",
     questionType:1,
-    complaintSourceC:4
+    complaintSourceC:4,
+    caseSource:11,
+    clientCaseStatusC:1,
   }
   createServiceCase(params).then(res =>{
     let rtData = res.data;

@@ -216,7 +216,7 @@ const { proxy }: any = getCurrentInstance()
 
 const pageConfig = ref({
   pageIndex: 1,
-  pageSize: 20,
+  pageSize: 15,
   total: 0
 })
 
@@ -315,13 +315,25 @@ const getDataTable = () => {
     .then((res: any) => {
       let dataList = res.data
       if (dataList.code == "success") {
-        pageConfig.value.total = dataList.total;
+        // pageConfig.value.total = dataList.total;
         tableData.value = dataList.data
-        ElMessage({
-          message: "查询成功!",
-          type: "success",
-        })
+        pageConfig.value = {
+          pageIndex:
+            res.data.current == undefined ? 1 : parseInt(res.data.current),
+          pageSize: res.data.size,
+          total: res.data.total,
+        } as any;
+        // ElMessage({
+        //   message: "查询成功!",
+        //   type: "success",
+        // })
       } else {
+        tableData.value = [];
+        pageConfig.value = {
+          pageIndex: 1,
+          pageSize: 15,
+          total: 0,
+        } as any;
         console.log("失败")
       }
     })

@@ -300,6 +300,9 @@
             <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData" :stripe="false"
               style="width: 100%; overflow: auto" max-height="200">
               <el-table-column prop="checked" label="全选" width="80px">
+                <template #header>
+                  <el-checkbox  @change="selectAll">全选</el-checkbox >
+                </template>
                 <template #default="scope">
                   <el-checkbox v-model="scope.row.checked" />
                 </template>
@@ -327,7 +330,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="ticketProblem" label="售后问题 ">
-                <template #default="scope">
+                <!-- <template #default="scope">
                   <div style="display: flex; align-items: center">
                     {{
                       scope.row.ticketProblem
@@ -337,7 +340,7 @@
                       : ""
                     }}
                   </div>
-                </template>
+                </template> -->
               </el-table-column>
               <el-table-column prop="" label="责任人 " />
               <el-table-column prop="descriptionOfTicketProblem" label="问题描述 " />
@@ -1703,7 +1706,15 @@ const loadingOrderList = (row) => {
                   val["descriptionOfTicketProblem"] =
                     item["descriptionOfTicketProblem"];
                   val["ticketClassification"] = item["ticketClassification"];
-                  val["ticketProblem"] = item["ticketProblem"];
+                  let ticketProblemNames="";
+                  item["ticketProblem"].forEach((problem)=>{
+                    ticketProblemNames=ticketProblemNames+
+                    afterSalesIssuesList.value.find(
+                        (aSItem) => aSItem["code"] == problem
+                      ).name+","
+                  })
+                  console.log(ticketProblemNames.substring(0,ticketProblemNames.length-1))
+                  val["ticketProblem"] = ticketProblemNames.substring(0,ticketProblemNames.length-1);
                   val["responsibleSubject"] = item["responsibleSubject"];
                   val["solutionDetailsId"] = item["id"]
                 }
@@ -2119,7 +2130,13 @@ const completeServiceCase = () => {
 const handleProblemTypeChange = (problemType) => {
   afterSalesIssuesListForSelect.value =
     afterSalesIssuesListWithType.value[problemType];
+    dialog2Form.value.afterSalesIssues=[];
 };
+const selectAll=(event)=>{
+  tableData.value.forEach(item=>{
+    item["checked"]=event
+  })
+}
 </script>
 
 <style lang="scss" scoped>

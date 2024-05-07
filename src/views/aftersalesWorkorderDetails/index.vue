@@ -471,6 +471,9 @@
             <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="ticketSoluDetailsTable" :stripe="false"
               style="width: 100%;overflow: auto;" max-height="200">
               <el-table-column prop="checked" label="全选" width="80px">
+                <template #header>
+                  <el-checkbox  @change="selectAll">全选</el-checkbox >
+                </template>
                 <template #default="scope">
                   <el-checkbox v-model="scope.row.checked" />
                 </template>
@@ -1059,6 +1062,12 @@ const submitDialog = () => {
 const handleProblemTypeChange = (problemType) => {
   afterSalesIssuesListForSelect.value =
     afterSalesIssuesListWithType.value[problemType];
+    dialog2Form.value.afterSalesIssues=[];
+};
+const selectAll=(event)=>{
+  tableData.value.forEach(item=>{
+    item["checked"]=event
+  })
 };
 </script>
 

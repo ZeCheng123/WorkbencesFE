@@ -122,7 +122,15 @@
               </el-select>
             </el-form-item>
             <el-form-item label="提报人姓名" prop="customerName">
-              <el-input placeholder="请输入提报人姓名" v-model="problemReportingForm.customerName" />
+              <!-- <el-input placeholder="请输入提报人姓名" v-model="problemReportingForm.customerName" /> -->
+              <el-select v-model="problemReportingForm.customerName" @change="onCahngeUserSelectForProblemReport" placeholder="请选择提报人人员">
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.neoId"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="提报人电话" prop="customerPhone">
               <el-input placeholder="请输入提报人电话" v-model="problemReportingForm.customerPhone" />
@@ -164,6 +172,7 @@ import {
   getOrderList,
   createServiceCase,
   getServiceCasePage,
+  getExternalUser,
 } from "../../api/common.js";
 
 const { proxy }: any = getCurrentInstance();
@@ -263,9 +272,7 @@ const problemReportingForm = ref({
   customerPhone: "",
   desc: "",
   fileList: [],
-  filePath: [],
-  phone:"",
-  accountName:""
+  filePath: []
 });
 
 const problemReportingRule = ref({
@@ -282,10 +289,15 @@ const tableData = ref([]);
 
 const orderList = ref([]);
 
+const extralUserData=ref([] as any)
+
+const curOrderData=ref({} as any)
+
 onMounted(() => {
   setTimeout(() => {
     getTableDataList();
     getSearchOrderList();
+    getExtralUserData()
   }, 500);
 });
 
@@ -351,7 +363,7 @@ const submitProblemReporting = () => {
   let params = {
     orderNeoId: problemReportingForm.value["orderNo"],
     // orderNeoId: problemReportingForm.value["orderNo"],
-    // name: problemReportingForm.value["customerName"]+"-"+problemReportingForm.value["desc"],
+    name: curOrderData.value["accountName__C"]+"的服务工单",
     externalUserName:problemReportingForm.value["customerName"],
     // caseAccountId: problemReportingForm.value["customerName"],
     externalUserPhone: problemReportingForm.value["customerPhone"],
@@ -362,8 +374,9 @@ const submitProblemReporting = () => {
     caseSource:11,
     clientCaseStatusC:1,
     complaintSourceC:4,
-    phone:problemReportingForm.value["phone"],
-    customerName:problemReportingForm.value["accountName"]
+    phone:curOrderData.value["contactTel"],
+    customerName:curOrderData.value["accountName__C"],
+    address:curOrderData.value["customerAddress"]
   };
   createServiceCase(params).then((res) => {
     let rtData = res.data;
@@ -374,9 +387,7 @@ const submitProblemReporting = () => {
         customerPhone: "",
         desc: "",
         fileList: [],
-        filePath: [],
-        phone:"",
-        accountName:""
+        filePath: []
       } as any;
       showProblemReportingDialog.value = false;
       proxy.$message.success("提交成功!");
@@ -440,11 +451,33 @@ const getSearchOrderList = () => {
   });
 };
 
+const getExtralUserData = ()=>{
+
+let params={"userType": 1,"name": "","phone": ""};
+getExternalUser(params).then((res : any) => {
+    let data = res.data.data
+    if (data!=undefined&&data.length>0) {
+      extralUserData.value = data
+    } else {
+      proxy.$message.warning("未获取到人员数据");           
+    }
+})
+}
+
+
+const onCahngeUserSelectForProblemReport = (event) => {
+  let item = extralUserData.value.find(val => val["neoId"] == event);
+  if(item){
+    problemReportingForm.value["customerName"] = item["name"];
+    problemReportingForm.value["customerPhone"] = item["phone"];    
+    //installationOrderForm.value["customerPhone"] = item["phone"];
+  }
+}
+
 const onCahngeOrderNo = (event) => {
-  let item = orderList.value.find((val) => val["po"] == event);
+  let item = orderList.value.find((val) => val["neoid"] == event);
   if (item) {
-    problemReportingForm.value["accountName"] = item["accountName"];
-    problemReportingForm.value["phone"] = item["accountPhone"];
+    curOrderData.value=item
   }
 };
 

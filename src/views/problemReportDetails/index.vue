@@ -733,6 +733,7 @@ const dialog2Form = ref<any>({
   responsiblePerson: "",
   problemDesc: "",
   fileList: [],
+  filePath: [],
   poductType: "",
   componentType: "",
   badType: "",
@@ -761,11 +762,16 @@ const handleUploaded = (rep) => {
   );
 };
 
+
 const handleSuccess = (res) => {
   console.log(res);
   if (res.code == "success") {
-    let path = res.data.map(val => val["fileUrl"]);
-    fileIdList.value["filePath"] = fileIdList.value["filePath"].concat(path)
+    fileIdList.value = fileIdList.value.concat(
+    res.data.map((item) => item.fileId)
+  );
+    // let path = res.data.map(val => val["fileUrl"]);
+    // dialog2Form.value["filePath"] = dialog2Form.value["filePath"].concat(path)
+    // console.log("dialog2Form.value",dialog2Form.value["filePath"]);
   }
 }
 
@@ -1533,7 +1539,7 @@ const currentDialogStepBut = () => {
 
 //升级到总部售后提交按钮
 const submitDialog = () => {
-  console.info("fileIdfileId", fileIdList);
+  console.info("fileIdfileId", fileIdList.value);
   const selectData = tableData.value.filter((item) => item.checked);
 
   // console.info("过滤：", selectData["id"])
@@ -1543,7 +1549,7 @@ const submitDialog = () => {
   }
   let selectDataClone = JSON.parse(JSON.stringify(selectData));
   selectDataClone.forEach((item) => {
-    item["picture"] = dialog2Form.value.fileList; //图片id fileIdList.value
+    item["picture"] = fileIdList.value; //图片id fileIdList.value
     item["orderProductId"] = item["id"]; //订单明细
     item["treeSpecies"] = item["treeSpecies__c"]; //树种
     item["category"] = item["category1"]; //产品大类

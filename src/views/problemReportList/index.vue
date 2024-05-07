@@ -19,7 +19,7 @@
             <el-date-picker v-model="form.createDate" type="daterange" range-separator="~" start-placeholder="开始时间"
               end-placeholder="结束时间" format="YYYY/MM/DD" value-format="YYYY-MM-DD" />
           </el-form-item>
-          <el-form-item label="订单状态">
+          <el-form-item label="问题状态">
             <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
               <el-option v-for="item in caseStatus" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
@@ -221,7 +221,7 @@ const caseSource = ref([
     code: "2",
   },
   {
-    name: "终端用户",
+    name: "用户",
     code: "3",
   },
   {
@@ -264,6 +264,8 @@ const problemReportingForm = ref({
   desc: "",
   fileList: [],
   filePath: [],
+  phone:"",
+  accountName:""
 });
 
 const problemReportingRule = ref({
@@ -350,16 +352,18 @@ const submitProblemReporting = () => {
     orderNeoId: problemReportingForm.value["orderNo"],
     // orderNeoId: problemReportingForm.value["orderNo"],
     // name: problemReportingForm.value["customerName"]+"-"+problemReportingForm.value["desc"],
-    customerName:problemReportingForm.value["customerName"],
+    externalUserName:problemReportingForm.value["customerName"],
     // caseAccountId: problemReportingForm.value["customerName"],
-    phone: problemReportingForm.value["customerPhone"],
+    externalUserPhone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],
     picture: problemReportingForm.value["filePath"],
     caseStatus: "1",
     questionType: 1,
     caseSource:11,
     clientCaseStatusC:1,
-    complaintSourceC:4
+    complaintSourceC:4,
+    phone:problemReportingForm.value["phone"],
+    customerName:problemReportingForm.value["accountName"]
   };
   createServiceCase(params).then((res) => {
     let rtData = res.data;
@@ -371,6 +375,8 @@ const submitProblemReporting = () => {
         desc: "",
         fileList: [],
         filePath: [],
+        phone:"",
+        accountName:""
       } as any;
       showProblemReportingDialog.value = false;
       proxy.$message.success("提交成功!");
@@ -437,8 +443,8 @@ const getSearchOrderList = () => {
 const onCahngeOrderNo = (event) => {
   let item = orderList.value.find((val) => val["po"] == event);
   if (item) {
-    problemReportingForm.value["customerName"] = item["accountName"];
-    problemReportingForm.value["customerPhone"] = item["accountPhone"];
+    problemReportingForm.value["accountName"] = item["accountName"];
+    problemReportingForm.value["phone"] = item["accountPhone"];
   }
 };
 

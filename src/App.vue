@@ -236,6 +236,10 @@ const clickNav = (item,index) =>{
       path: item.path, 
       query: item.query
     })
+  }else{
+    proxy.$router.push({
+      path: '/main'
+    })
   }
 }
 

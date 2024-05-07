@@ -91,19 +91,6 @@
             <span class="label">问题描述：</span>
             <span class="value">{{ currentItem["problemDescription"] }}</span>
           </span>
-        </span>
-      </span>
-      <span class="title">其他字段</span>
-      <span class="other_field">
-        <span class="row_field">
-          <span class="field">
-            <span class="label">客户姓名：</span>
-            <span class="value">{{ currentItem["caseAccountName"] }}</span>
-          </span>
-          <span class="field">
-            <span class="label">客户手机号：</span>
-            <span class="value">{{ currentItem["phone"] }}</span>
-          </span>
           <span class="field">
             <span class="label">来源：</span>
             <span class="value">{{
@@ -113,6 +100,33 @@
                   )?.name
                 : ""
             }}</span>
+          </span>
+          <span class="field">
+            <span class="label">提报人：</span>
+            <span class="value">{{ currentItem["externalUserName"] }}</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">提报人电话：</span>
+            <span class="value">{{ currentItem["externalUserPhone"] }}</span>
+          </span>
+        </span>
+      </span>
+      <span class="title">其他字段</span>
+      <span class="other_field">
+        <span class="row_field">
+          <span class="field">
+            <span class="label">客户姓名：</span>
+            <span class="value">{{ currentItem["customerName"] }}</span>
+          </span>
+          <span class="field">
+            <span class="label">客户手机号：</span>
+            <span class="value">{{ currentItem["phone"] }}</span>
+          </span>
+          <span class="field">
+            <span class="label">经销商处理结论：</span>
+            <span class="value">{{ currentItem["processingProcessAndResults"] }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -137,14 +151,6 @@
           <span class="field">
             <span class="label">经销商内部提报：</span>
             <el-checkbox v-model="checked1" disabled></el-checkbox>
-          </span>
-          <span class="field">
-            <span class="label">提报人：</span>
-            <span class="value">{{ currentItem["externalUserName"] }}</span>
-          </span>
-          <span class="field">
-            <span class="label">提报人电话：</span>
-            <span class="value">{{ currentItem["externalUserPhone"] }}</span>
           </span>
         </span>
       </span>
@@ -2111,6 +2117,7 @@ const bindServiceTicket = (row, editOrNot) => {
               name: currentItem.value["name"],
               caseStatus: 3,
               dealerProcessingTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+              processingProcessAndResults:formDialog.value.remark
             };
             processingTime(paramsTime);
             setTimeout(() => {

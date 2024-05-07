@@ -1,58 +1,31 @@
 <template>
   <div class="main">
     <span class="header">
-      <span class="title"
-        ><span>问题提报状态</span
-        ><el-button class="btn" @click="upgradeToHeadquarters"
-          >升级到总部 (售后)</el-button
-        ></span
-      >
+      <span class="title"><span>问题提报状态</span><el-button class="btn" @click="upgradeToHeadquarters">升级到总部
+          (售后)</el-button></span>
       <span class="step">
         <span class="item">
-          <span :class="currentItem['caseStatus'] == 1 ? 'num_selected' : 'num'"
-            >1</span
-          >
-          <span
-            :class="currentItem['caseStatus'] >= 1 ? 'name_selected' : 'name'"
-            >待处理</span
-          >
+          <span :class="currentItem['caseStatus'] == 1 ? 'num_selected' : 'num'">1</span>
+          <span :class="currentItem['caseStatus'] >= 1 ? 'name_selected' : 'name'">待处理</span>
         </span>
         <span class="item">
-          <span :class="currentItem['caseStatus'] == 2 ? 'num_selected' : 'num'"
-            >2</span
-          >
-          <span
-            :class="currentItem['caseStatus'] >= 2 ? 'name_selected' : 'name'"
-            >已受理</span
-          >
+          <span :class="currentItem['caseStatus'] == 2 ? 'num_selected' : 'num'">2</span>
+          <span :class="currentItem['caseStatus'] >= 2 ? 'name_selected' : 'name'">已受理</span>
         </span>
         <span class="item">
-          <span :class="currentItem['caseStatus'] == 3 ? 'num_selected' : 'num'"
-            >3</span
-          >
-          <span
-            :class="currentItem['caseStatus'] >= 3 ? 'name_selected' : 'name'"
-            >处理中</span
-          >
+          <span :class="currentItem['caseStatus'] == 3 ? 'num_selected' : 'num'">3</span>
+          <span :class="currentItem['caseStatus'] >= 3 ? 'name_selected' : 'name'">处理中</span>
         </span>
         <span class="item">
-          <span
-            @click="completeServiceCase"
-            :class="currentItem['caseStatus'] == 4 ? 'num_selected' : 'num'"
-            >4</span
-          >
-          <span
-            :class="currentItem['caseStatus'] >= 4 ? 'name_selected' : 'name'"
-            >已完成</span
-          >
+          <span @click="completeServiceCase" :class="currentItem['caseStatus'] == 4 ? 'num_selected' : 'num'">4</span>
+          <span :class="currentItem['caseStatus'] >= 4 ? 'name_selected' : 'name'">已完成</span>
         </span>
       </span>
     </span>
     <span class="problem_report_info">
-      <span class="title"
-        >问题提报详情<span class="titleDateTime">{{
-          caseStatus <= 2 && caseStatus > 0 ? formatTime(remainingSeconds) : ""
-        }}</span></span>
+      <span class="title">问题提报详情<span class="titleDateTime">{{
+        caseStatus <= 2 && caseStatus > 0 ? formatTime(remainingSeconds) : ""
+      }}</span></span>
       <span class="main_field">
         <span class="row_field">
           <span class="field">
@@ -94,10 +67,10 @@
             <span class="label">来源：</span>
             <span class="value">{{
               currentItem["complaintSourceC"]
-                ? complaintSource.find(
-                    (val) => val["code"] == currentItem["complaintSourceC"]
-                  )?.name
-                : ""
+              ? complaintSource.find(
+                (val) => val["code"] == currentItem["complaintSourceC"]
+              )?.name
+              : ""
             }}</span>
           </span>
           <span class="field">
@@ -156,38 +129,21 @@
     </span>
     <span class="related_documents">
       <span class="title">相关单据</span>
-      <el-button class="btn"
-        >{{
-          relatedDocumentsAftersalesWorkorderList.length
-        }}个售后工单</el-button
-      >
-      <el-button class="btn"
-        >{{ relatedDocumentsDispatchList.length }}个派工单</el-button
-      >
-      <el-button class="btn"
-        >{{ serviceCaseAttachment.length }}个附件</el-button
-      >      
-      <span class="view" @click="showRelatedDocumentsDialogClick"
-        >点击查看</span
-      >
+      <el-button class="btn">{{
+        relatedDocumentsAftersalesWorkorderList.length
+      }}个售后工单</el-button>
+      <el-button class="btn">{{ relatedDocumentsDispatchList.length }}个派工单</el-button>
+      <el-button class="btn">{{ serviceCaseAttachment.length }}个附件</el-button>
+      <span class="view" @click="showRelatedDocumentsDialogClick">点击查看</span>
     </span>
     <span class="action_list">
       <div class="left">
         <img src="@/assets/images/comment.png" alt="" />
-        <span class="initiate_comments" @click="initiateComments"
-          >发起评论</span
-        >
+        <span class="initiate_comments" @click="initiateComments">发起评论</span>
       </div>
       <div class="right">
-        <el-button type="primary" @click="editServiceCase" class="primary_btn"
-          >编辑</el-button
-        >
-        <el-button
-          type="primary"
-          @click="createDeliveryOrder"
-          class="primary_btn"
-          >创建派工单</el-button
-        >
+        <el-button type="primary" @click="editServiceCase" class="primary_btn">编辑</el-button>
+        <el-button type="primary" @click="createDeliveryOrder" class="primary_btn">创建派工单</el-button>
       </div>
     </span>
     <div class="comment" v-for="item in commentList" :key="item.date">
@@ -201,43 +157,23 @@
       <img class="tips" src="@/assets/images/tips.png" alt="" />
     </div>
     <div class="showMainDialog">
-      <el-dialog
-        v-model="showMainDialog"
-        title="升级到总部 (售后)"
-        width="80% "
-        :show-close="false"
-      >
+      <el-dialog v-model="showMainDialog" title="升级到总部 (售后)" width="80% " :show-close="false">
         <div class="step">
           <span class="item">
-            <span
-              @click="changeDialogStep(1)"
-              :class="currentDialogStep == 1 ? 'num_selected' : 'num'"
-              >1</span
-            >
-            <span class="name"
-              >确认问题订单
+            <span @click="changeDialogStep(1)" :class="currentDialogStep == 1 ? 'num_selected' : 'num'">1</span>
+            <span class="name">确认问题订单
               <span class="remark">选择或确认问题订单</span>
             </span>
           </span>
           <span class="item">
-            <span
-              @click="changeDialogStep(2)"
-              :class="currentDialogStep == 2 ? 'num_selected' : 'num'"
-              >2</span
-            >
-            <span class="name"
-              >完善必填信息
+            <span @click="changeDialogStep(2)" :class="currentDialogStep == 2 ? 'num_selected' : 'num'">2</span>
+            <span class="name">完善必填信息
               <span class="remark">完善问题描述与处理方式</span>
             </span>
           </span>
           <span class="item">
-            <span
-              @click="changeDialogStep(3)"
-              :class="currentDialogStep == 3 ? 'num_selected' : 'num'"
-              >3</span
-            >
-            <span class="name"
-              >提交升级
+            <span @click="changeDialogStep(3)" :class="currentDialogStep == 3 ? 'num_selected' : 'num'">3</span>
+            <span class="name">提交升级
               <span class="remark">提交售后至总部</span>
             </span>
           </span>
@@ -245,50 +181,32 @@
         <template v-if="currentDialogStep == 1">
           <span class="form_row_shengji">
             <span class="label required">订单编号:</span>
-            <el-input
-              disabled
-              v-model="formDialog.orderNo"
-              placeholder="订单编号"
-              style="width: auto"
-            ></el-input>
+            <el-input disabled v-model="formDialog.orderNo" placeholder="订单编号" style="width: auto"></el-input>
           </span>
           <div class="form_row_shengji">
             <span class="label required">经销商需求描述:</span>
-            <el-input
-              v-model="formDialog.remark"
-              placeholder="输入升级描述"
-              style="width: auto"
-            ></el-input>
+            <el-input v-model="formDialog.remark" placeholder="输入升级描述" style="width: auto"></el-input>
           </div>
           <div class="search">
             <span class="label required">客户历史售后工单</span>
           </div>
           <div class="table">
-            <el-table
-              ref="multipleTableRef"
-              :selection-change="handleSelectionChange"
-              :data="serviceTicket"
-              :stripe="false"
-              style="width: 100%; overflow: auto"
-              max-height="400"
-            >
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="serviceTicket"
+              :stripe="false" style="width: 100%; overflow: auto" max-height="400">
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #default="scope">
-                  <el-checkbox v-if="scope.row.operate==false" disabled v-model="scope.row.checked" />
-                  <el-checkbox v-if="scope.row.operate==true" v-model="scope.row.checked" />
+                  <el-checkbox v-if="scope.row.operate == false" disabled v-model="scope.row.checked" />
+                  <el-checkbox v-if="scope.row.operate == true" v-model="scope.row.checked" />
                 </template>
               </el-table-column>
               <el-table-column prop="name" label="售后工单编号">
                 <template #default="scope">
-                  <div
-                    style="
+                  <div style="
                       display: flex;
                       align-items: center;
                       color: #165dff;
                       cursor: pointer;
-                    "
-                    @click="handleView(scope.row)"
-                  >
+                    " @click="handleView(scope.row)">
                     {{ scope.row.name }}
                   </div>
                 </template>
@@ -300,47 +218,34 @@
                   <div style="display: flex; align-items: center">
                     {{
                       scope.row.status__c
-                        ? seviceTicketStatusOptions.find(
-                            (val) => val["code"] == scope.row.status__c
-                          )?.name
-                        : ""
+                      ? seviceTicketStatusOptions.find(
+                        (val) => val["code"] == scope.row.status__c
+                      )?.name
+                      : ""
                     }}
                   </div>
                 </template>
               </el-table-column>
               <el-table-column prop="reporter__c" label="提报人" />
               <el-table-column prop="problemDescription__c" label="问题描述 " />
-              <el-table-column
-                prop="distributorDemands__c"
-                label="经销商需求描述 "
-              />
+              <el-table-column prop="distributorDemands__c" label="经销商需求描述 " />
               <el-table-column prop="createdTime" label="创建时间 " />
               <el-table-column prop="operate" label="操作">
                 <template #default="scope">
-                  <el-checkbox
-                    disabled
-                    v-if="scope.row.operate"
-                    v-model="scope.row.operate"
-                    :value="scope.row.operate"
+                  <el-checkbox disabled v-if="scope.row.operate" v-model="scope.row.operate" :value="scope.row.operate"
                     style="
                       --el-disabled-text-color: #ff8127;
                       --el-checkbox-disabled-checked-icon-color: white;
                       --el-checkbox-disabled-checked-input-fill: #ff8127;
                       --el-checkbox-text-color: #ff8127;
-                    "
-                    >已绑定</el-checkbox
-                  >
+                    ">已绑定</el-checkbox>
                   <!-- <el-checkbox v-else v-model="scope.row.operate">点击绑定</el-checkbox> -->
-                  <div
-                    v-else
-                    style="
+                  <div v-else style="
                       display: flex;
                       align-items: center;
                       color: #165dff;
                       cursor: pointer;
-                    "
-                    @click="bindServiceTicket(scope.row, false)"
-                  >
+                    " @click="bindServiceTicket(scope.row, false)">
                     点击绑定
                   </div>
                 </template>
@@ -363,85 +268,37 @@
           <div class="desc_action">
             <span class="desc">搜索和选择/批量编辑问题产品</span>
             <span class="action">
-              <el-button
-                style="display: none"
-                class="btn"
-                @click="openDialog2(1)"
-                >完善问题描述</el-button
-              >
-              <el-button
-                style="display: none"
-                class="btn"
-                @click="openDialog2(2)"
-                >定义处理方式</el-button
-              >
+              <el-button style="display: none" class="btn" @click="openDialog2(1)">完善问题描述</el-button>
+              <el-button style="display: none" class="btn" @click="openDialog2(2)">定义处理方式</el-button>
             </span>
           </div>
           <div class="search">
-            <el-input
-              v-model="formDialog.searchValue"
-              placeholder="搜索"
-            ></el-input>
+            <el-input v-model="formDialog.searchValue" placeholder="搜索"></el-input>
           </div>
           <div class="filter_list">
             <el-select v-model="formDialog.orderType">
-              <el-option
-                v-for="item in filterList1"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in filterList1" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.productType">
-              <el-option
-                v-for="item in filterList2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in filterList2" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.productModel">
-              <el-option
-                v-for="item in filterList3"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in filterList3" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.treeSpecies">
-              <el-option
-                v-for="item in filterList4"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in filterList4" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.paintColor">
-              <el-option
-                v-for="item in filterList5"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in filterList5" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.size">
-              <el-option
-                v-for="item in filterList6"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in filterList6" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
           <div class="table">
             <!-- style="width: 100%;max-height: 200px;overflow: auto; -->
-            <el-table
-              ref="multipleTableRef"
-              :selection-change="handleSelectionChange"
-              :data="tableData"
-              :stripe="false"
-              style="width: 100%; overflow: auto" max-height="200"
-            >
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData" :stripe="false"
+              style="width: 100%; overflow: auto" max-height="200">
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #default="scope">
                   <el-checkbox v-model="scope.row.checked" />
@@ -460,11 +317,11 @@
                   <div style="display: flex; align-items: center">
                     {{
                       scope.row.ticketClassification
-                        ? problemTypeList.find(
-                            (val) =>
-                              val["code"] == scope.row.ticketClassification
-                          )?.name
-                        : ""
+                      ? problemTypeList.find(
+                        (val) =>
+                          val["code"] == scope.row.ticketClassification
+                      )?.name
+                      : ""
                     }}
                   </div>
                 </template>
@@ -474,65 +331,35 @@
                   <div style="display: flex; align-items: center">
                     {{
                       scope.row.ticketProblem
-                        ? afterSalesIssuesList.find(
-                            (val) => val["code"] == scope.row.ticketProblem
-                          )?.name
-                        : ""
+                      ? afterSalesIssuesList.find(
+                        (val) => val["code"] == scope.row.ticketProblem
+                      )?.name
+                      : ""
                     }}
                   </div>
                 </template>
               </el-table-column>
               <el-table-column prop="" label="责任人 " />
-              <el-table-column
-                prop="descriptionOfTicketProblem"
-                label="问题描述 "
-              />
+              <el-table-column prop="descriptionOfTicketProblem" label="问题描述 " />
             </el-table>
           </div>
           <div class="responsibilityPerson">
             <span class="label required">问题大类</span>
-            <el-select
-              v-model="dialog2Form.problemType"
-              placeholder=""
-              @change="handleProblemTypeChange"
-            >
-              <el-option
-                v-for="item in problemTypeList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              />
+            <el-select v-model="dialog2Form.problemType" placeholder="" @change="handleProblemTypeChange">
+              <el-option v-for="item in problemTypeList" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <span class="label required">售后问题</span>
-            <el-select
-              multiple
-              collapse-tags
-              v-model="dialog2Form.afterSalesIssues"
-              placeholder=""
-            >
-              <el-option
-                v-for="item in afterSalesIssuesListForSelect"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              />
+            <el-select multiple collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
+              <el-option v-for="item in afterSalesIssuesListForSelect" :key="item.code" :label="item.name"
+                :value="item.code" />
             </el-select>
             <span class="label required">责任人</span>
-            <el-input
-              v-model="dialog2Form.responsiblePerson"
-              style="width: 240px"
-              placeholder="请输入责任人"
-            />
+            <el-input v-model="dialog2Form.responsiblePerson" style="width: 240px" placeholder="请输入责任人" />
           </div>
           <div class="responsibilityPerson">
             <span class="label required">问题描述</span>
-            <el-input
-              v-model="dialog2Form.problemDesc"
-              style="width: 440px"
-              :rows="2"
-              type="textarea"
-              placeholder="请输入问题描述"
-            />
+            <el-input v-model="dialog2Form.problemDesc" style="width: 440px" :rows="2" type="textarea"
+              placeholder="请输入问题描述" />
           </div>
           <div class="responsibilityPerson">
             <span class="label">上传文件</span>
@@ -560,25 +387,11 @@
         </template>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="showMainDialog = false"
-              >取消</el-button
-            >
-            <el-button
-              v-if="currentDialogStep == 1"
-              @click="currentDialogStepBut"
-              type="primary"
-              class="primary_btn"
-              style="margin-left: 50px !important"
-              >下一步</el-button
-            >
-            <el-button
-              v-if="currentDialogStep == 2"
-              @click="submitDialog"
-              type="primary"
-              class="primary_btn"
-              style="margin-left: 50px !important"
-              >提交</el-button
-            >
+            <el-button class="cancel_btn" @click="showMainDialog = false">取消</el-button>
+            <el-button v-if="currentDialogStep == 1" @click="currentDialogStepBut" type="primary" class="primary_btn"
+              style="margin-left: 50px !important">下一步</el-button>
+            <el-button v-if="currentDialogStep == 2" @click="submitDialog" type="primary" class="primary_btn"
+              style="margin-left: 50px !important">提交</el-button>
           </div>
         </template>
       </el-dialog>
@@ -586,102 +399,51 @@
 
     <!-- 创建派工单 -->
     <div class="deliveryOrderDialog">
-      <el-dialog
-        v-model="deliveryOrderDialog"
-        title="新建配送派工单"
-        width="80%"
-        :show-close="false"
-      >
+      <el-dialog v-model="deliveryOrderDialog" title="新建配送派工单" width="80%" :show-close="false">
         <div class="step">
           <span class="item">
-            <span
-              @click="changeDeliveryOrderStep(1)"
-              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'"
-              >1</span
-            >
-            <span
-              :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
-              >选择配送司机
+            <span @click="changeDeliveryOrderStep(1)"
+              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'">1</span>
+            <span :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'">选择配送司机
               <span class="remark">选择配送货品的司机</span>
             </span>
           </span>
           <span class="item">
-            <span
-              @click="changeDeliveryOrderStep(2)"
-              :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'"
-              >2</span
-            >
-            <span
-              :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'"
-              >输入派工单注意事项
+            <span @click="changeDeliveryOrderStep(2)"
+              :class="currentDeliveryOrderStep == 2 ? 'num_selected' : 'num'">2</span>
+            <span :class="currentDeliveryOrderStep >= 2 ? 'name_selected' : 'name'">输入派工单注意事项
               <span class="remark">如有,请填写关键备注</span>
             </span>
           </span>
           <span class="item">
-            <span
-              @click="changeDeliveryOrderStep(3)"
-              :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'"
-              >3</span
-            >
-            <span
-              :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'"
-              >完成创建
+            <span @click="changeDeliveryOrderStep(3)"
+              :class="currentDeliveryOrderStep == 3 ? 'num_selected' : 'num'">3</span>
+            <span :class="currentDeliveryOrderStep >= 3 ? 'name_selected' : 'name'">完成创建
               <span class="remark">等待司机配送</span>
             </span>
           </span>
         </div>
         <div class="content">
-          <el-form
-            v-if="currentDeliveryOrderStep == 1"
-            :model="deliveryOrderForm"
-            :rules="deliveryOrderRule"
-            ref="deliveryOrderFormRef"
-            label-width="90px"
-            label-position="left"
-          >
+          <el-form v-if="currentDeliveryOrderStep == 1" :model="deliveryOrderForm" :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef" label-width="90px" label-position="left">
             <el-form-item label="人员名称" prop="followerId">
-              <el-select
-                v-model="deliveryOrderForm.followerId"
-                @change="onCahngeUserSelectForDelivery"
-                placeholder="查找或输入服务人员姓名"
-              >
-                <el-option
-                  v-for="item in extralUserData"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="item.id"
-                />
+              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery"
+                placeholder="查找或输入服务人员姓名">
+                <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
               </el-select>
-              <span class="custom_item"
-                ><img src="@/assets/images/add.png" alt=""
-              /></span>
+              <span class="custom_item"><img src="@/assets/images/add.png" alt="" /></span>
             </el-form-item>
             <el-form-item label="联系方式" prop="contactTelephone">
-              <el-input
-                v-model="deliveryOrderForm.contactTelephone"
-                placeholder="查找或输入配送司机手机号码"
-              />
+              <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="查找或输入配送司机手机号码" />
             </el-form-item>
 
             <el-form-item label="预约开始" prop="appointmentStartTime">
-              <el-date-picker
-                v-model="deliveryOrderForm.appointmentStartTime"
-                type="datetime"
-                placeholder="日期/时间"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                :default-time="defaultStartTime"
-                :disabled-date="disabledPastDate"
-              />
+              <el-date-picker v-model="deliveryOrderForm.appointmentStartTime" type="datetime" placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss" :default-time="defaultStartTime" :disabled-date="disabledPastDate" />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
-              <el-date-picker
-                v-model="deliveryOrderForm.appointmentEndTime"
-                type="datetime"
-                placeholder="日期/时间"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                :default-time="defaultStartTime"
-                :disabled-date="disabledPastDate"
-              />
+              <el-date-picker v-model="deliveryOrderForm.appointmentEndTime" type="datetime" placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss" :default-time="defaultStartTime" :disabled-date="disabledPastDate" />
             </el-form-item>
             <!-- <el-form-item label="是否具备安装条件" class="check_item">
               <span>
@@ -689,38 +451,16 @@
               </span>
             </el-form-item> -->
           </el-form>
-          <el-form
-            v-if="currentDeliveryOrderStep == 2"
-            :model="deliveryOrderForm"
-            :rules="deliveryOrderRule"
-            ref="deliveryOrderFormRef"
-            label-width="90px"
-            label-position="left"
-          >
+          <el-form v-if="currentDeliveryOrderStep == 2" :model="deliveryOrderForm" :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef" label-width="90px" label-position="left">
             <el-form-item label="优先级" prop="priority">
-              <el-select
-                v-model="deliveryOrderForm.priority"
-                placeholder="选择优先级"
-              >
-                <el-option
-                  v-for="item in priority"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                />
+              <el-select v-model="deliveryOrderForm.priority" placeholder="选择优先级">
+                <el-option v-for="item in priority" :key="item.code" :label="item.name" :value="item.code" />
               </el-select>
             </el-form-item>
             <el-form-item label="派工类型" prop="fieldJobType__c">
-              <el-select
-                v-model="deliveryOrderForm.fieldJobType__c"
-                placeholder="选择派工类型"
-              >
-                <el-option
-                  v-for="item in dispatchType"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                />
+              <el-select v-model="deliveryOrderForm.fieldJobType__c" placeholder="选择派工类型">
+                <el-option v-for="item in dispatchType" :key="item.code" :label="item.name" :value="item.code" />
               </el-select>
               <!-- <el-input
                 disabled
@@ -729,29 +469,15 @@
               /> -->
             </el-form-item>
             <el-form-item label="派工单备注" class="customLayout">
-              <el-input
-                v-model="deliveryOrderForm.remark"
-                :rows="5"
-                type="textarea"
-                maxlength="500"
-                placeholder="请填写派工单备注"
-                show-word-limit
-              />
+              <el-input v-model="deliveryOrderForm.remark" :rows="5" type="textarea" maxlength="500"
+                placeholder="请填写派工单备注" show-word-limit />
             </el-form-item>
             <el-form-item label="上传图片" class="custom_upload">
-              <el-upload
-                :on-success="handleSuccessDelivery"
-                :on-remove="handleDeleteDelivery"
-                :auto-upload="true"
-                :data="uploadDataDelivery"
-                :headers="headers"
-                :before-upload="beforeUploadDelivery"
-                v-model:file-list="deliveryOrderForm.fileList"
-                class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
-                :show-file-list="true"
-                list-type="picture-card"
-              >
+              <el-upload :on-success="handleSuccessDelivery" :on-remove="handleDeleteDelivery" :auto-upload="true"
+                :data="uploadDataDelivery" :headers="headers" :before-upload="beforeUploadDelivery"
+                v-model:file-list="deliveryOrderForm.fileList" class="avatar-uploader"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                list-type="picture-card">
                 <el-icon class="avatar-uploader-icon">
                   <Plus />
                 </el-icon>
@@ -761,23 +487,11 @@
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="deliveryOrderDialog = false"
-              >取消</el-button
-            >
-            <el-button
-              v-if="currentDeliveryOrderStep == 1"
-              type="primary"
-              class="primary_btn"
-              @click="deliveryOrderNextStep"
-              >下一步</el-button
-            >
-            <el-button
-              v-if="currentDeliveryOrderStep == 2"
-              type="primary"
-              class="primary_btn"
-              @click="finishDeliveryOrder"
-              >完成</el-button
-            >
+            <el-button class="cancel_btn" @click="deliveryOrderDialog = false">取消</el-button>
+            <el-button v-if="currentDeliveryOrderStep == 1" type="primary" class="primary_btn"
+              @click="deliveryOrderNextStep">下一步</el-button>
+            <el-button v-if="currentDeliveryOrderStep == 2" type="primary" class="primary_btn"
+              @click="finishDeliveryOrder">完成</el-button>
           </div>
         </template>
       </el-dialog>
@@ -785,81 +499,38 @@
     <!-- 创建派工单 -->
     <!-- 编辑问题描述及负责人按钮 -->
     <div class="editcontentDialog">
-      <el-dialog
-        v-model="editServerCasecontentDialog"
-        title="编辑"
-        width="40%"
-        :show-close="false"
-      >
+      <el-dialog v-model="editServerCasecontentDialog" title="编辑" width="40%" :show-close="false">
         <div class="content">
-          <el-form
-            :model="editFollowerAndPDescriptForm"
-            :rules="editFollowerAndPDescriptFormRule"
-            ref="deditFollowerAndPDescriptFormRef"
-            label-width="90px"
-            label-position="left"
-          >
+          <el-form :model="editFollowerAndPDescriptForm" :rules="editFollowerAndPDescriptFormRule"
+            ref="deditFollowerAndPDescriptFormRef" label-width="90px" label-position="left">
             <el-form-item label="负责人" prop="followerId">
-              <el-select
-                v-model="editFollowerAndPDescriptForm.followerId"
-                @change="onCahngeUserSelectForEditServiceCase"
-                placeholder="请选择负责人"
-              >
-                <el-option
-                  v-for="item in extralUserData"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="item.id"
-                />
+              <el-select v-model="editFollowerAndPDescriptForm.followerId" @change="onCahngeUserSelectForEditServiceCase"
+                placeholder="请选择负责人">
+                <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
-            <el-form-item
-              label="经销商处理结论"
-              prop="processingProcessAndResults"
-            >
-              <el-input
-                v-model="
-                  editFollowerAndPDescriptForm.processingProcessAndResults
-                "
-                placeholder="请输入经销商处理结论"
-              />
+            <el-form-item label="经销商处理结论" prop="processingProcessAndResults">
+              <el-input v-model="editFollowerAndPDescriptForm.processingProcessAndResults
+                " placeholder="请输入经销商处理结论" />
             </el-form-item>
           </el-form>
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button
-              class="cancel_btn"
-              @click="editServerCasecontentDialog = false"
-              >取消</el-button
-            >
-            <el-button
-              type="primary"
-              class="primary_btn"
-              @click="SaveServiceData"
-              >保存</el-button
-            >
+            <el-button class="cancel_btn" @click="editServerCasecontentDialog = false">取消</el-button>
+            <el-button type="primary" class="primary_btn" @click="SaveServiceData">保存</el-button>
           </div>
         </template>
       </el-dialog>
     </div>
     <!-- 相关单据数据table -->
     <div class="relatedDocumentsDialog">
-      <el-dialog
-        v-model="showRelatedDocumentsDialog"
-        title="相关单据"
-        width="80%"
-        :show-close="false"
-      >
+      <el-dialog v-model="showRelatedDocumentsDialog" title="相关单据" width="80%" :show-close="false">
         <div class="content">
           <span class="tableItem">
             <span class="tableTitle"> 1. 售后工单 </span>
             <span class="tableContent">
-              <el-table
-                :data="relatedDocumentsAftersalesWorkorderList"
-                :stripe="false"
-                style="width: 100%"
-              >
+              <el-table :data="relatedDocumentsAftersalesWorkorderList" :stripe="false" style="width: 100%">
                 <el-table-column prop="name" label="售后工单编号" />
                 <el-table-column prop="serviceTicketType__c" label="类别" />
                 <el-table-column prop="text3" label="负责人" />
@@ -868,10 +539,10 @@
                     <div style="display: flex; align-items: center">
                       {{
                         scope.row.status__c
-                          ? seviceTicketStatusOptions.find(
-                              (val) => val["code"] == scope.row.status__c
-                            )?.name
-                          : ""
+                        ? seviceTicketStatusOptions.find(
+                          (val) => val["code"] == scope.row.status__c
+                        )?.name
+                        : ""
                       }}
                     </div>
                   </template>
@@ -879,15 +550,12 @@
                 <el-table-column prop="updatedTime" label="修改时间" />
                 <el-table-column label="操作" width="80px">
                   <template #default="scope">
-                    <div
-                      style="
+                    <div style="
                         display: flex;
                         align-items: center;
                         color: #165dff;
                         cursor: pointer;
-                      "
-                      @click="handleView(scope.row)"
-                    >
+                      " @click="handleView(scope.row)">
                       查看
                     </div>
                   </template>
@@ -898,21 +566,17 @@
           <span class="tableItem">
             <span class="tableTitle"> 2. 派工单 </span>
             <span class="tableContent">
-              <el-table
-                :data="relatedDocumentsDispatchList"
-                :stripe="false"
-                style="width: 100%"
-              >
+              <el-table :data="relatedDocumentsDispatchList" :stripe="false" style="width: 100%">
                 <el-table-column prop="caseNo" label="派工单编号" />
                 <el-table-column prop="fieldJobType__c" label="类别">
                   <template #default="scope">
                     <div style="display: flex; align-items: center">
                       {{
                         scope.row.fieldJobType__c
-                          ? technicianTypeOption.find(
-                              (val) => val["code"] == scope.row.fieldJobType__c
-                            )?.name
-                          : "配送派工单"
+                        ? technicianTypeOption.find(
+                          (val) => val["code"] == scope.row.fieldJobType__c
+                        )?.name
+                        : "配送派工单"
                       }}
                     </div>
                   </template>
@@ -920,15 +584,13 @@
                 <el-table-column prop="followerName" label="负责人" />
                 <el-table-column prop="status" label="状态">
                   <template #default="scope">
-                    <div
-                      style="display: flex; align-items: center; color: blue"
-                    >
+                    <div style="display: flex; align-items: center; color: blue">
                       {{
                         scope.row.stage__c
-                          ? dispatchWorkerStatusOption.find(
-                              (val) => val["code"] == scope.row.stage__c
-                            )?.name
-                          : "待开始"
+                        ? dispatchWorkerStatusOption.find(
+                          (val) => val["code"] == scope.row.stage__c
+                        )?.name
+                        : "待开始"
                       }}
                     </div>
                   </template>
@@ -936,15 +598,12 @@
                 <el-table-column prop="updatedTime" label="修改时间" />
                 <el-table-column label="操作" width="80px">
                   <template #default="scope">
-                    <div
-                      style="
+                    <div style="
                         display: flex;
                         align-items: center;
                         color: #165dff;
                         cursor: pointer;
-                      "
-                      @click="dispatch(scope.row)"
-                    >
+                      " @click="dispatch(scope.row)">
                       查看
                     </div>
                   </template>
@@ -955,25 +614,13 @@
           <span class="tableItem">
             <span class="tableTitle"> 3. 问题提报附件 </span>
             <span class="tableContent">
-              <el-table
-                :data="serviceCaseAttachment"
-                :stripe="false"
-                style="width: 100%"
-                max-height="150"
-              >
+              <el-table :data="serviceCaseAttachment" :stripe="false" style="width: 100%" max-height="150">
                 <el-table-column prop="picNo" label="附件编号" />
                 <el-table-column prop="type" label="类型" />
                 <el-table-column prop="text3" label="附件链接">
                   <template #default="{ row }">
-                    <template
-                      v-for="(image, index) in row.picture"
-                      :key="index"
-                    >
-                      <el-image
-                        style="margin-right: 5px; width: 50px"
-                        :src="image"
-                        :preview-src-list="row.picture"
-                      >
+                    <template v-for="(image, index) in row.picture" :key="index">
+                      <el-image style="margin-right: 5px; width: 50px" :src="image" :preview-src-list="row.picture">
                       </el-image>
                     </template>
                   </template>
@@ -984,12 +631,7 @@
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button
-              type="primary"
-              class="primary_btn"
-              @click="showRelatedDocumentsDialog = false"
-              >返回</el-button
-            >
+            <el-button type="primary" class="primary_btn" @click="showRelatedDocumentsDialog = false">返回</el-button>
           </div>
         </template>
       </el-dialog>
@@ -1745,8 +1387,8 @@ const formatTime = (seconds) => {
   return timeout
     ? timeout
     : `${hours.toString().padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+      .toString()
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 };
 
 const changeDeliveryOrderStep = (step) => {
@@ -1919,20 +1561,20 @@ const submitDialog = () => {
           // });
           let tsDetails = data.details;
           if (tsDetails && tsDetails.length > 0) {
-              selectData.forEach((val) => {
-                let item = tsDetails.find(
-                  (val2) => val["id"] == val2["orderProductId"]
-                );
-                if (item) {
-                  val["descriptionOfTicketProblem"] =
-                    item["descriptionOfTicketProblem"];
-                  val["ticketClassification"] = item["ticketClassification"];
-                  val["ticketProblem"] = item["ticketProblem"];
-                  val["responsibleSubject"] = item["responsibleSubject"];
-                  val["solutionDetailsId"]=item["id"]
-                }
-              });
-            }
+            selectData.forEach((val) => {
+              let item = tsDetails.find(
+                (val2) => val["id"] == val2["orderProductId"]
+              );
+              if (item) {
+                val["descriptionOfTicketProblem"] =
+                  item["descriptionOfTicketProblem"];
+                val["ticketClassification"] = item["ticketClassification"];
+                val["ticketProblem"] = item["ticketProblem"];
+                val["responsibleSubject"] = item["responsibleSubject"];
+                val["solutionDetailsId"] = item["id"]
+              }
+            });
+          }
         }
       });
     }, 500);
@@ -2033,7 +1675,7 @@ const loadingOrderList = (row) => {
                   val["ticketClassification"] = item["ticketClassification"];
                   val["ticketProblem"] = item["ticketProblem"];
                   val["responsibleSubject"] = item["responsibleSubject"];
-                  val["solutionDetailsId"]=item["id"]
+                  val["solutionDetailsId"] = item["id"]
                 }
               });
               console.log("tableData222", tableData.value);
@@ -2116,7 +1758,7 @@ const bindServiceTicket = (row, editOrNot) => {
               name: currentItem.value["name"],
               caseStatus: 3,
               dealerProcessingTime: moment().format("YYYY-MM-DD HH:mm:ss"),
-              processingProcessAndResults:formDialog.value.remark
+              processingProcessAndResults: formDialog.value.remark
             };
             processingTime(paramsTime);
             setTimeout(() => {
@@ -2124,13 +1766,13 @@ const bindServiceTicket = (row, editOrNot) => {
             }, 100);
           }
         }
-        if(!editOrNot){
+        if (!editOrNot) {
           ElMessage({
             message: "绑定售后工单成功",
             type: "success",
           });
         }
-        
+
       } else {
         ElMessage({
           message: "绑定售后工单失败,请重试",

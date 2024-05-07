@@ -366,7 +366,7 @@
           </div>
           <div class="containerUpload">
             <span class="item">
-              <el-upload
+              <!-- <el-upload
                 name="files"
                 :on-success="handleUploaded"
                 class="upload"
@@ -381,6 +381,14 @@
                     jpg/png files with a size less than 500kb
                   </div>
                 </template>
+              </el-upload> -->
+              <el-upload :on-success="handleSuccess" :on-remove="handleDelete" :auto-upload="true" :data="uploadDatas"
+                :headers="headers" :before-upload="beforeUpload" list-type="picture-card" class="avatar-uploader"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                v-model:file-list="dialog2Form.fileList">
+                <el-icon>
+                  <Plus />
+                </el-icon>
               </el-upload>
             </span>
           </div>
@@ -750,6 +758,19 @@ const handleUploaded = (rep) => {
   );
 };
 
+const handleSuccess = (res) => {
+  console.log(res);
+  if (res.code == "success") {
+    let path = res.data.map(val => val["fileUrl"]);
+    fileIdList.value["filePath"] = fileIdList.value["filePath"].concat(path)
+  }
+}
+
+const handleDelete = (res) => {
+  var resopnse = res["response"];
+  console.log(resopnse);
+}
+
 const multipleTableRef = ref();
 const multipleSelection = ref([]);
 
@@ -1114,6 +1135,15 @@ const uploadDataDelivery = ref({
   files: [],
   name: "files",
 });
+
+const uploadDatas = ref({
+  files: [],
+  name: "files",
+});
+
+const beforeUpload = (file) => {
+  uploadDatas.value["files"] = [file];
+};
 
 const beforeUploadDelivery = (file) => {
   uploadDataDelivery.value["files"] = [file];
@@ -1510,7 +1540,7 @@ const submitDialog = () => {
   }
   let selectDataClone = JSON.parse(JSON.stringify(selectData));
   selectDataClone.forEach((item) => {
-    item["picture"] = fileIdList.value; //图片id
+    item["picture"] = dialog2Form.value.fileList; //图片id fileIdList.value
     item["orderProductId"] = item["id"]; //订单明细
     item["treeSpecies"] = item["treeSpecies__c"]; //树种
     item["category"] = item["category1"]; //产品大类

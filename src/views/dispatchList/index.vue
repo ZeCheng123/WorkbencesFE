@@ -49,6 +49,7 @@
               range-separator="~"
               start-placeholder="开始时间"
               end-placeholder="结束时间"
+              value-format="YYYY-MM-DD"
             />
           </el-form-item>
           <el-form-item label="派工状态">
@@ -282,7 +283,8 @@ onMounted(() => {
 	});
 const getList = (isTure: boolean) => {
 
-		let param = {"fieldJobType__c": form.technicianType==undefined?"":form.technicianType,  "appointmentEndTime": "",  "createdTime": "",  "status": form.dispatchWorkerStatus==undefined?"":form.dispatchWorkerStatus,  "caseNo": form.dispatchWorkerNo==undefined?"":form.dispatchWorkerNo,  "artisanName": form.technicianName==undefined?"":form.technicianName,  "pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex}
+		let param = {"fieldJobType__c": form.technicianType==undefined?"":form.technicianType,  "appointmentEndTime": "",  "from": form.createDate==undefined||form.createDate[0]==undefined?"":form.createDate[0]+" 00:00:00",
+		"to":form.createDate==undefined||form.createDate[1]==undefined?"":form.createDate[1]+" 23:59:59",  "status": form.dispatchWorkerStatus==undefined?"":form.dispatchWorkerStatus,  "caseNo": form.dispatchWorkerNo==undefined?"":form.dispatchWorkerNo,  "artisanName": form.technicianName==undefined?"":form.technicianName,  "pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex}
 		getFieldJobByPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {

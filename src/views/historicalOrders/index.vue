@@ -225,6 +225,12 @@ const getList = (isTure: boolean) => {
   if(customerStatus!=""){
     param["status__c"]=customerStatus
   }
+  if(form.createDate!=undefined&&form.createDate[0]!=undefined&&form.createDate[0]!=""){
+    param["from"]=form.createDate[0]+" 00:00:00"
+  }
+  if(form.createDate!=undefined&&form.createDate[1]!=undefined && form.createDate[1]!="" ){
+    param["to"]=form.createDate[1]+" 23:59:59"
+  }
   getOrderListByPage(param).then((res: any) => {
     let data = res.data.data
     if (data.length > 0) {

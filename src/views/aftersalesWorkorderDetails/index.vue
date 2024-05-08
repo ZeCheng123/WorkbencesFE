@@ -528,15 +528,22 @@
           </div>
           <div class="containerUpload">
             <span class="item">
-              <el-upload name="files" :on-success="handleUploaded" class="upload" drag
+              <!-- <el-upload name="files" :on-success="handleUploaded" class="upload" drag
                 action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" multiple>
-                <!-- <el-icon class="el-icon--upload"><upload-filled /></el-icon> -->
                 <div class="el-upload__text">将文件拖至此处 或 点击上传</div>
                 <template #tip>
                   <div class="el-upload__tip">
                     jpg/png files with a size less than 500kb
                   </div>
                 </template>
+              </el-upload> -->
+              <el-upload :on-success="handleSuccess" :on-remove="handleDelete" :auto-upload="true" :data="uploadDatas"
+                :headers="headers" :before-upload="beforeUpload" list-type="picture-card" class="avatar-uploader"
+                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                v-model:file-list="dialog2Form.fileList">
+                <el-icon>
+                  <Plus />
+                </el-icon>
               </el-upload>
             </span>
           </div>
@@ -558,6 +565,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
 import { getOrderListByNeoId, getServiceCaseItem, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution } from "../../api/common";
+import { Plus } from "@element-plus/icons-vue";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -759,6 +767,14 @@ const filterList = ref({
   value6: "1",
 })
 
+const headers = ref({
+  Content: "application/json",
+  Authorization: ``, // Here you can add your token
+  isImage: "true",
+  needFileId: "true",
+  "Trace-Id": "",
+});
+
 const tableData = ref([
   // {
   //   text1: "",
@@ -808,6 +824,14 @@ const filterList6 = ref([{ label: "尺寸", value: "1" }])
 const ticketSolutionTable = ref<any>([]);
 const ticketSolutionDetials = ref<any>({});
 
+const uploadDatas = ref({
+  files: [],
+  name: "files",
+});
+
+const beforeUpload = (file) => {
+  uploadDatas.value["files"] = [file];
+};
 
 const changeStep = (step) => {
   currentStep.value = step
@@ -950,6 +974,25 @@ const fileIdList = ref<any>([])
 const handleUploaded = (rep) => {
   fileIdList.value = fileIdList.value.concat(rep.data.map(item => item.fileId))
 }
+
+const handleSuccess = (res) => {
+  console.log(res);
+  if (res.code == "success") {
+    fileIdList.value = fileIdList.value.concat(
+    res.data.map((item) => item.fileId)
+  );
+  }
+}
+
+const handleDelete = (res) => {
+  var resopnse = res["response"];
+  console.log(resopnse);
+}
+
+
+
+
+
 //售后处理明细table
 const ticketSoluDetailsTable=ref([])
 const multipleTableRef = ref()

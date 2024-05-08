@@ -122,7 +122,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">经销商内部提报：</span>
-            <el-checkbox v-model="checked1" disabled></el-checkbox>
+            <el-checkbox v-model="checkedForJXSTiBao" disabled></el-checkbox>
           </span>
         </span>
       </span>
@@ -276,23 +276,23 @@
             <el-input v-model="formDialog.searchValue" placeholder="搜索"></el-input>
           </div>
           <div class="filter_list">
-            <el-select v-model="formDialog.orderType">
-              <el-option v-for="item in filterList1" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="formDialog.orderType" placeholder="清除筛选">
+              <el-option v-for="item in filterList2Clear" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.productType">
-              <el-option v-for="item in filterList2" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="formDialog.productType" placeholder="产品大类">
+              <el-option v-for="item in filterList2Category" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.productModel">
-              <el-option v-for="item in filterList3" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="formDialog.productModel" placeholder="产品型号">
+              <el-option v-for="item in filterList2fscProductModel" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.treeSpecies">
-              <el-option v-for="item in filterList4" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="formDialog.treeSpecies" placeholder="树种">
+              <el-option v-for="item in filterList2treeSpecies__c" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.paintColor">
-              <el-option v-for="item in filterList5" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="formDialog.paintColor" placeholder="油漆颜色">
+              <el-option v-for="item in filterList2paintColor__c" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.size">
-              <el-option v-for="item in filterList6" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="formDialog.size" placeholder="尺寸" @change="fscProductSpecFilterChange">
+              <el-option v-for="item in filterList2fscProductSpec" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
           <div class="table">
@@ -694,12 +694,14 @@ const deliveryOrderDialog = ref(false);
 const editcontentDialog = ref(false);
 const editServerCasecontentDialog = ref(false);
 const tableData = ref([]);
+const tableData2Filter = ref([]);
 const serviceTicket = ref([]);
 const selectedRows = ref([]);
 const currentItem = ref<any>({});
 const provinceList = ref([]);
 const cityList = ref([]);
 const districtList = ref([]);
+const checkedForJXSTiBao=ref(false);
 let solutionId = "";
 let remainingSeconds = ref<number>();
 let caseStatus = 0;
@@ -718,12 +720,12 @@ const formDialog = ref<any>({
   orderNo: "",
   remark: "",
   searchValue: "",
-  orderType: "1",
-  productType: "1",
-  productModel: "1",
-  treeSpecies: "1",
-  paintColor: "1",
-  size: "1",
+  orderType: "",
+  productType: "",
+  productModel: "",
+  treeSpecies: "",
+  paintColor: "",
+  size: "",
 });
 
 const dialog2Form = ref<any>({
@@ -742,17 +744,17 @@ const dialog2Form = ref<any>({
   handleWay: "",
 });
 
-const filterList1 = ref([{ label: "全部订单", value: "1" }]);
+const filterList2Clear = ref([{ label: "清除", value: "1" }]);
 
-const filterList2 = ref([{ label: "产品大类", value: "1" }]);
+const filterList2Category = ref([{ label: "全部产品大类", value: "1" }]);
 
-const filterList3 = ref([{ label: "产品型号", value: "1" }]);
+const filterList2fscProductModel = ref([{ label: "全部产品型号", value: "1" }]);
 
-const filterList4 = ref([{ label: "树种", value: "1" }]);
+const filterList2treeSpecies__c = ref([{ label: "全部树种", value: "1" }]);
 
-const filterList5 = ref([{ label: "油漆颜色", value: "1" }]);
+const filterList2paintColor__c = ref([{ label: "全部油漆颜色", value: "1" }]);
 
-const filterList6 = ref([{ label: "尺寸", value: "1" }]);
+const filterList2fscProductSpec = ref([{ label: "全部尺寸", value: "1" }]);
 
 ///图片上传组合数组
 const fileIdList = ref<any>([]);
@@ -795,38 +797,38 @@ const handleSelectionChange = (val) => {
 };
 
 const tableDataOrderDetials = ref([
-  {
-    text1: "CS0011-06665-01",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "门套",
+  //   text3: "示例字段...",
+  //   text4: "混油米灰1#",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "门套",
+  //   text3: "示例字段...",
+  //   text4: "混油米灰1#",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "门套",
+  //   text3: "示例字段...",
+  //   text4: "混油米灰1#",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "门套",
+  //   text3: "示例字段...",
+  //   text4: "混油米灰1#",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
 ]);
 
 const tableDataServiceEvaluation = ref([
@@ -1003,7 +1005,7 @@ const relatedDocumentsDispatchList = ref([]);
 const complaintSource = ref([
   { code: "1", name: "配送技工" },
   { code: "2", name: "安装技工" },
-  { code: "3", name: "终端用户" },
+  { code: "3", name: "用户" },
   { code: "4", name: "经销商" },
 ]);
 
@@ -1385,6 +1387,7 @@ const getDetailsData = () => {
       caseStatus = currentItem.value["caseStatus"];
       editFollowerAndPDescriptForm["processingProcessAndResults"] =
         currentItem.value["processingProcessAndResults"];
+      checkedForJXSTiBao.value = currentItem.value["complaintSourceC"].toString()=="4"
       var baseUrl =
         "https://sh.mengtian.com.cn:9595/md/api/common/file/direct-download?fileId=";
       if (
@@ -1614,11 +1617,20 @@ const submitDialog = () => {
                 val["descriptionOfTicketProblem"] =
                   item["descriptionOfTicketProblem"];
                 val["ticketClassification"] = item["ticketClassification"];
-                val["ticketProblem"] = item["ticketProblem"];
+                let ticketProblemNames="";
+                  item["ticketProblem"].forEach((problem)=>{
+                    ticketProblemNames=ticketProblemNames+
+                    afterSalesIssuesList.value.find(
+                        (aSItem) => aSItem["code"] == problem
+                      ).name+","
+                  })
+                  //console.log(ticketProblemNames.substring(0,ticketProblemNames.length-1))
+                val["ticketProblem"] = ticketProblemNames.substring(0,ticketProblemNames.length-1);
                 val["responsibleSubject"] = item["responsibleSubject"];
                 val["solutionDetailsId"] = item["id"]
               }
             });
+            
           }
         }
       });
@@ -1725,13 +1737,23 @@ const loadingOrderList = (row) => {
                         (aSItem) => aSItem["code"] == problem
                       ).name+","
                   })
-                  console.log(ticketProblemNames.substring(0,ticketProblemNames.length-1))
+                  //console.log(ticketProblemNames.substring(0,ticketProblemNames.length-1))
                   val["ticketProblem"] = ticketProblemNames.substring(0,ticketProblemNames.length-1);
                   val["responsibleSubject"] = item["responsibleSubject"];
                   val["solutionDetailsId"] = item["id"]
                 }
               });
-              console.log("tableData222", tableData.value);
+              filterList2Category.value=[filterList2Category.value,[...new Set(tableData.value.map(item => item.category1))]
+        .map(category1 => ({ "label":category1, "value": category1}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
+              filterList2fscProductModel.value=[filterList2fscProductModel.value,[...new Set(tableData.value.map(item => item.fscProductModel))]
+        .map(fscProductModel => ({ "label":fscProductModel, "value": fscProductModel}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
+              filterList2fscProductSpec.value=[filterList2fscProductSpec.value,[...new Set(tableData.value.map(item => item.fscProductSpec))]
+        .map(fscProductSpec => ({ "label":fscProductSpec, "value": fscProductSpec}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
+              filterList2paintColor__c.value=[filterList2paintColor__c.value,[...new Set(tableData.value.map(item => item.paintColor__c))]
+        .map(paintColor__c => ({ "label":paintColor__c, "value": paintColor__c}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
+              filterList2treeSpecies__c.value=[filterList2treeSpecies__c.value,[...new Set(tableData.value.map(item => item.treeSpecies__c))]
+        .map(treeSpecies__c => ({ "label":treeSpecies__c, "value": treeSpecies__c}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="")
+              //console.log("tableData222", tableData.value);
             } else {
               console.info("details没数据");
             }
@@ -2147,6 +2169,17 @@ const handleProblemTypeChange = (problemType) => {
 const selectAll=(event)=>{
   tableData.value.forEach(item=>{
     item["checked"]=event
+  })
+}
+
+const fscProductSpecFilterChange=(event)=>{
+  console.log(event)
+  console.log(formDialog.value.size)
+  tableData2Filter.value=tableData.value.filter(item=>{
+    let sizeFlags=true;
+    if(formDialog.value.size!="" && formDialog.value.size!="1"){
+      sizeFlags=item.fscProductSpec==formDialog.value.size
+    }
   })
 }
 </script>

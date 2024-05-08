@@ -20,7 +20,7 @@
               end-placeholder="结束时间" format="YYYY/MM/DD" value-format="YYYY-MM-DD" />
           </el-form-item>
           <el-form-item label="问题状态">
-            <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
+            <el-select v-model="form.orderStatus" placeholder="请选择问题状态">
               <el-option v-for="item in caseStatus" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
           </el-form-item>

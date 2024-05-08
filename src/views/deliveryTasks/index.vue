@@ -25,8 +25,8 @@
 						<el-date-picker v-model="form.createDate" type="daterange" range-separator="~"
 							start-placeholder="开始时间" end-placeholder="结束时间" value-format="YYYY-MM-DD" />
 					</el-form-item>
-					<el-form-item label="订单状态">
-						<el-select v-model="form.orderStatus" placeholder="请选择订单状态">
+					<el-form-item label="交付状态">
+						<el-select v-model="form.orderStatus" placeholder="请选择交付状态">
 							<el-option v-for="item in orderStatusPtions" :key="item.code" :label="item.name"
 								:value="item.code" />
 						</el-select>

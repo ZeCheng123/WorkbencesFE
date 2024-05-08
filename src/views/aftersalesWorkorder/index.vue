@@ -47,8 +47,8 @@
               end-placeholder="结束时间"
             />
           </el-form-item>
-          <el-form-item label="订单状态">
-            <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
+          <el-form-item label="售后状态">
+            <el-select v-model="form.orderStatus" placeholder="请选择售后状态">
               <el-option
                 v-for="item in seviceTicketStatusOptions"
                 :key="item.code"

@@ -17,10 +17,10 @@
         <el-form :model="form" :rules="rule" label-width="80px" label-position="left">
           <el-form-item label="创建时间">
             <el-date-picker v-model="form.createDate" type="daterange" range-separator="~" start-placeholder="开始时间"
-              end-placeholder="结束时间" format="YYYY/MM/DD" value-format="YYYY-MM-DD" />
+              end-placeholder="结束时间" format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
           </el-form-item>
           <el-form-item label="问题状态">
-            <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
+            <el-select v-model="form.orderStatus" placeholder="请选择问题状态">
               <el-option v-for="item in caseStatus" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
           </el-form-item>
@@ -405,8 +405,8 @@ const getTableDataList = () => {
     "caseNo": form.problemNo == undefined ? "" : form.problemNo,
     "accountName": form.customerName == undefined ? "" : form.customerName,
     "accountPhone": form.customerPhone == undefined ? "" : form.customerPhone,
-    "from": form.createDate == undefined ? "" : form.createDate[0],
-    "to": form.createDate == undefined ? "" : form.createDate[1],
+    "from": form.createDate==undefined||form.createDate[0] == undefined ? "" : form.createDate[0]+" 00:00:00",
+    "to": form.createDate==undefined||form.createDate[1] == undefined ? "" : form.createDate[1]+" 23:59:59",
     "pageSize": pageConfig.value.pageSize,
     "pageNo": pageConfig.value.pageIndex,
   };

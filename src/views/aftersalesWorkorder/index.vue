@@ -45,10 +45,11 @@
               range-separator="~"
               start-placeholder="开始时间"
               end-placeholder="结束时间"
+              value-format="YYYY-MM-DD"
             />
           </el-form-item>
-          <el-form-item label="订单状态">
-            <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
+          <el-form-item label="售后状态">
+            <el-select v-model="form.orderStatus" placeholder="请选择售后状态">
               <el-option
                 v-for="item in seviceTicketStatusOptions"
                 :key="item.code"
@@ -61,7 +62,7 @@
         </el-form>
       </span>
       <span class="right">
-        <el-button type="primary" @click="getList(true)" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
+        <el-button type="primary" @click="getList(false)" class="search_btn"><template #icon> <img src="@/assets/images/search.png" alt=""> </template>查询</el-button>
         <el-button type="primary" class="reset_btn"><template #icon> <img src="@/assets/images/reset.png" alt=""> </template>重置</el-button>
       </span>
     </span>
@@ -314,7 +315,8 @@ const getList = (isTure: boolean) => {
   console.log(form)
   const customerName = form.customerName==undefined?"":form.customerName;
   const customerPhone = form.customerPhone==undefined?"":form.customerPhone;
-  let param = {"customerName": customerName,  "customerPhone": customerPhone,  "status": form.orderStatus,  "createdTime": "",  "pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex}
+  let param = {"customerName": customerName,  "customerPhone": customerPhone,  "status": form.orderStatus,  "from": form.createDate==undefined||form.createDate[0]==undefined?"":form.createDate[0]+" 00:00:00",
+		"to":form.createDate==undefined||form.createDate[1]==undefined?"":form.createDate[1]+" 23:59:59",  "pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex}
 		getServiceticketPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {

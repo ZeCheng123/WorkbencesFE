@@ -986,8 +986,15 @@ const handleSuccess = (res) => {
 
 const handleDelete = (res) => {
   var resopnse = res["response"];
-  console.log(resopnse);
+  if(resopnse.code == "success"){
+    const fileIdToDelete = resopnse.data[0].fileId;
+    const indexToDelete = fileIdList.value.findIndex(fileId => fileId === fileIdToDelete);
+    if (indexToDelete !== -1) {
+      fileIdList.value.splice(indexToDelete, 1);
+    }
+  }
 }
+
 
 
 

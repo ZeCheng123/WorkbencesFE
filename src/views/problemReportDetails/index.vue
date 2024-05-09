@@ -272,23 +272,23 @@
               <el-button style="display: none" class="btn" @click="openDialog2(2)">定义处理方式</el-button>
             </span>
           </div>
-          <div class="search">
+          <!-- <div class="search">
             <el-input v-model="formDialog.searchValue" placeholder="搜索"></el-input>
-          </div>
+          </div> -->
           <div class="filter_list">
-            <el-select v-model="formDialog.orderType" placeholder="清除筛选">
+            <el-select v-model="formDialog.orderType" placeholder="清除筛选" @change="clearFilterChange">
               <el-option v-for="item in filterList2Clear" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.productType" placeholder="产品大类">
+            <el-select v-model="formDialog.productType" placeholder="产品大类" @change="categoryFilterChange">
               <el-option v-for="item in filterList2Category" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.productModel" placeholder="产品型号">
+            <el-select v-model="formDialog.productModel" placeholder="产品型号" @change="fscProductModelFilterChange">
               <el-option v-for="item in filterList2fscProductModel" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.treeSpecies" placeholder="树种">
+            <el-select v-model="formDialog.treeSpecies" placeholder="树种" @change="treeSpeciesCFilterChange">
               <el-option v-for="item in filterList2treeSpecies__c" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-select v-model="formDialog.paintColor" placeholder="油漆颜色">
+            <el-select v-model="formDialog.paintColor" placeholder="油漆颜色" @change="paintColorCFilterChange">
               <el-option v-for="item in filterList2paintColor__c" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.size" placeholder="尺寸" @change="fscProductSpecFilterChange">
@@ -297,7 +297,7 @@
           </div>
           <div class="table">
             <!-- style="width: 100%;max-height: 200px;overflow: auto; -->
-            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData" :stripe="false"
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData2Filter" :stripe="false"
               style="width: 100%; overflow: auto" max-height="200">
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #header>
@@ -1743,20 +1743,22 @@ const loadingOrderList = (row) => {
                   val["solutionDetailsId"] = item["id"]
                 }
               });
-              filterList2Category.value=[filterList2Category.value,[...new Set(tableData.value.map(item => item.category1))]
+
+              filterList2Category.value=[[{ label: "全部产品大类", value: "1" }],[...new Set(tableData.value.map(item => item.category1))]
         .map(category1 => ({ "label":category1, "value": category1}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
-              filterList2fscProductModel.value=[filterList2fscProductModel.value,[...new Set(tableData.value.map(item => item.fscProductModel))]
+              filterList2fscProductModel.value=[[{ label: "全部产品型号", value: "1" }],[...new Set(tableData.value.map(item => item.fscProductModel))]
         .map(fscProductModel => ({ "label":fscProductModel, "value": fscProductModel}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
-              filterList2fscProductSpec.value=[filterList2fscProductSpec.value,[...new Set(tableData.value.map(item => item.fscProductSpec))]
+              filterList2fscProductSpec.value=[[{ label: "全部尺寸", value: "1" }],[...new Set(tableData.value.map(item => item.fscProductSpec))]
         .map(fscProductSpec => ({ "label":fscProductSpec, "value": fscProductSpec}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
-              filterList2paintColor__c.value=[filterList2paintColor__c.value,[...new Set(tableData.value.map(item => item.paintColor__c))]
+              filterList2paintColor__c.value=[[{ label: "全部油漆颜色", value: "1" }],[...new Set(tableData.value.map(item => item.paintColor__c))]
         .map(paintColor__c => ({ "label":paintColor__c, "value": paintColor__c}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
-              filterList2treeSpecies__c.value=[filterList2treeSpecies__c.value,[...new Set(tableData.value.map(item => item.treeSpecies__c))]
+              filterList2treeSpecies__c.value=[[{ label: "全部树种", value: "1" }],[...new Set(tableData.value.map(item => item.treeSpecies__c))]
         .map(treeSpecies__c => ({ "label":treeSpecies__c, "value": treeSpecies__c}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="")
               //console.log("tableData222", tableData.value);
             } else {
               console.info("details没数据");
             }
+            tableData2Filter.value=tableData.value
           }
         });
       });
@@ -2171,16 +2173,69 @@ const selectAll=(event)=>{
     item["checked"]=event
   })
 }
-
+// {
+//   orderNo: "",
+//   remark: "",
+//   searchValue: "",
+//   orderType: "",
+//   productType: "",
+//   productModel: "",
+//   treeSpecies: "",
+//   paintColor: "",
+//   size: "",
+// }
+const clearFilterChange=(event)=>{
+  formDialog.value.productType = "";
+  formDialog.value.productType = "";
+  formDialog.value.productModel = "";
+  formDialog.value.treeSpecies = "";
+  formDialog.value.paintColor = "";
+  formDialog.value.size = "";
+  formDialog.value.orderType="";
+  // filterByFormDialog();
+  tableData2Filter.value=tableData.value
+}
+const categoryFilterChange=(event)=>{
+  filterByFormDialog();
+}
+const fscProductModelFilterChange=(event)=>{
+  filterByFormDialog();
+}
+const treeSpeciesCFilterChange=(event)=>{
+  filterByFormDialog();
+}
+const paintColorCFilterChange=(event)=>{
+  filterByFormDialog();
+}
 const fscProductSpecFilterChange=(event)=>{
-  console.log(event)
-  console.log(formDialog.value.size)
+  filterByFormDialog();
+}
+
+const filterByFormDialog=()=>{
   tableData2Filter.value=tableData.value.filter(item=>{
     let sizeFlags=true;
     if(formDialog.value.size!="" && formDialog.value.size!="1"){
       sizeFlags=item.fscProductSpec==formDialog.value.size
     }
+    let productTypeFlags=true;
+    if(formDialog.value.productType!="" && formDialog.value.productType!="1"){
+      productTypeFlags=item.category1==formDialog.value.productType
+    }
+    let productModelFlags=true;
+    if(formDialog.value.productModel!="" && formDialog.value.productModel!="1"){
+      productModelFlags=item.fscProductModel==formDialog.value.productModel
+    }
+    let treeSpeciesFlags=true;
+    if(formDialog.value.treeSpecies!="" && formDialog.value.treeSpecies!="1"){
+      treeSpeciesFlags=item.treeSpecies__c==formDialog.value.treeSpecies
+    }
+    let paintColorFlags=true;
+    if(formDialog.value.paintColor!="" && formDialog.value.paintColor!="1"){
+      paintColorFlags=item.paintColor__c==formDialog.value.paintColor
+    }
+    return sizeFlags&&productModelFlags&&productTypeFlags&&treeSpeciesFlags&&paintColorFlags
   })
+  console.log(tableData2Filter)
 }
 </script>
 

@@ -469,7 +469,7 @@
           </div> -->
           <div class="table">
             <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="ticketSoluDetailsTable" :stripe="false"
-              style="width: 100%;overflow: auto;" max-height="200">
+              style="width: 100%;overflow: auto;" max-height="300">
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #header>
                   <el-checkbox  @change="selectAll">全选</el-checkbox >
@@ -495,12 +495,12 @@
                 </template>
               </el-table-column>
               <el-table-column prop="ticketProblem" label="售后问题 ">
-                <template #default="scope">
+                <!-- <template #default="scope">
                   <div style="display:flex;align-items:center;">
                     {{ scope.row.ticketProblem ? (afterSalesIssuesList.find(val => val["code"] ==
                       scope.row.ticketProblem)?.name) : "" }}
                   </div>
-                </template>
+                </template> -->
               </el-table-column>
               <el-table-column prop="" label="责任人 " />
               <el-table-column prop="descriptionOfTicketProblem" label="问题描述 " />
@@ -566,6 +566,7 @@ import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
 import { getOrderListByNeoId, getServiceCaseItem, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution } from "../../api/common";
 import { Plus } from "@element-plus/icons-vue";
+import { isArray } from "lodash";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -614,7 +615,9 @@ const afterSalesIssuesList = ref<any>([
   {code:"8",name:"店里安装师问题"},
   {code:"9",name:"消费者补单"},
   {code:"10",name:"消费者使用不当"},
-  {code:"11",name:"产品丢失"}
+  {code:"11",name:"产品丢失"},
+  {code:"12",name:"公司问题"},
+  {code:"13",name:"物流问题"}
 ])
 
 const afterSalesIssuesListForSelect = ref([] as any);
@@ -1029,11 +1032,24 @@ const loadingOrderList = () => {
                   val["quantity"] = item["quantity"];
                   val["name"] = item["name"];
                   val["productName"] = item["productName"];
-                  val["color__c"] = item["color__c"];
+                  val["paintColor__c"] = item["paintColor__c"];
                   val["treeSpecies__c"] = item["treeSpecies__c"];
                   val["fscProductSpec"] = item["fscProductSpec"];
                   val["fscProductModel"] = item["fscProductModel"];
                   val["category1"] = item["category1"];
+                  if(val["ticketProblem"] && isArray(val["ticketProblem"])){
+                    let ticketProblemNames="";
+                    console.log()
+                    val["ticketProblem"].forEach((problem)=>{
+                    ticketProblemNames=ticketProblemNames+
+                    afterSalesIssuesList.value.find(
+                        (aSItem) => aSItem["code"] == problem
+                      ).name+","
+                    })
+                    //console.log(ticketProblemNames.substring(0,ticketProblemNames.length-1))
+                    val["ticketProblem"] = ticketProblemNames.substring(0,ticketProblemNames.length-1);
+                  }
+                  
                 }
               })
               console.log("tableData222", tableData.value)

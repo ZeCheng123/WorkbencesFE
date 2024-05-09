@@ -114,11 +114,12 @@
           <span class="title">当前订单</span>
           <span class="content">
             <div class="left">
-              <span class="num">¥{{ currenAmount }}</span>
+              <span class="num">¥{{ currenAmount.toFixed(2) }}</span>
               <span class="desc">
                 <span class="text1">较上月</span>
-                <span class="text2">20%</span>
-                <span class="text3"><img src="@/assets/images/up.png" alt="" /></span>
+                <span class="text2">{{ percentage }}%</span>
+                <span v-if="percentage > 0" class="text3"><img src="@/assets/images/up.png" alt="" /></span>
+                <span v-else class="text3"><img src="@/assets/images/fall.png" alt="" /></span>
               </span>
             </div>
             <div class="right">
@@ -130,11 +131,12 @@
           <span class="title">任务分布</span>
           <span class="content">
             <div class="left">
-              <span class="num">12</span>
+              <span class="num">{{ currentMonthTask }}</span>
               <span class="desc">
                 <span class="text1">较上月</span>
-                <span class="text2">6</span>
-                <span class="text3"><img src="@/assets/images/up.png" alt="" /></span>
+                <span class="text2">{{ taskNumber }}</span>
+                <span v-if="taskNumber > 0" class="text3"><img src="@/assets/images/up.png" alt="" /></span>
+                <span v-else class="text3"><img src="@/assets/images/fall.png" alt="" /></span>
               </span>
             </div>
             <div class="right">
@@ -147,11 +149,12 @@
         <span class="title">派工分布</span>
         <span class="content">
           <div class="left">
-            <span class="num">12</span>
+            <span class="num">{{ currentMonthlen }}</span>
             <span class="desc">
               <span class="text1">较上月</span>
-              <span class="text2">2</span>
-              <span class="text3"><img src="@/assets/images/up.png" alt="" /></span>
+              <span class="text2">{{ JobBynumber }}</span>
+              <span v-if="JobBynumber > 0" class="text3"><img src="@/assets/images/up.png" alt="" /></span>
+              <span v-else class="text3"><img src="@/assets/images/fall.png" alt="" /></span>
             </span>
           </div>
           <div class="right">
@@ -166,7 +169,7 @@
 
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted } from "vue"
-import { getServiceCasePage, createServiceCase, getOrderListByPage } from '../../api/common.js'
+import { getServiceCasePage, createServiceCase, getOrderListByPage, getFieldJobByPage, getTaskByPage } from '../../api/common.js'
 import * as echarts from "echarts"
 import moment from 'moment';
 const { proxy }: any = getCurrentInstance()
@@ -187,6 +190,22 @@ let currenAmount = ref(0) //本月总金额
 let retailCount = ref(0); // 零售订单数量
 let distributionCount = ref(0); // 分配订单数量
 let otherCount = ref(0); // 其他订单数量
+let percentage = ref<number>(0)
+let pendingCount = ref(0);//派工待处理
+let progressCount = ref(0);//派工处理中
+let completeCount = ref(0);//派工已完成
+let lastMonthlen = ref(0);//派工上月单数
+let currentMonthlen = ref(0);//派工本月单数
+let JobBynumber = ref(0);//派工差
+let taskPending = ref(0);//任务分布待处理
+let taskExtract = ref(0);//任务分布提货
+let taskWarehousing = ref(0);//任务分布入库
+let taskDelivery = ref(0);//任务分布配送
+let taskInstall = ref(0);//任务分布安装
+let taskComplete = ref(0);//任务分布完成
+let lastMonthTask = ref(0)
+let currentMonthTask = ref(0)
+let taskNumber = ref<number>(0)
 const currentTooltips = ref(1)
 
 const option1 = computed(() => {
@@ -248,12 +267,15 @@ const option2 = computed(() => {
     },
     legend: {
       top: "10",
-      left: "50%",
+      left: "40%",
       orient: "vertical", // 设置图例垂直显示
       data: [
         { name: "待处理", icon: "circle" },
-        { name: "进行中", icon: "circle" },
-        { name: "已完成", icon: "circle" },
+        { name: "提货", icon: "circle" },
+        { name: "入库", icon: "circle" },
+        { name: "配送", icon: "circle" },
+        { name: "安装", icon: "circle" },
+        { name: "完成", icon: "circle" },
       ],
     },
     series: [
@@ -282,11 +304,14 @@ const option2 = computed(() => {
         labelLine: {
           show: false,
         },
-        color: ["#8D4EDA", "#165DFF", "#00B2FF"],
+        color: ["#8D4EDA", "#165DFF", "#00B2FF", "rgb(238 102 102)", "rgb(250 200 88)", "rgb(145 204 117)"],
         data: [
-          { value: 1048, name: "待处理" },
-          { value: 735, name: "进行中" },
-          { value: 580, name: "已完成" },
+          { value: taskPending.value, name: "待处理" },
+          { value: taskExtract.value, name: "提货" },
+          { value: taskWarehousing.value, name: "入库" },
+          { value: taskDelivery.value, name: "配送" },
+          { value: taskInstall.value, name: "安装" },
+          { value: taskComplete.value, name: "完成" },
         ],
       },
     ],
@@ -336,9 +361,9 @@ const option3 = computed(() => {
         },
         color: ["#8D4EDA", "#165DFF", "#00B2FF"],
         data: [
-          { value: 1048, name: "待处理" },
-          { value: 735, name: "进行中" },
-          { value: 580, name: "已完成" },
+          { value: pendingCount.value, name: "待处理" },
+          { value: progressCount.value, name: "进行中" },
+          { value: completeCount.value, name: "已完成" },
         ],
       },
     ],
@@ -380,7 +405,6 @@ const initEchart = () => {
 }
 
 const goTaskDetail = (item) => {
-  console.log("item", item.id)
   let getParams = "id=" + item.id + "&neoid=" + item.neoid;
   let params = {
     id: item.id,
@@ -428,6 +452,7 @@ function padZero(num, length = 2) {
 function executeMessageDataList() {
   // 调用 messageDataList 方法
   messageDataList();
+  statisticalData();
 }
 
 
@@ -440,6 +465,14 @@ function formatDate(date) {
   const seconds = padZero(date.getSeconds());
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function formatDateTask(date) {
+  const year = date.getFullYear();
+  const month = padZero(date.getMonth() + 1); // 月份从0开始
+  const day = padZero(date.getDate());
+
+  return `${year}-${month}-${day}`;
 }
 
 // 获取上个月开始时间
@@ -516,10 +549,16 @@ const statisticalData = () => {
     "pageNo": 1,
     "pageSize": 10000
   };
+  //当前订单
   getOrderListByPage(params).then((res) => {
     let rtData = res.data;
     let lastMonth = ref([])//上月数据
     let currentMonth = ref([])//当前月数据
+    let lastMoney = 0;
+    let currenMoney = 0;
+    let retail = ref(0);
+    let distribution = ref(0);
+    let other = ref(0);
     if (rtData.code == "success") {
       const orders = rtData.data;
       // 遍历订单列表
@@ -529,38 +568,33 @@ const statisticalData = () => {
           // 判断订单是否属于上个月
           if (orderDate >= firstDayOfLastMonth && orderDate < firstDayOfMonth) {
             lastMonth.value.push(order); // 属于上个月
-            lastAmount.value += order.productsAmount; // 将订单金额累加到上个月总额
+            lastMoney += order.productsAmount; // 将订单金额累加到上个月总额
           }
           if (orderDate >= firstDayOfMonth && orderDate <= lastDayOfMonth) {
             currentMonth.value.push(order); // 属于本月
-            currenAmount.value += order.productsAmount; // 将订单金额累加到本月总额
+            currenMoney += order.productsAmount; // 将订单金额累加到本月总额
             // 根据 typeOfSale__c 属性统计订单数量
             switch (order.typeOfSale__c) {
               case '零售':
-                retailCount.value++;
+                retail.value++;
                 break;
               case '分配':
-                distributionCount.value++;
+                distribution.value++;
                 break;
               default:
-                otherCount.value++;
+                other.value++;
                 break;
             }
           }
         }
       });
-
-      // 现在 lastMonth 和 currentMonth 已经被分类
-      console.log('上月订单:', lastMonth.value);
-      console.log('本月订单:', currentMonth.value);
-      console.log('上个月总额:', lastAmount.value);
-      console.log('本月总额:', currenAmount.value);
-      console.log('零售订单数量:', retailCount.value);
-      console.log('分配订单数量:', distributionCount.value);
-      console.log('其他订单数量:', otherCount.value);
-
-      console.info("重新设置：：", chart1.value)
-      console.info("重新设置：：", retailCount.value, distributionCount.value, otherCount.value)
+      currenAmount.value = currenMoney
+      retailCount.value = retail.value
+      distributionCount.value = distribution.value
+      otherCount.value = other.value
+      let difference: number = currenMoney - lastMoney
+      let percentageChange = (difference / lastMoney) * 100;
+      percentage.value = Number(percentageChange.toFixed(4))
       chart1.value.setOption(
         {
           series: [{
@@ -574,6 +608,143 @@ const statisticalData = () => {
       )
     }
   });
+
+  //任务分布
+  let paramsTask = {
+    "createdTimeStart": formatDateTask(firstDayOfLastMonth),
+    "createdTimeEnd": formatDateTask(lastDayOfMonth),
+    "pageNo": 1,
+    "pageSize": 10000
+  };
+  getTaskByPage(paramsTask).then((res) => {
+    let rtData = res.data;
+    let lastMonth = ref([])//上月数据
+    let currentMonth = ref([])//当前月数据
+    let Pending = ref(0);
+    let Extract = ref(0);
+    let Warehousing = ref(0);
+    let Delivery = ref(0);
+    let Install = ref(0);
+    let Complete = ref(0)
+    if (rtData.code == "success") {
+      const orders = rtData.data;
+      // 遍历订单列表
+      orders.forEach((order) => {
+        if (order.createdTime && order.createdTime !== '') {
+          const orderDate = new Date(order.createdTime); // 转换成日期对象
+          // 判断订单是否属于上个月
+          if (orderDate >= firstDayOfLastMonth && orderDate < firstDayOfMonth) {
+            lastMonth.value.push(order); // 属于上个月
+          }
+          if (orderDate >= firstDayOfMonth && orderDate <= lastDayOfMonth) {
+            currentMonth.value.push(order); // 属于本月
+            // 根据 status 属性统计订单数量
+            switch (order.status) {
+              case 0:
+                Pending.value++;//待处理
+                break;
+              case 2:
+                Extract.value++;//提货
+                break;
+              case 3:
+                Warehousing.value++;//入库
+                break;
+              case 4:
+                Delivery.value++;//配送
+                break;
+              case 5:
+                Install.value++;//安装
+                break;
+              default:
+                Complete.value++;//完成
+                break;
+            }
+          }
+        }
+      });
+
+      taskPending.value = Pending.value
+      taskExtract.value = Extract.value
+      taskWarehousing.value = Warehousing.value
+      taskDelivery.value = Delivery.value
+      taskInstall.value = Install.value
+      taskComplete.value = Complete.value
+      lastMonthTask.value = lastMonth.value.length
+      currentMonthTask.value = currentMonth.value.length
+      taskNumber.value = Number(currentMonthlen.value) - Number(lastMonthlen.value)
+      chart2.value.setOption(
+        {
+          series: [{
+            data: [
+              { value: taskPending.value, name: "待处理" },
+              { value: taskExtract.value, name: "提货" },
+              { value: taskWarehousing.value, name: "入库" },
+              { value: taskDelivery.value, name: "配送" },
+              { value: taskInstall.value, name: "安装" },
+              { value: taskComplete.value, name: "完成" }
+            ]
+          }]
+        }
+      )
+    }
+
+  })
+
+  //派工分布
+  getFieldJobByPage(params).then((res) => {
+    let rtData = res.data;
+    let lastMonth = ref([])//上月数据
+    let currentMonth = ref([])//当前月数据
+    let pending = ref(0);
+    let progress = ref(0);
+    let complete = ref(0);
+    if (rtData.code == "success") {
+      const orders = rtData.data;
+      // 遍历订单列表
+      orders.forEach((order) => {
+        if (order.createdTime && order.createdTime !== '') {
+          const orderDate = new Date(order.createdTime); // 转换成日期对象
+          // 判断订单是否属于上个月
+          if (orderDate >= firstDayOfLastMonth && orderDate < firstDayOfMonth) {
+            lastMonth.value.push(order); // 属于上个月
+          }
+          if (orderDate >= firstDayOfMonth && orderDate <= lastDayOfMonth) {
+            currentMonth.value.push(order); // 属于本月
+            // 根据 stage__c 属性统计派工类型数量
+            switch (order.stage__c) {
+              case 0:
+                pending.value++;
+                break;
+              case 1:
+                progress.value++;
+                break;
+              default:
+                complete.value++;
+                break;
+            }
+          }
+        }
+      });
+      pendingCount.value = pending.value
+      progressCount.value = progress.value
+      completeCount.value = complete.value
+      lastMonthlen.value = lastMonth.value.length
+      currentMonthlen.value = currentMonth.value.length
+      JobBynumber.value = Number(currentMonthlen.value) - Number(lastMonthlen.value)
+      chart3.value.setOption(
+        {
+          series: [{
+            data: [
+              { value: pendingCount.value, name: "待处理" },
+              { value: progressCount.value, name: "进行中" },
+              { value: completeCount.value, name: "已完成" },
+            ]
+          }]
+        }
+      )
+    }
+  })
+
 };
 
 

@@ -189,10 +189,15 @@ onMounted(() =>{
               const offsetHeight = docHeight - shouleHeight;
               translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
             }
+            // mainElement.value.style.cssText = `
+            //   transform: scale(${scale}) ${translate};transform-origin: top left;
+            //   min-width: 1920px;
+            //   min-height: 1080px;
+            // `;
             mainElement.value.style.cssText = `
               transform: scale(${scale}) ${translate};transform-origin: top left;
               min-width: 1920px;
-              min-height: 1080px;
+              height: ${document.body.clientHeight / scale}px;
             `;
           }
           else{

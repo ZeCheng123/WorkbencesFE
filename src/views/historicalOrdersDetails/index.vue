@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div ref="mainRef" class="main">
     <span class="header">
       <span class="title">订单状态</span>
       <span class="step">
@@ -460,7 +460,7 @@ import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
 import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase, getServiceticketPage, getServiceticketList, updateOrderData, getFeildJobList } from '../../api/common.js'
-
+import _ from "lodash"
 
 const { proxy }: any = getCurrentInstance()
 const size = ref('default')
@@ -564,6 +564,7 @@ const otherField = ref<any>({
 
 const currentProblemReportingStep = ref(1)
 
+const mainRef = ref(null);
 
 const problemReportingForm = ref({
   orderNo: "",
@@ -668,8 +669,45 @@ onMounted(() => {
   setTimeout(() => {
     getList();
     postRelateList();
-    postServiceCaseList();   
-  }, 100);
+    postServiceCaseList();
+    const standardScale = (("100%") as any) / (("100%") as any);
+    window.addEventListener("resize", _.debounce(function (){
+        const docHeight = document.body.clientHeight;
+        const docWidth = document.body.clientWidth;
+        if(docWidth < 1680)
+        {
+          const currentSacle = docHeight / docWidth;
+          let [scale, translate]:any = [0,0];
+          if(currentSacle < standardScale){
+            // 以高度计算
+            scale = docHeight / 1080;
+            const shouleWidth = 1920 * scale;
+            const offsetWidth = docWidth - shouleWidth;
+            translate = offsetWidth > 0 ? `translate(${offsetWidth / 2}px, 0)` : "";
+          }
+          else{
+            // 以宽度计算
+            scale = (docWidth-20) / 1920;
+            const shouleHeight = 1080 * scale;
+            const offsetHeight = docHeight - shouleHeight;
+            translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
+          }
+          mainRef.value.style.height = `calc(${document.body.clientHeight / scale}px - ${40 * scale}px - 10px)`;
+        }
+        else{
+          mainRef.value.style.height = `calc(${document.body.clientHeight}px - 40px)`;
+        }
+    },0));
+      if(document.createEvent){
+        var event = document.createEvent("HTMLEvents");
+        event.initEvent("resize",true,true);
+        window.dispatchEvent(event);
+      }
+      else if(typeof Event === 'function')
+      {
+        window.dispatchEvent(new Event('resize'));
+      } 
+    }, 100);
 })
 
 

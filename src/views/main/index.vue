@@ -671,7 +671,7 @@ const statisticalData = () => {
       taskComplete.value = Complete.value
       lastMonthTask.value = lastMonth.value.length
       currentMonthTask.value = currentMonth.value.length
-      taskNumber.value = Number(currentMonthlen.value) - Number(lastMonthlen.value)
+      taskNumber.value = Number(currentMonthTask.value) - Number(lastMonthTask.value)
       chart2.value.setOption(
         {
           series: [{
@@ -729,7 +729,9 @@ const statisticalData = () => {
       progressCount.value = progress.value
       completeCount.value = complete.value
       lastMonthlen.value = lastMonth.value.length
+      console.log("lastMonth",lastMonth.value.length)
       currentMonthlen.value = currentMonth.value.length
+      console.log("currentMonthlen",currentMonthlen.value.length)
       JobBynumber.value = Number(currentMonthlen.value) - Number(lastMonthlen.value)
       chart3.value.setOption(
         {

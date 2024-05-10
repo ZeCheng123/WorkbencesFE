@@ -388,7 +388,7 @@ const comfirmAdd = () =>{
       addExternalUser(params)
       .then((res: any) => {
         if (res?.data?.code == "success") {
-          form.value.userType = params["userType"];
+          // form.value.userType = params["userType"];
           dialogForm.value = {
             userType: 1,
             name: "",

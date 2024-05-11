@@ -18,7 +18,7 @@
           <el-form-item label="客户电话">
             <el-input
               placeholder="请输入客户电话"
-              v-model="form.customerName"
+              v-model="form.customerPhone"
             />
           </el-form-item>
         </el-form>

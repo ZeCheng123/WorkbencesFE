@@ -521,7 +521,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="经销商处理结论" prop="processingProcessAndResults">
-              <el-input v-model="editFollowerAndPDescriptForm.processingProcessAndResults
+              <el-input type="textarea" v-model="editFollowerAndPDescriptForm.processingProcessAndResults
                 " placeholder="请输入经销商处理结论" />
             </el-form-item>
           </el-form>
@@ -1005,7 +1005,7 @@ const relatedDocumentsDispatchList = ref([]);
 const complaintSource = ref([
   { code: "1", name: "配送技工" },
   { code: "2", name: "安装技工" },
-  { code: "3", name: "用户" },
+  { code: "3", name: "客户" },
   { code: "4", name: "经销商" },
 ]);
 
@@ -1549,7 +1549,7 @@ const currentDialogStepBut = () => {
 //升级到总部售后提交按钮
 const submitDialog = () => {
   console.info("fileIdfileId", fileIdList.value);
-  const selectData = tableData.value.filter((item) => item.checked);
+  const selectData = tableData2Filter.value.filter((item) => item.checked);
 
   // console.info("过滤：", selectData["id"])
   if (selectData.length <= 0) {
@@ -1559,7 +1559,7 @@ const submitDialog = () => {
   let selectDataClone = JSON.parse(JSON.stringify(selectData));
   selectDataClone.forEach((item) => {
     item["picture"] = fileIdList.value; //图片id fileIdList.value
-    item["orderProductId"] = item["id"]; //订单明细
+    item["orderProductId"] = item["neoid"]; //订单明细
     item["treeSpecies"] = item["treeSpecies__c"]; //树种
     item["category"] = item["category1"]; //产品大类
     item["paintColor"] = item["paintColor__c"]; //油漆颜色
@@ -1611,7 +1611,7 @@ const submitDialog = () => {
           if (tsDetails && tsDetails.length > 0) {
             selectData.forEach((val) => {
               let item = tsDetails.find(
-                (val2) => val["id"] == val2["orderProductId"]
+                (val2) => val["neoid"] == val2["orderProductId"]
               );
               if (item) {
                 val["descriptionOfTicketProblem"] =
@@ -1724,7 +1724,7 @@ const loadingOrderList = (row) => {
             if (tsDetails && tsDetails.length > 0) {
               tableData.value.forEach((val) => {
                 let item = tsDetails.find(
-                  (val2) => val["id"] == val2["orderProductId"]
+                  (val2) => val["neoid"] == val2["orderProductId"]
                 );
                 if (item) {
                   val["descriptionOfTicketProblem"] =
@@ -1743,8 +1743,13 @@ const loadingOrderList = (row) => {
                   val["solutionDetailsId"] = item["id"]
                 }
               });
-
-              filterList2Category.value=[[{ label: "全部产品大类", value: "1" }],[...new Set(tableData.value.map(item => item.category1))]
+            } else {
+              console.info("details没数据");
+            }            
+          }
+        });
+        tableData2Filter.value=tableData.value
+        filterList2Category.value=[[{ label: "全部产品大类", value: "1" }],[...new Set(tableData.value.map(item => item.category1))]
         .map(category1 => ({ "label":category1, "value": category1}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
               filterList2fscProductModel.value=[[{ label: "全部产品型号", value: "1" }],[...new Set(tableData.value.map(item => item.fscProductModel))]
         .map(fscProductModel => ({ "label":fscProductModel, "value": fscProductModel}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
@@ -1754,13 +1759,7 @@ const loadingOrderList = (row) => {
         .map(paintColor__c => ({ "label":paintColor__c, "value": paintColor__c}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="");
               filterList2treeSpecies__c.value=[[{ label: "全部树种", value: "1" }],[...new Set(tableData.value.map(item => item.treeSpecies__c))]
         .map(treeSpecies__c => ({ "label":treeSpecies__c, "value": treeSpecies__c}))].reduce((acc, val) => acc.concat(val), []).filter(item => item.label!="")
-              //console.log("tableData222", tableData.value);
-            } else {
-              console.info("details没数据");
-            }
-            tableData2Filter.value=tableData.value
-          }
-        });
+
       });
     } else {
       proxy.$message.error("数据异常!");
@@ -1783,7 +1782,7 @@ const bindServiceTicket = (row, editOrNot) => {
       neoId: row.neoId,
       serviceCase__c: currentItem.value["neoid"],
       serviceCaseNeoId: currentItem.value["neoid"],
-      distributorDemands__c: formDialog.value.remark,
+      distributorDemands__c: editOrNot==true?row.distributorDemands__c:formDialog.value.remark,
     };
     createOrNot = false;
   } else {

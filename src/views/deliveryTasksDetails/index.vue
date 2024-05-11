@@ -201,7 +201,7 @@
     <span class="related_item_invoice">
       <span class="table_title">相关项>派工单</span>
       <span class="table_content">
-        <el-table :data="tableDataDispatch" :stripe="false" style="width: 100%">
+        <el-table :data="tableDataDispatch" :stripe="false" style="width: 100%" max-height="150">
           <el-table-column prop="view" label="操作" width="160px">
             <template #default="scope">
               <div style="display: flex; align-items: center; color: #165dff; cursor: pointer;">

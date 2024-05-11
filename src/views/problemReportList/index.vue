@@ -230,7 +230,7 @@ const caseSource = ref([
     code: "2",
   },
   {
-    name: "用户",
+    name: "客户",
     code: "3",
   },
   {

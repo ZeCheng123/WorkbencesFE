@@ -880,6 +880,7 @@ const getDetail = (isTure: boolean) => {
         changeStep(aftersalesHeaderDetails.value["status__c"])
         getTicketSolutionData();
         getOrderData();
+        getProblemData();
 				if(isTure)
 				{
 					ElMessage({
@@ -1026,7 +1027,7 @@ const loadingOrderList = () => {
         })
             if (getOrderItems && getOrderItems.length > 0) {
               ticketSoluDetailsTable.value.forEach(val => {
-                let item = getOrderItems.find(val2 => val["orderProductId"] == val2["id"]);
+                let item = getOrderItems.find(val2 => val["orderProductId"] == val2["neoid"]);
                 if (item) {
                   val["productionOrderNo__c"] = item["productionOrderNo__c"];
                   val["quantity"] = item["quantity"];

@@ -874,13 +874,16 @@
 
     }
     .containerUpload{
-        width: 100%;
-        height: 200px;
-        position: absolute;
-        left: 115px;
-        bottom: 70px;
+        // width: 100%;
+        // height: 200px;
+        // position: absolute;
+        // left: 115px;
+        // bottom: 70px;
         // display: none;
         // float: right;
+        height: 10px;
+        position: relative;
+        left: 95px;
     }
     .table{
         width: 100%;

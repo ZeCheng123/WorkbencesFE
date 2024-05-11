@@ -36,6 +36,8 @@ const getScale = () => {
    return {x:w,y:h};
 }
 
+const isMobile = ref(false);
+
 const setScale = () =>{
   let scale = getScale();
   style.value.transform = "scaleY(" + scale.y + ") scaleX(" + scale.x + ") translate(-50%, -50%)";
@@ -163,6 +165,7 @@ watch(() => proxy.$route,
 
 
 onMounted(() =>{
+  detectMobile();
   nextTick(() =>{
     if(mainElement.value)
     {
@@ -217,6 +220,12 @@ onMounted(() =>{
             appEl.style.cssText = `padding: 0px 0px 0px 0px;`
           }
         }
+        if(isMobile.value){
+          setTimeout(() => {
+            let doc:any = document.documentElement;
+            doc.style.zoom = 0.9;
+          }, 66);
+        }
       },0));
       if(document.createEvent){
         var event = document.createEvent("HTMLEvents");
@@ -228,10 +237,13 @@ onMounted(() =>{
         window.dispatchEvent(new Event('resize'));
       }
     }
-
   })
 })
 
+const detectMobile = () => {
+      const userAgent = window.navigator.userAgent;
+      isMobile.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    }
 
 
 const clickNav = (item,index) =>{

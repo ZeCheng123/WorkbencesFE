@@ -4,6 +4,7 @@
 
 import request from '@/utils/request'
 
+//交付任务列表
 export const getLoginInfo = (data) => {
   return request({
     method: 'POST',
@@ -12,6 +13,7 @@ export const getLoginInfo = (data) => {
   })
 }
 
+//交付任务分页
 export const getTaskByPage= (data) => {
   return request({
     method: 'POST',
@@ -20,11 +22,21 @@ export const getTaskByPage= (data) => {
   })
 }
 
+//更新交付任务状态
 export const updateTask= (data) => {
   return request({
     method: 'POST',
     data:data,
     url: '/md/api/task/update'
+  })
+}
+
+//合并交付任务
+export const mergeTask= (data) => {
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/task/merge'
   })
 }
 

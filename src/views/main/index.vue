@@ -4,7 +4,7 @@
       <img class="main_header_image" src="@/assets/images/main_header_image.png" alt="Logo" />
       <div class="function_guide">
         <div class="header">
-          <label class="label">功能指引</label>
+          <label class="label">功能指引=={{}}==</label>
           <img class="logo" src="@/assets/images/logo.png" alt="" />
         </div>
         <div class="function_item">
@@ -180,6 +180,8 @@ const chart1 = ref(null)
 const chart2 = ref(null)
 
 const chart3 = ref(null)
+
+const text = ref(null);
 
 //消息列表
 const messageList = ref([]);
@@ -371,6 +373,9 @@ const option3 = computed(() => {
 })
 
 onMounted(() => {
+  setTimeout(() => {
+    text.value = localStorage.getItem("token") || sessionStorage.getItem("token");
+  }, 5000);
   proxy.$nextTick(() => {
     initEchart();
   })

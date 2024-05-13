@@ -165,7 +165,6 @@ watch(() => proxy.$route,
 
 
 onMounted(() =>{
-  detectMobile();
   nextTick(() =>{
     if(mainElement.value)
     {
@@ -220,13 +219,21 @@ onMounted(() =>{
             appEl.style.cssText = `padding: 0px 0px 0px 0px;`
           }
         }
-        if(isMobile.value){
-          setTimeout(() => {
-            let doc:any = document.documentElement;
-            doc.style.zoom = 0.9;
-          }, 66);
-        }
-      },0));
+      },66));
+      window.addEventListener("orientationchange", () =>{
+        alert("横屏、竖屏切换!");
+        setTimeout(() => {
+          if(document.createEvent){
+            var event = document.createEvent("HTMLEvents");
+            event.initEvent("resize",true,true);
+            window.dispatchEvent(event);
+          }
+          else if(typeof Event === 'function')
+          {
+            window.dispatchEvent(new Event('resize'));
+          }
+        }, 66);
+      })
       if(document.createEvent){
         var event = document.createEvent("HTMLEvents");
         event.initEvent("resize",true,true);
@@ -238,7 +245,7 @@ onMounted(() =>{
       }
     }
   })
-})
+})    
 
 const detectMobile = () => {
       const userAgent = window.navigator.userAgent;

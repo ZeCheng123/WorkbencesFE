@@ -15,11 +15,12 @@ export default {
 
 	async getAuth(code) {
 		return new Promise(function (resolve) {
+            alert(code);
             wecom({code: code, userType: 2}).then(res =>{
                 let rtData = res.data;
                 if(rtData.code == "success"){
                     let data = rtData.data || {};
-                    console.log(data);
+                    alert(JSON.stringify(data)+"===============");
                     localStorage.setItem("token",data["token"]);
                     sessionStorage.setItem("token",data["token"]);
                     // userinfoStore.setUserInfo(data);

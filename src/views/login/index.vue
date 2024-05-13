@@ -68,44 +68,44 @@ const getSendCode = () =>{
 const clickBtn = () =>{
 
 
-    // // 企业微信授权接口地址
-    // var appid = "wx3c93310d99a3becf";
-    // var agentid = "1000056";
-    // var redirect_uri = encodeURIComponent("http://hkhwedi.kwesz.com.cn");
-    // var authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`;
-    // window.open(authUrl);
+    // 企业微信授权接口地址
+    var appid = "wwa53fff1bab51c954";
+    var agentid = "1000052";
+    var redirect_uri = encodeURIComponent("https://sh.mengtian.com.cn:9595/#/main");
+    var authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`;
+    window.open(authUrl);
 
 
   ////////////////////////////////////////////////////////
-  if(!form.phone){
-    proxy.$message.error("手机号不能为空!");
-    return;
-  }
-  const reg = /^1[3-9]\d{9}$/;
-  if(!reg.test(form.phone)){
-    proxy.$message.error("手机号不合法!");
-    return;
-  }
-  if(!form.code){
-    proxy.$message.error("验证码不能为空!");
-    return;
-  }
-  if(!checkbox.value)
-  {
-    proxy.$message.error("请勾选自服务隐私协议");
-    return;
-  }
-  login({phone: form.phone, captcha: form.code, userType: 1}).then(res =>{
-    let rtData = res.data;
-    if(rtData.code == "success"){
-      let data = rtData.data || {};
-      userinfoStore.setUserInfo(data);
-      proxy.$router.push("/main");
-    }
-    else{
-      proxy.$message.error(res?.message);
-    }
-  })
+  // if(!form.phone){
+  //   proxy.$message.error("手机号不能为空!");
+  //   return;
+  // }
+  // const reg = /^1[3-9]\d{9}$/;
+  // if(!reg.test(form.phone)){
+  //   proxy.$message.error("手机号不合法!");
+  //   return;
+  // }
+  // if(!form.code){
+  //   proxy.$message.error("验证码不能为空!");
+  //   return;
+  // }
+  // if(!checkbox.value)
+  // {
+  //   proxy.$message.error("请勾选自服务隐私协议");
+  //   return;
+  // }
+  // login({phone: form.phone, captcha: form.code, userType: 1}).then(res =>{
+  //   let rtData = res.data;
+  //   if(rtData.code == "success"){
+  //     let data = rtData.data || {};
+  //     userinfoStore.setUserInfo(data);
+  //     proxy.$router.push("/main");
+  //   }
+  //   else{
+  //     proxy.$message.error(res?.message);
+  //   }
+  // })
 }
 
 const setTimer = () =>{

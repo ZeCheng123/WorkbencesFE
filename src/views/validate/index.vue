@@ -31,7 +31,7 @@ const time_down_count = ref(0);
 
 const userinfoStore = userInfoStore();
 
-const phone = ref(null)
+// const phone = ref(null)
 
 const code = ref(null)
 
@@ -64,8 +64,8 @@ onMounted(() => {
 })
 
 const showDialog = () => {
-      dialogVisible.value = true;
-    };
+  dialogVisible.value = true;
+};
 
 
 
@@ -95,6 +95,7 @@ const getAuth = async () => {
       if (rtData.code == "success") {
         let data = rtData.data || {};
         userInfo.value = data;
+        alert("userInfo:" + JSON.stringify(data))
         //token存在时直接进入主界面
         if (userInfo.value.token) {
           localStorage.setItem("token", data["token"]);
@@ -104,7 +105,7 @@ const getAuth = async () => {
         //不存在时需要根据当前返回内容、提示用户输入手机号后再新增用户
         else {
           dialogVisible.value = true
-          phone.value = form.phone
+          // phone.value = form.phone
         }
 
       }
@@ -151,8 +152,8 @@ const addExternalUserAction = async (data) => {
   let params = {
     id:data.id,
     neoId:data.neoId,
-    phone: phone.value,
-    name: phone.value,
+    phone: data.phone,
+    name: data.phone,
     corpId: userInfo.value.corpId,
     userId: userInfo.value.userId,
     userType: 2

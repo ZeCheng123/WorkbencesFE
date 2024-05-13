@@ -11,6 +11,12 @@ const routes = [
     name: '登录',
     component: () => import('../views/login/index.vue')
   },
+  //中转界面 处理登录逻辑
+  {
+    path: '/validate',
+    name: '登录验证',
+    component: () => import('../views/validate/index.vue')
+  },
   //工作台主界面
   {
     path: '/main',

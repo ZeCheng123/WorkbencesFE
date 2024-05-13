@@ -14,6 +14,6 @@ const app = createApp(App);
 app.use(pinia);
 app.use(ElementPlus);
 app.use(router);
-app.use(beforeLoad);
+// app.use(beforeLoad);
 app.component('ECharts',ECharts);
 app.mount('#app');

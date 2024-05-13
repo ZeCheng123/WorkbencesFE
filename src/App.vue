@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%; height: calc(100% - 16px);" ref="mainElement">
-    <div class="nav_list" id="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login'">
+    <div class="nav_list" id="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login' && proxy.$route.path!='/validate'">
        <ul>
           <li v-for="(record, index) in routes" :key="index" @click="clickNav(record,index)" >
              <template v-if="index == 0"><img  src="@/assets/images/main_icon.png" alt=""></template>
@@ -59,7 +59,7 @@ watch(() => proxy.$route,
             path: to.path
           }];
         }
-        else if(to.path!="/main" && to.path!="/login"){
+        else if(to.path!="/main" && to.path!="/login" && to.path!="validate"){
           routes.value.push({
             name: to.name,
             path: to.path,
@@ -67,7 +67,7 @@ watch(() => proxy.$route,
           });
         }
         var appEl = document.getElementById("app");
-        if(to.path == "/login" && appEl){
+        if((to.path == "/login" || to.path == "/validate") && appEl){
           appEl.style.cssText = `padding: 0px !important`;
           if(mainElement.value){
             mainElement.value.style.height = "100%";
@@ -170,7 +170,7 @@ onMounted(() =>{
     {
       const standardScale = (("100%") as any) / (("100%") as any);
       window.addEventListener("resize", _.debounce(function (){
-        if(proxy.$route.path!="/login"){
+        if(proxy.$route.path!="/login" || proxy.$route.path!="/validate"){
           const docHeight = document.body.clientHeight;
           const docWidth = document.body.clientWidth;
           if(docWidth < 1680)

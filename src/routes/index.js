@@ -14,7 +14,7 @@ const routes = [
   //中转界面 处理登录逻辑
   {
     path: '/validate',
-    name: '登录验证',
+    name: '获取token验证',
     component: () => import('../views/validate/index.vue')
   },
   //工作台主界面

@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-      获取token
+    验证
   </div>
 </template>
 
@@ -27,14 +27,15 @@ const userInfo = ref({
 
 onMounted(() =>{
     const index = window.location.href.indexOf("?");
-        const paramsStr = index >= 0 ? window.location.href.substring(index + 1) : window.location.href;
-        const searchParams = new URLSearchParams(paramsStr);
-        const wxcode = searchParams.get('code');
-        if(wxcode){
-          code.value = wxcode
-          //调用企微登录接口
-		      getAuth();
-        }
+    const paramsStr = index >= 0 ? window.location.href.substring(index + 1) : window.location.href;
+    const searchParams = new URLSearchParams(paramsStr);
+    const wxcode = searchParams.get('code');
+    if(wxcode){
+      alert("wxcode:"+ wxcode)
+      code.value = wxcode
+      //调用企微登录接口
+      getAuth();
+    }
 })
 
 const getAuth = async () => {
@@ -44,7 +45,6 @@ const getAuth = async () => {
           if(rtData.code == "success"){
               let data = rtData.data || {};
               userInfo.value = data;
-              alert(JSON.stringify(userInfo.value));
               //token存在时直接进入主界面
               if(userInfo.value.token)
               {
@@ -85,8 +85,10 @@ const addExternalUserAction = async() =>{
     userId: userInfo.value.userId,
     userType: 2
   }
+  alert("新增用户接口参数:"+ JSON.stringify(params))
   addExternalUser(params)
       .then((res: any) => {
+        alert(JSON.stringify(res.data));
         if (res?.data?.code == "success") {
           //成功之后再次调用企微登录方法
           getAuth()
@@ -95,6 +97,7 @@ const addExternalUserAction = async() =>{
         }
       })
       .catch((error: any) => {
+        alert("新增失败!");
         console.error("新增失败:", error)
   })
 }

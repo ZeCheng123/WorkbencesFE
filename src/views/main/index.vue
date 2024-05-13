@@ -373,9 +373,6 @@ const option3 = computed(() => {
 })
 
 onMounted(() => {
-  setTimeout(() => {
-    text.value = localStorage.getItem("token") || sessionStorage.getItem("token");
-  }, 5000);
   proxy.$nextTick(() => {
     initEchart();
   })

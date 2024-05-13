@@ -1,5 +1,5 @@
 <template>
-  <div class="main"></div>
+  <div class="main">登录</div>
 </template>
 
 
@@ -15,11 +15,15 @@ const userinfoStore = userInfoStore();
 
 onMounted(() =>{
     // 企业微信授权接口地址
-    var appid = "wwa53fff1bab51c954";
-    var agentid = "1000052";
-    var redirect_uri = encodeURIComponent("https://sh.mengtian.com.cn:9595/#/validate");
-    var authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`;
-    window.open(authUrl);
+    setTimeout(() => {
+      var appid = "wwa53fff1bab51c954";
+      var agentid = "1000052";
+      var redirect_uri = encodeURIComponent("https://sh.mengtian.com.cn:9595/#/validate");
+      var authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`;
+      // window.open(authUrl);
+      window.location.href = authUrl
+    }, 66);
+
 })
 
 

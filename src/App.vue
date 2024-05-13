@@ -221,7 +221,6 @@ onMounted(() =>{
         }
       },66));
       window.addEventListener("orientationchange", () =>{
-        alert("横屏、竖屏切换!");
         setTimeout(() => {
           if(document.createEvent){
             var event = document.createEvent("HTMLEvents");

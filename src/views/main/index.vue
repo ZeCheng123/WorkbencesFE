@@ -4,7 +4,7 @@
       <img class="main_header_image" src="@/assets/images/main_header_image.png" alt="Logo" />
       <div class="function_guide">
         <div class="header">
-          <label class="label">功能指引=={{}}==</label>
+          <label class="label">功能指引</label>
           <img class="logo" src="@/assets/images/logo.png" alt="" />
         </div>
         <div class="function_item">

@@ -114,7 +114,9 @@
 } 
 
 
-
+:deep(.el-input-group){
+    margin-bottom: 15px;
+}
 
 
 :deep(.content .el-input-group__prepend){

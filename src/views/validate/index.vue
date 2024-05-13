@@ -1,7 +1,7 @@
 <template>
   <div class="main">
   </div>
-  <el-dialog v-model="dialogVisible" title="登录" :close-on-click-modal="false">
+  <el-dialog v-model="dialogVisible" title="登录" :close-on-click-modal="false" :show-close="false">
     <div class="content">
       <el-input class="phone" placeholder="请输入手机号" v-model="form.phone">
         <template #prepend> <img src="@/assets/images/phone.png" alt=""> </template>
@@ -138,6 +138,7 @@ const clickBtn = () => {
     if (rtData.code == "success") {
       let data = rtData.data || {};
       alert(JSON.stringify(data));
+      addExternalUserAction(data)
       proxy.$router.push("/main");
     }
     else {
@@ -146,8 +147,10 @@ const clickBtn = () => {
   })
 }
 
-const addExternalUserAction = async () => {
+const addExternalUserAction = async (data) => {
   let params = {
+    id:data.id,
+    neoId:data.neoId,
     phone: phone.value,
     name: phone.value,
     corpId: userInfo.value.corpId,

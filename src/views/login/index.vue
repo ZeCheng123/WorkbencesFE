@@ -2,7 +2,6 @@
   <div class="main">登录</div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { userInfoStore } from '../../store/userinfo'
@@ -10,8 +9,6 @@ const { proxy }: any = getCurrentInstance()
 
 
 const userinfoStore = userInfoStore();
-
-
 
 onMounted(() =>{
     // 企业微信授权接口地址
@@ -25,9 +22,6 @@ onMounted(() =>{
     }, 66);
 
 })
-
-
-
 
 </script>
 

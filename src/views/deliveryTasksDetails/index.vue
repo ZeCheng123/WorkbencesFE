@@ -145,7 +145,7 @@
     <span class="related_item_order">
       <span class="table_title">相关项>订单</span>
       <span class="table_content">
-        <el-table :data="tableDataOrder" :stripe="false" style="width: 100%">
+        <el-table :data="tableDataOrder" :stripe="false" style="width: 100%" max-height="115">
           <el-table-column prop="id" label="操作" width="80px">
             <template #default="scope">
               <div
@@ -173,7 +173,7 @@
     <span class="related_item_invoice">
       <span class="table_title">相关项>包装清单</span>
       <span class="table_content">
-        <el-table :data="tableDataInvoice" :stripe="false" style="width: 100%" height="100">
+        <el-table :data="tableDataInvoice" :stripe="false" style="width: 100%" max-height="115">
           <el-table-column prop="id" label="操作" width="160px">
             <template #default="scope">
               <div
@@ -201,7 +201,7 @@
     <span class="related_item_invoice">
       <span class="table_title">相关项>派工单</span>
       <span class="table_content">
-        <el-table :data="tableDataDispatch" :stripe="false" style="width: 100%" max-height="150">
+        <el-table :data="tableDataDispatch" :stripe="false" style="width: 100%" max-height="115">
           <el-table-column prop="view" label="操作" width="160px">
             <template #default="scope">
               <div style="display: flex; align-items: center; color: #165dff; cursor: pointer;">
@@ -771,7 +771,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase, updateTask} from "../../api/common";
+import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase, updateTask, getOrderList, getDispatchNoteList} from "../../api/common";
 import { AnyARecord } from "dns";
 import { update } from "lodash";
 import _ from "lodash"
@@ -793,6 +793,7 @@ const orderId = route.query.orderId
 // const fieldJobNeoId = route.query.fieldJobNeoId
 const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0)+1:1
 const taskType = route.query.taskType
+const mergedOrderNo = route.query.mergedOrderNo
 
 const taskDetails=ref({
   taskid:route.query.id,
@@ -971,7 +972,7 @@ const tableDataInvoice = ref([
 
 const tableDataDispatch = ref([] as any)
 
-const mainRef = ref(null);
+const mainRef = ref<any>(null);
 
 const headers = ref({
     Content: "application/json",
@@ -1039,6 +1040,7 @@ const finishInstallationOrder = async () => {
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
     fieldJobOrderId: orderData.value.neoid,
+    mergedOrderNo:mergedOrderNo==undefined?"":mergedOrderNo,
     name:orderData.value.accountName__C+"的安装派工单",
     type: "安装派工",
     fieldJobType__c:1,
@@ -1114,10 +1116,11 @@ const finishDeliveryOrder =  () => {
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
   params["name"] = orderData.value.accountName__C+"的配送派工单";
-  params["status"]=0
-  params["orderNo__c"] = orderData.value["po"]
-  params["source__c"]=1
-  params["fieldJobOrderId"]=orderData.value.neoid
+  params["status"]=0;
+  params["orderNo__c"] = orderData.value["po"];
+  params["source__c"]=1;
+  params["fieldJobOrderId"]=orderData.value.neoid;
+  params["mergedOrderNo"]=mergedOrderNo==undefined?"":mergedOrderNo;
   addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
       tableDataDispatch.value.push(data);
@@ -1325,8 +1328,14 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
 			if (data!=undefined) {
         orderData.value = data
         problemReportingForm.orderNo=orderData.value.po
-        tableDataOrder.value.push(data)
-        getFieldList(false,orderData.value.neoid)        
+        // tableDataOrder.value.push(data)
+        getFieldList(false,orderData.value.neoid)
+        if(mergedOrderNo&&mergedOrderNo!=""){
+          getDispatchNoteByOrder(false,mergedOrderNo) 
+        }else{
+          getDispatchNoteByOrder(false,orderData.value.po)
+          tableDataOrder.value.push(data)
+        }               
 				if(showMsg)
 				{
 					ElMessage({
@@ -1344,6 +1353,18 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
 				
 			}
   })
+  if(mergedOrderNo && mergedOrderNo!=""){
+    let params={
+      orderNo:mergedOrderNo.toString().split(";")
+    }
+    getOrderList(params).then((res : any) => {
+			let data = res.data.data
+			if (data!=undefined) {
+        console.log("orderlist:",data)
+        tableDataOrder.value=data     
+			}
+  })
+  }
 }
 
 const getFieldList = (showMsg: boolean,orderId:any)=>{
@@ -1374,12 +1395,14 @@ const getFieldList = (showMsg: boolean,orderId:any)=>{
   })
 }
 
-const getDispatchNoteByOrderId = (showMsg: boolean,orderId:any)=>{
-  if(orderId==undefined){
+const getDispatchNoteByOrder = (showMsg: boolean,orderNo:any)=>{
+  if(orderNo==undefined){
     return;
   }
-  let params="fieldJobOrderId="+orderId
-  getDispatchNoteByGet(params).then((res : any) => {
+  let params={
+    orderNo:orderNo.split(";")
+  }
+  getDispatchNoteList(params).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
         tableDataInvoice.value=data

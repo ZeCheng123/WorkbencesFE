@@ -112,6 +112,7 @@ const getAuth = async () => {
 
       }else{
         console.log("错误",res?.message)
+        proxy.$message.error("接口错误:",res?.message);
         // alert("token:错误"+JSON.stringify(rtData))
       }
       resolve(true)
@@ -149,7 +150,7 @@ const clickBtn = () => {
     }
     else {
       // alert("111111"+JSON.stringify(rtData));
-      proxy.$message.error(res?.message);
+      proxy.$message.error("接口错误："+res?.message);
     }
   })
 }
@@ -159,7 +160,7 @@ const addExternalUserAction = async (data) => {
     id:data.id,
     neoId:data.neoId,
     phone: data.phone,
-    name: data.phone,
+    name: data.name,
     corpId: userInfo.value.corpId,
     userId: userInfo.value.userId,
     userType: 2
@@ -173,11 +174,13 @@ const addExternalUserAction = async (data) => {
         getAuth()
       } else {
         console.log("失败")
+        proxy.$message.error("新增失败");
       }
     })
     .catch((error: any) => {
       // alert("新增失败!");
       console.error("新增失败:", error)
+      proxy.$message.error("新增失败",error);
     })
 }
 

@@ -99,8 +99,20 @@ const getAuth = async () => {
         //token存在时直接进入主界面
         if (userInfo.value.token) {
           // alert("3.userInfo.value.token:" + JSON.stringify(data))
+
           localStorage.setItem("token", data["token"]);
           sessionStorage.setItem("token", data["token"]);
+          let newData = {
+            id:data.id ? data.id : null,
+            neoid:data.neoId ? data.neoId :null,
+            name:data.name ? data.name : null,
+            phone:data.phone? data.phone : null,
+            userType:data.userType? data.userType :null,
+            store:data.store?data.store:null,
+            distributor:data.distributor?data.distributor:null,
+          }
+          localStorage.setItem("userinfo", JSON.stringify(newData));
+          sessionStorage.setItem("userinfo", JSON.stringify(newData));
           proxy.$router.push({ path: "/main", query: {} });
         }
         //不存在时需要根据当前返回内容、提示用户输入手机号后再新增用户

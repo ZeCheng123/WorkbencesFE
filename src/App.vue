@@ -168,27 +168,27 @@ onMounted(() =>{
   nextTick(() =>{
     if(mainElement.value)
     {
-      const standardScale = (("100%") as any) / (("100%") as any);
+      let standardScale = (("100%") as any) / (("100%") as any);
       window.addEventListener("resize", _.debounce(function (){
-        if(proxy.$route.path!="/login" || proxy.$route.path!="/validate"){
-          const docHeight = document.body.clientHeight;
-          const docWidth = document.body.clientWidth;
+        if(proxy.$route.path!="/login" && proxy.$route.path!="/validate"){
+          let docHeight = document.body.clientHeight;
+          let docWidth = document.body.clientWidth;
           if(docWidth < 1680)
           {
-            const currentSacle = docHeight / docWidth;
+            let currentSacle = docHeight / docWidth;
             let [scale, translate]:any = [0,0];
             if(currentSacle < standardScale){
               // 以高度计算
               scale = docHeight / 1080;
-              const shouleWidth = 1920 * scale;
-              const offsetWidth = docWidth - shouleWidth;
+              let shouleWidth = 1920 * scale;
+              let offsetWidth = docWidth - shouleWidth;
               translate = offsetWidth > 0 ? `translate(${offsetWidth / 2}px, 0)` : "";
             }
             else{
               // 以宽度计算
               scale = (docWidth-20) / 1920;
-              const shouleHeight = 1080 * scale;
-              const offsetHeight = docHeight - shouleHeight;
+              let shouleHeight = 1080 * scale;
+              let offsetHeight = docHeight - shouleHeight;
               translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
             }
             // mainElement.value.style.cssText = `
@@ -222,15 +222,8 @@ onMounted(() =>{
       },66));
       window.addEventListener("orientationchange", () =>{
         setTimeout(() => {
-          if(document.createEvent){
-            var event = document.createEvent("HTMLEvents");
-            event.initEvent("resize",true,true);
-            window.dispatchEvent(event);
-          }
-          else if(typeof Event === 'function')
-          {
-            window.dispatchEvent(new Event('resize'));
-          }
+          // 在需要刷新的地方调用
+          window.location.reload();
         }, 66);
       })
       if(document.createEvent){

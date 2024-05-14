@@ -297,3 +297,22 @@ export const wecom = (data) =>{
     url: 'md/api/auth/login/wecom'
   })
 }
+
+//获取发货单(包装清单)
+export const getDispatchNoteList = (data) =>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/dispatch-note/list'
+  })
+}
+
+//获取安装派工服务评价
+export const getInvestigation = (data) =>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/common/investigation'
+  })
+}
+

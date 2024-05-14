@@ -37,7 +37,7 @@ const code = ref(null)
 
 const timer = ref(null)
 
-const dialogVisible = ref(true)
+const dialogVisible = ref(false)
 
 const userInfo = ref({
   userId: "",
@@ -56,7 +56,7 @@ onMounted(() => {
   const searchParams = new URLSearchParams(paramsStr);
   const wxcode = searchParams.get('code');
   if (wxcode) {
-    alert("wxcode:" + wxcode)
+    // alert("1.wxcode:" + wxcode)
     code.value = wxcode
     //调用企微登录接口
     getAuth();
@@ -95,9 +95,10 @@ const getAuth = async () => {
       if (rtData.code == "success") {
         let data = rtData.data || {};
         userInfo.value = data;
-        alert("userInfo:" + JSON.stringify(data))
+        // alert("2.userInfo:" + JSON.stringify(data))
         //token存在时直接进入主界面
         if (userInfo.value.token) {
+          // alert("3.userInfo.value.token:" + JSON.stringify(data))
           localStorage.setItem("token", data["token"]);
           sessionStorage.setItem("token", data["token"]);
           proxy.$router.push({ path: "/main", query: {} });
@@ -105,9 +106,13 @@ const getAuth = async () => {
         //不存在时需要根据当前返回内容、提示用户输入手机号后再新增用户
         else {
           dialogVisible.value = true
+          // alert("3.userInfo:" + JSON.stringify(data))
           // phone.value = form.phone
         }
 
+      }else{
+        console.log("错误",res?.message)
+        // alert("token:错误"+JSON.stringify(rtData))
       }
       resolve(true)
     })
@@ -138,11 +143,12 @@ const clickBtn = () => {
     let rtData = res.data;
     if (rtData.code == "success") {
       let data = rtData.data || {};
-      alert(JSON.stringify(data));
+      // alert("4."+JSON.stringify(data));
       addExternalUserAction(data)
-      proxy.$router.push("/main");
+      // proxy.$router.push("/main");
     }
     else {
+      // alert("111111"+JSON.stringify(rtData));
       proxy.$message.error(res?.message);
     }
   })
@@ -158,10 +164,10 @@ const addExternalUserAction = async (data) => {
     userId: userInfo.value.userId,
     userType: 2
   }
-  alert("新增用户接口参数:" + JSON.stringify(params))
+  // alert("5.新增用户接口参数:" + JSON.stringify(params))
   addExternalUser(params)
     .then((res: any) => {
-      alert(JSON.stringify(res.data));
+      // alert(JSON.stringify(res.data));
       if (res?.data?.code == "success") {
         //成功之后再次调用企微登录方法
         getAuth()
@@ -170,7 +176,7 @@ const addExternalUserAction = async (data) => {
       }
     })
     .catch((error: any) => {
-      alert("新增失败!");
+      // alert("新增失败!");
       console.error("新增失败:", error)
     })
 }

@@ -596,8 +596,9 @@ const statisticalData = () => {
       otherCount.value = other.value
       let difference: number = currenMoney - lastMoney
       let percentageChange = (difference / lastMoney) * 100;
-      percentage.value = Number(percentageChange.toFixed(4))
-      chart1.value.setOption(
+      percentage.value = Number(percentageChange.toFixed(4));
+      if(chart1.value){
+        chart1.value.setOption(
         {
           series: [{
             data: [
@@ -606,8 +607,8 @@ const statisticalData = () => {
               { value: otherCount.value, name: "其他" },
             ]
           }]
-        }
-      )
+        })
+      }
     }
   });
 
@@ -674,7 +675,8 @@ const statisticalData = () => {
       lastMonthTask.value = lastMonth.value.length
       currentMonthTask.value = currentMonth.value.length
       taskNumber.value = Number(currentMonthTask.value) - Number(lastMonthTask.value)
-      chart2.value.setOption(
+      if(chart2.value){
+         chart2.value.setOption(
         {
           series: [{
             data: [
@@ -687,7 +689,8 @@ const statisticalData = () => {
             ]
           }]
         }
-      )
+        )
+      }
     }
 
   })
@@ -733,7 +736,8 @@ const statisticalData = () => {
       lastMonthlen.value = lastMonth.value.length
       currentMonthlen.value = currentMonth.value.length
       JobBynumber.value = Number(currentMonthlen.value) - Number(lastMonthlen.value)
-      chart3.value.setOption(
+      if(chart3.value){
+        chart3.value.setOption(
         {
           series: [{
             data: [
@@ -743,7 +747,8 @@ const statisticalData = () => {
             ]
           }]
         }
-      )
+        )
+      }
     }
   })
 

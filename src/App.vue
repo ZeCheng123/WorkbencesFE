@@ -168,15 +168,17 @@ onMounted(() =>{
   nextTick(() =>{
     if(mainElement.value)
     {
-      let standardScale = (("100%") as any) / (("100%") as any);
+      let standardScale = 1;
       window.addEventListener("resize", _.debounce(function (){
         if(proxy.$route.path!="/login" && proxy.$route.path!="/validate"){
           let docHeight = document.body.clientHeight;
           let docWidth = document.body.clientWidth;
           if(docWidth < 1680)
           {
-            let currentSacle = docHeight / docWidth;
+            // let currentSacle = docHeight / docWidth;
+            let currentSacle = docWidth / docHeight;
             let [scale, translate]:any = [0,0];
+            console.log("宽："+docWidth,"高:" + docHeight);
             if(currentSacle < standardScale){
               // 以高度计算
               scale = docHeight / 1080;
@@ -189,18 +191,20 @@ onMounted(() =>{
               scale = (docWidth-20) / 1920;
               let shouleHeight = 1080 * scale;
               let offsetHeight = docHeight - shouleHeight;
-              translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
+              translate =  offsetHeight > 0 ? `translate(0, 0)` : "";
             }
             // mainElement.value.style.cssText = `
             //   transform: scale(${scale}) ${translate};transform-origin: top left;
             //   min-width: 1920px;
             //   min-height: 1080px;
             // `;
-            mainElement.value.style.cssText = `
-              transform: scale(${scale}) ${translate};transform-origin: top left;
-              min-width: 1920px;
-              height: ${document.body.clientHeight / scale}px;
-            `;
+            if(mainElement.value){
+                mainElement.value.style.cssText = `
+                transform: scale(${scale}) ${translate};transform-origin: top left;
+                min-width: 1920px;
+                height: ${document.body.clientHeight / scale}px;
+              `;
+            }
           }
           else{
             if(mainElement.value){
@@ -223,7 +227,7 @@ onMounted(() =>{
       window.addEventListener("orientationchange", () =>{
         setTimeout(() => {
           // 在需要刷新的地方调用
-          window.location.reload();
+          // window.location.reload();
         }, 66);
       })
       if(document.createEvent){

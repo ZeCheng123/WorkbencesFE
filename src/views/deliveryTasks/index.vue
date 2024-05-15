@@ -68,7 +68,7 @@
 				<el-table-column prop="id" label="任务编号" />
 				<el-table-column prop="distributorName" label="经销商" />
 				<el-table-column prop="followerName" label="经销商负责人" />
-				<el-table-column prop="accountName" label="关联客户" />
+				<el-table-column prop="accountNameLabel" label="关联客户" />
 				<!-- <el-table-column prop="serviceCaseNeoId" label="剩余时间" /> -->
 				<!-- <el-table-column prop="serviceCaseId" label="关联的服务工单id" :visible="true"/> -->
 				<!-- <el-table-column prop="fieldJobNeoId" label="任务结束时间" />  -->
@@ -129,7 +129,7 @@
 		orderStatus: "",
 	})
 	
-	const tableData = ref([])
+	const tableData = ref<any>([])
 	
 	onMounted(() => {
 		getList(false);
@@ -192,9 +192,10 @@
 			status:row.status,
 			distributorName:row.distributorName,
 			followerName:row.followerName,
-			accountName:row.accountName,
+			accountName:row.accountNameLabel,
 			createdTime:row.createdTime,
-			createdBy:row.createdBy
+			createdBy:row.createdBy,
+			mergedOrderNo:row.mergedOrderNo
 			} ,
 		});
 	}

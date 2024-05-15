@@ -3,7 +3,7 @@
     <span class="header"><span class="title">问题提报</span></span>
     <span class="search">
       <span class="left">
-        <el-form :model="form" :rules="rule" label-width="80px" label-position="left">
+        <el-form :model="form"  label-width="80px" label-position="left">
           <el-form-item label="问题编号">
             <el-input placeholder="请输入问题编号" v-model="form.problemNo" />
           </el-form-item>
@@ -14,7 +14,7 @@
             <el-input placeholder="请输入客户电话" v-model="form.customerPhone" />
           </el-form-item>
         </el-form>
-        <el-form :model="form" :rules="rule" label-width="80px" label-position="left">
+        <el-form :model="form"  label-width="80px" label-position="left">
           <el-form-item label="创建时间">
             <el-date-picker v-model="form.createDate" type="daterange" range-separator="~" start-placeholder="开始时间"
               end-placeholder="结束时间" format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
@@ -287,7 +287,7 @@ const problemReportingRule = ref({
 
 const tableData = ref([]);
 
-const orderList = ref([]);
+const orderList = ref<any>([]);
 
 const extralUserData=ref([] as any)
 
@@ -503,12 +503,12 @@ const beforeUpload = (file) => {
 //重置按钮
 const resetting = () => {
   console.log("aaaa");
-  form.problemNo = null;
-  form.customerName = null;
-  form.customerPhone = null;
-  form.filterMethod = null;
+  form.problemNo = "";
+  form.customerName = "";
+  form.customerPhone = "";
+  form.filterMethod = "";
   form.createDate = [];
-  form.orderStatus = null;
+  form.orderStatus = "";
   getTableDataList();
 };
 const handleCurrentChange = (val: number) => {

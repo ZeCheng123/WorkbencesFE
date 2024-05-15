@@ -83,6 +83,10 @@
             <span class="label">提报人电话：</span>
             <span class="value">{{ currentItem["externalUserPhone"] }}</span>
           </span>
+          <span class="field">
+            <span class="label">购买门店名称：</span>
+            <span class="value">{{ currentItem["purchaseStoreName"] }}</span>
+          </span>
         </span>
       </span>
       <span class="title">其他字段</span>
@@ -1786,6 +1790,11 @@ const bindServiceTicket = (row, editOrNot) => {
     };
     createOrNot = false;
   } else {
+    const userInfoJsonStr =sessionStorage.getItem("userinfo");
+    let userInfo =null;
+    if(userInfoJsonStr){
+      userInfo = JSON.parse(userInfoJsonStr);
+    }
     //创建新的售后工单
     params = {
       serviceCase__c: currentItem.value["neoid"],
@@ -1803,8 +1812,8 @@ const bindServiceTicket = (row, editOrNot) => {
       storeName: currentItem.value["storeName"],
       storeNo: orderDetails.value["storeNo"],
       status__c: "1",
-      reporter__c: currentItem.value["externalUserName"],
-      reporterPhone__c: currentItem.value["externalUserPhone"],
+      reporter__c: userInfo?userInfo["name"]:"",
+      reporterPhone__c: userInfo?userInfo["phone"]:"",
       ticketSource__c: "1",
       orderNeoId: orderDetails.value["neoid"],
       orderType__c: orderDetails.value["orderType__c"],
@@ -1993,7 +2002,8 @@ const finishDeliveryOrder = () => {
   params["orderNo__c"] = orderDetails.value["po"];
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
-  params["status"] = 0;
+  params["status"] = 1;
+  params["address"]=orderDetails.value["customerAddress"];
   addFieldJob(params)
     .then((res: any) => {
       let data = res.data.data;

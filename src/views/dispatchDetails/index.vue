@@ -113,37 +113,21 @@
         </span>
       </span>
     </span>
-    <!-- <span class="service_evaluation_list">
+    <span class="service_evaluation_list">
       <span class="table_title">服务评价</span>
       <span class="table_content">
         <el-table
           :data="tableDataServiceEvaluation"
           :stripe="false"
           style="width: 100%"
+          max-height="100"
         >
-          <el-table-column prop="text1" label="服务评价号" />
-          <el-table-column prop="text2" label="状态" />
-          <el-table-column prop="text3" label="满意度" />
-          <el-table-column prop="text4" label="服务技工" />
-          <el-table-column prop="text5" label="创建时间" />
-          <el-table-column prop="text6" label="操作" width="80px">
-            <template #default="scope">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  color: #165dff;
-                  cursor: pointer;
-                "
-                @click="console.log(scope)"
-              >
-                查看
-              </div>
-            </template>
-          </el-table-column>
+          <el-table-column prop="sNumber" label="序号" />
+          <el-table-column prop="type" label="评价类型" />
+          <el-table-column prop="satisfaction" label="满意度" />
         </el-table>
       </span>
-    </span> -->
+    </span>
     <span class="dispatch_attachment_list">
       <span class="table_title">派工附件</span>
       <span class="table_content">
@@ -215,7 +199,8 @@
 import { ref, computed, getCurrentInstance, reactive,onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
-import { getExternalUser, getFieldJob } from "../../api/common";
+import { getExternalUser, getFieldJob, getInvestigation } from "../../api/common";
+import { NO } from "@vue/shared";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -287,41 +272,41 @@ const dispatchWorkerStatusOption = ref([
 ])
 
 const tableDataOrderDetials = ref([
-  {
-    text1: "CS0011-06665-01",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
-  {
-    text1: "CS0011-06665-01",
-    text2: "门套",
-    text3: "示例字段...",
-    text4: "混油米灰1#",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "门套",
+  //   text3: "示例字段...",
+  //   text4: "混油米灰1#",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "门套",
+  //   text3: "示例字段...",
+  //   text4: "混油米灰1#",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
+  // {
+  //   text1: "CS0011-06665-01",
+  //   text2: "门套",
+  //   text3: "示例字段...",
+  //   text4: "混油米灰1#",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
 ])
 
-const tableDataServiceEvaluation = ref([
-  {
-    text1: "SU2024030101",
-    text2: "未评价",
-    text3: "待填写",
-    text4: "李工",
-    text5: "2021-02-28 10:30:50",
-    text6: "",
-  },
+const tableDataServiceEvaluation = ref<any>([
+  // {
+  //   text1: "SU2024030101",
+  //   text2: "未评价",
+  //   text3: "待填写",
+  //   text4: "李工",
+  //   text5: "2021-02-28 10:30:50",
+  //   text6: "",
+  // },
 ])
 
 const tableDataDispatchAttachment = ref([
@@ -394,12 +379,26 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
           });
           tableDataDispatchAttachment.value.push({picNo:data["scenePicture"].join(","),type:'现场墙面保护',goodsPicture:scenePicture})
         }
+        if(data["beforeInstallPicture"]!=undefined && data["beforeInstallPicture"].length>0){
+          var beforeInstallPicture=[] as any;
+          data["beforeInstallPicture"].forEach(item => {
+            beforeInstallPicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["beforeInstallPicture"].join(","),type:'安装前图片',goodsPicture:beforeInstallPicture})
+        }
         if(data["afterInstallPicture"]!=undefined && data["afterInstallPicture"].length>0){
           var afterInstallPicture=[] as any;
           data["afterInstallPicture"].forEach(item => {
             afterInstallPicture.push(baseUrl+item)
           });
           tableDataDispatchAttachment.value.push({picNo:data["afterInstallPicture"].join(","),type:'安装后图片',goodsPicture:afterInstallPicture})
+        }
+        if(data["afterInstallScenePicture"]!=undefined && data["afterInstallScenePicture"].length>0){
+          var afterInstallScenePicture=[] as any;
+          data["afterInstallScenePicture"].forEach(item => {
+            afterInstallScenePicture.push(baseUrl+item)
+          });
+          tableDataDispatchAttachment.value.push({picNo:data["afterInstallScenePicture"].join(","),type:'安装后现场环境图片',goodsPicture:afterInstallScenePicture})
         }
         if(data["completePicture"]!=undefined && data["completePicture"].length>0){
           var completePicture=[] as any;
@@ -408,22 +407,25 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
           });
           tableDataDispatchAttachment.value.push({picNo:data["completePicture"].join(","),type:'完工证明',goodsPicture:completePicture})
         }
-        if(showMsg)
-				{
-					ElMessage({
-						message: '查询成功',
-						type: 'success'
-					})
-				}
-			} else {
-        if(showMsg){
-          ElMessage({
-            message: '获取数据失败',
-            type: 'error'
-  				})
+        let invesParams={
+          "type": "field_job",
+          "recordId": fieldJobData.value["neoId"]
         }
-				
-			}
+        getInvestigation(invesParams).then(res=>{
+          let data=res.data;
+          if(data.code=="success"&&data.data&&data.data.length>0){
+            let details=data.data[data.data.length-1]
+            // console.log(Object.keys(details))
+            let i=1
+            Object.keys(details).forEach(keyItem=>{
+              let newRow={"sNumber":i,"type":keyItem,"satisfaction":details[keyItem]}
+              tableDataServiceEvaluation.value.push(newRow)
+              i=i+1
+            })
+            changeStep(3);
+          }
+        })
+			} 
 
 		}).catch((error: any) => {
 			// 显示请求失败的提示框

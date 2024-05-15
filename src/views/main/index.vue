@@ -23,12 +23,12 @@
             <div class="menu" @click="clickMenu('delivery_tasks')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">交付任务</label>
-              <span class="tips">1</span>
+              <!-- <span class="tips">1</span> -->
             </div>
             <div class="menu" @click="clickMenu('historical_orders')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">历史订单</label>
-              <span class="tips">5</span>
+              <!-- <span class="tips">5</span> -->
             </div>
             <div class="line"></div>
           </div>
@@ -36,7 +36,7 @@
             <div class="menu" @click="clickMenu('dispatch_list')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">派工单</label>
-              <span class="tips">1</span>
+              <!-- <span class="tips">1</span> -->
             </div>
             <div class="menu">
               <!-- @click="clickMenu('service_workorder')" -->
@@ -57,7 +57,7 @@
             <div class="menu" @click="clickMenu('aftersales_workorder')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">售后工单</label>
-              <span class="tips">2</span>
+              <!-- <span class="tips">2</span> -->
             </div>
             <div class="menu"></div>
             <div class="line2"></div>
@@ -89,7 +89,7 @@
             <span class="type message">消息</span>
             <span class="tips">{{ item.text }}</span>
             <span class="important" v-if="item.important == 1">重要</span>
-            <span class="important" v-else="item.important == 0"></span>
+            <!-- <span class="important" v-else="item.important == 0"></span> -->
           </div>
         </div>
 
@@ -596,18 +596,19 @@ const statisticalData = () => {
       otherCount.value = other.value
       let difference: number = currenMoney - lastMoney
       let percentageChange = (difference / lastMoney) * 100;
-      percentage.value = Number(percentageChange.toFixed(4));
-      if(chart1.value){
+      percentage.value = Number(percentageChange.toFixed(4))
+      if (chart1.value !== null) {
         chart1.value.setOption(
-        {
-          series: [{
-            data: [
-              { value: distributionCount.value, name: "总部分配" },
-              { value: retailCount.value, name: "零售订单" },
-              { value: otherCount.value, name: "其他" },
-            ]
-          }]
-        })
+          {
+            series: [{
+              data: [
+                { value: distributionCount.value, name: "总部分配" },
+                { value: retailCount.value, name: "零售订单" },
+                { value: otherCount.value, name: "其他" },
+              ]
+            }]
+          }
+        )
       }
     }
   });
@@ -675,20 +676,20 @@ const statisticalData = () => {
       lastMonthTask.value = lastMonth.value.length
       currentMonthTask.value = currentMonth.value.length
       taskNumber.value = Number(currentMonthTask.value) - Number(lastMonthTask.value)
-      if(chart2.value){
-         chart2.value.setOption(
-        {
-          series: [{
-            data: [
-              { value: taskPending.value, name: "待处理" },
-              { value: taskExtract.value, name: "提货" },
-              { value: taskWarehousing.value, name: "入库" },
-              { value: taskDelivery.value, name: "配送" },
-              { value: taskInstall.value, name: "安装" },
-              { value: taskComplete.value, name: "完成" }
-            ]
-          }]
-        }
+      if (chart2.value !== null) {
+        chart2.value.setOption(
+          {
+            series: [{
+              data: [
+                { value: taskPending.value, name: "待处理" },
+                { value: taskExtract.value, name: "提货" },
+                { value: taskWarehousing.value, name: "入库" },
+                { value: taskDelivery.value, name: "配送" },
+                { value: taskInstall.value, name: "安装" },
+                { value: taskComplete.value, name: "完成" }
+              ]
+            }]
+          }
         )
       }
     }
@@ -736,19 +737,20 @@ const statisticalData = () => {
       lastMonthlen.value = lastMonth.value.length
       currentMonthlen.value = currentMonth.value.length
       JobBynumber.value = Number(currentMonthlen.value) - Number(lastMonthlen.value)
-      if(chart3.value){
+      if (chart3.value !== null) {
         chart3.value.setOption(
-        {
-          series: [{
-            data: [
-              { value: pendingCount.value, name: "待处理" },
-              { value: progressCount.value, name: "进行中" },
-              { value: completeCount.value, name: "已完成" },
-            ]
-          }]
-        }
+          {
+            series: [{
+              data: [
+                { value: pendingCount.value, name: "待处理" },
+                { value: progressCount.value, name: "进行中" },
+                { value: completeCount.value, name: "已完成" },
+              ]
+            }]
+          }
         )
       }
+
     }
   })
 

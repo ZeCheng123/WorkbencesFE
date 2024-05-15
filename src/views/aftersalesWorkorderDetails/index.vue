@@ -149,10 +149,10 @@
         <img src="@/assets/images/comment.png" alt="" />
         <span class="initiate_comments" @click="initiateComments">发起评论</span>
       </div>
-      <div class="right">
-        <el-button type="primary" class="primary_btn" @click="openDialog2(1)">完善问题描述</el-button>
+      <!-- <div class="right"> -->
+        <!-- <el-button type="primary" class="primary_btn" @click="openDialog2(1)">完善问题描述</el-button> -->
         <!-- <el-button type="primary" class="primary_btn" @click="openDialog2(2)">定义处理方式</el-button> -->
-      </div>
+      <!-- </div> -->
     </span>
     <div class="comment" v-for="item in commentList" :key="item.date">
       <div class="userinfo">

@@ -2003,6 +2003,7 @@ const finishDeliveryOrder = () => {
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
   params["status"] = 1;
+  params["address"]=orderDetails.value["customerAddress"];
   addFieldJob(params)
     .then((res: any) => {
       let data = res.data.data;

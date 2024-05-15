@@ -23,12 +23,12 @@
             <div class="menu" @click="clickMenu('delivery_tasks')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">交付任务</label>
-              <span class="tips">1</span>
+              <!-- <span class="tips">1</span> -->
             </div>
             <div class="menu" @click="clickMenu('historical_orders')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">历史订单</label>
-              <span class="tips">5</span>
+              <!-- <span class="tips">5</span> -->
             </div>
             <div class="line"></div>
           </div>
@@ -36,7 +36,7 @@
             <div class="menu" @click="clickMenu('dispatch_list')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">派工单</label>
-              <span class="tips">1</span>
+              <!-- <span class="tips">1</span> -->
             </div>
             <div class="menu">
               <!-- @click="clickMenu('service_workorder')" -->
@@ -57,7 +57,7 @@
             <div class="menu" @click="clickMenu('aftersales_workorder')">
               <img class="icon" src="@/assets/images/menu_icon.png" alt="" />
               <label class="name">售后工单</label>
-              <span class="tips">2</span>
+              <!-- <span class="tips">2</span> -->
             </div>
             <div class="menu"></div>
             <div class="line2"></div>
@@ -89,7 +89,7 @@
             <span class="type message">消息</span>
             <span class="tips">{{ item.text }}</span>
             <span class="important" v-if="item.important == 1">重要</span>
-            <span class="important" v-else="item.important == 0"></span>
+            <!-- <span class="important" v-else="item.important == 0"></span> -->
           </div>
         </div>
 

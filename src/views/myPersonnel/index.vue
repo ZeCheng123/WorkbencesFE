@@ -231,7 +231,7 @@ const form = ref({
 })
 
 const dialogForm = ref({
-    userType: "1",
+    userType: "",
     name: "",
     phone: "",
     status: 1,

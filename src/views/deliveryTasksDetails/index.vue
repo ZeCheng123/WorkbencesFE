@@ -1040,6 +1040,7 @@ const finishInstallationOrder = async () => {
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
     fieldJobOrderId: orderData.value.neoid,
+    orderNo__c:orderData.value.po,
     mergedOrderNo:mergedOrderNo==undefined?"":mergedOrderNo,
     name:orderData.value.accountName__C+"的安装派工单",
     type: "安装派工",
@@ -1050,7 +1051,7 @@ const finishInstallationOrder = async () => {
     appointmentEndTime: installationOrderForm.appointmentEndTime,
     followerId:installationOrderForm.username,
     address:orderData.value.customerAddress==undefined?"":orderData.value.customerAddress,
-    status:0,
+    status:1,
     source__c:1
   }
     addFieldJob(params).then((res : any) => {
@@ -1116,7 +1117,7 @@ const finishDeliveryOrder =  () => {
   params["picture"] = params.filePath;
   params["goodsPicture"] = params.filePath;
   params["name"] = orderData.value.accountName__C+"的配送派工单";
-  params["status"]=0;
+  params["status"]=1;
   params["orderNo__c"] = orderData.value["po"];
   params["source__c"]=1;
   params["fieldJobOrderId"]=orderData.value.neoid;

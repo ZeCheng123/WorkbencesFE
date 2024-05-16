@@ -93,6 +93,7 @@ const getAuth = async () => {
   return new Promise(function (resolve) {
     wecom({ code: code.value, userType: 2 }).then(res => {
       let rtData = res.data;
+      alert("rtData:错误"+JSON.stringify(rtData))
       if (rtData.code == "success") {
         let data = rtData.data || {};
         userInfo.value = data;
@@ -157,7 +158,6 @@ const clickBtn = () => {
     let rtData = res.data;
     if (rtData.code == "success") {
       let data = rtData.data || {};
-      alert("4."+JSON.stringify(data["token"]));
       localStorage.setItem("token", data["token"]);
       sessionStorage.setItem("token", data["token"]);
       addExternalUserAction(data)
@@ -180,22 +180,20 @@ const addExternalUserAction = async (data) => {
     userId: userInfo.value.userId,
     userType: 2
   }
-  alert("5.新增用户接口参数:" + JSON.stringify(params))
   addExternalUser(params)
     .then((res: any) => {
-      alert("6-"+JSON.stringify(res.data));
       if (res?.data?.code == "success") {
         //成功之后再次调用企微登录方法
         getAuth()
       } else {
         console.log("失败")
-        proxy.$message.error("新增失败1");
+        proxy.$message.error("新增失败");
       }
     })
     .catch((error: any) => {
       // alert("新增失败!");
       console.error("新增失败:", error)
-      proxy.$message.error("新增失败2",error);
+      proxy.$message.error("新增失败",error);
     })
 }
 

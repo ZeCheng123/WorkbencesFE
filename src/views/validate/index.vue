@@ -56,7 +56,6 @@ onMounted(() => {
   const searchParams = new URLSearchParams(paramsStr);
   const wxcode = searchParams.get('code');
   if (wxcode) {
-    // alert("1.wxcode:" + wxcode)
     code.value = wxcode
     //调用企微登录接口
     getAuth();
@@ -92,13 +91,12 @@ const getAuth = async () => {
   return new Promise(function (resolve) {
     wecom({ code: code.value, userType: 2 }).then(res => {
       let rtData = res.data;
+      console.info("wecom",res)
       if (rtData.code == "success") {
         let data = rtData.data || {};
         userInfo.value = data;
         //token存在时直接进入主界面
         if (userInfo.value.token) {
-          // alert("3.userInfo.value.token:" + JSON.stringify(data))
-
           localStorage.setItem("token", data["token"]);
           sessionStorage.setItem("token", data["token"]);
           let newData = {
@@ -122,7 +120,7 @@ const getAuth = async () => {
         }
 
       }else if(rtData.code == "get_wxwork_user_failed"){
-        proxy.$router.push({ path: "src/views/login", query: {} });
+        proxy.$router.push({ path: "/login", query: {} });
       }
       else{
         console.log("错误",res?.message)
@@ -156,15 +154,15 @@ const clickBtn = () => {
   }
   login({ phone: form.phone, captcha: form.code, userType: 2 }).then(res => {
     let rtData = res.data;
+    console.info("login",res)
     if (rtData.code == "success") {
       let data = rtData.data || {};
-      // localStorage.setItem("token", data["token"]);
-      // sessionStorage.setItem("token", data["token"]);
+      localStorage.setItem("token", data["token"]);
+      sessionStorage.setItem("token", data["token"]);
       addExternalUserAction(data)
       // proxy.$router.push("/main");
     }
     else {
-      // alert("111111"+JSON.stringify(rtData));
       proxy.$message.error("接口错误："+res?.message);
     }
   })

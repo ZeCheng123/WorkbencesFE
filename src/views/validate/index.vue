@@ -157,13 +157,15 @@ const clickBtn = () => {
     let rtData = res.data;
     if (rtData.code == "success") {
       let data = rtData.data || {};
-      alert("4."+JSON.stringify(data));
+      alert("4."+JSON.stringify(data["token"]));
+      localStorage.setItem("token", data["token"]);
+      sessionStorage.setItem("token", data["token"]);
       addExternalUserAction(data)
       // proxy.$router.push("/main");
     }
     else {
       // alert("111111"+JSON.stringify(rtData));
-      proxy.$message.error("接口错误："+res?.message);
+      proxy.$message.error("接口错误1："+res?.message);
     }
   })
 }

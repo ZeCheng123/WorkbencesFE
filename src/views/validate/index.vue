@@ -81,7 +81,6 @@ const getSendCode = () => {
   }
   sendCode({ phone: form.phone }).then(res => {
     let rtData = res.data;
-    alert("111111"+JSON.stringify(res));
     if (rtData.code == "success") {
       time_down_count.value = 60;
       setTimer();
@@ -93,11 +92,9 @@ const getAuth = async () => {
   return new Promise(function (resolve) {
     wecom({ code: code.value, userType: 2 }).then(res => {
       let rtData = res.data;
-      alert("rtData:错误"+JSON.stringify(rtData))
       if (rtData.code == "success") {
         let data = rtData.data || {};
         userInfo.value = data;
-        // alert("2.userInfo:" + JSON.stringify(data))
         //token存在时直接进入主界面
         if (userInfo.value.token) {
           // alert("3.userInfo.value.token:" + JSON.stringify(data))
@@ -124,7 +121,10 @@ const getAuth = async () => {
           // phone.value = form.phone
         }
 
-      }else{
+      }else if(rtData.code == "get_wxwork_user_failed"){
+        proxy.$router.push({ path: "src/views/login", query: {} });
+      }
+      else{
         console.log("错误",res?.message)
         proxy.$message.error("接口错误:",res?.message);
         // alert("token:错误"+JSON.stringify(rtData))
@@ -158,14 +158,14 @@ const clickBtn = () => {
     let rtData = res.data;
     if (rtData.code == "success") {
       let data = rtData.data || {};
-      localStorage.setItem("token", data["token"]);
-      sessionStorage.setItem("token", data["token"]);
+      // localStorage.setItem("token", data["token"]);
+      // sessionStorage.setItem("token", data["token"]);
       addExternalUserAction(data)
       // proxy.$router.push("/main");
     }
     else {
       // alert("111111"+JSON.stringify(rtData));
-      proxy.$message.error("接口错误1："+res?.message);
+      proxy.$message.error("接口错误："+res?.message);
     }
   })
 }

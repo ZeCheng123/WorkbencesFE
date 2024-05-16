@@ -1,6 +1,10 @@
 #app, body, html {width: 100vw;height: 100vh;background: #F6F6F7; box-sizing: border-box; margin:0px; overflow-x: hidden; overflow-y: hidden;}
 #app {padding: 0px 16px 16px 16px;}
 
+@media screen and (max-width: 1080px){
+  #app, body, html {width: 96vw;height: 98vh; box-sizing: border-box;  margin:auto auto; overflow-x: hidden; overflow-y: hidden;}
+}
+
 /*谷歌、safari、qq浏览器、360浏览器滚动条样式*/
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {

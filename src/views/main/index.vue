@@ -170,6 +170,7 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted } from "vue"
 import { getServiceCasePage, createServiceCase, getOrderListByPage, getFieldJobByPage, getTaskByPage } from '../../api/common.js'
+import  vconsole  from "vconsole"
 import * as echarts from "echarts"
 import moment from 'moment';
 const { proxy }: any = getCurrentInstance()
@@ -373,6 +374,7 @@ const option3 = computed(() => {
 })
 
 onMounted(() => {
+  // new vconsole();
   proxy.$nextTick(() => {
     initEchart();
   })

@@ -1254,10 +1254,15 @@ onMounted(()=>{
           const offsetHeight = docHeight - shouleHeight;
           translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
         }
-        mainRef.value.style.height = `calc(${document.body.clientHeight / scale}px - ${40 * scale}px - 10px)`;
+        if(mainRef.value){
+          mainRef.value.style.height = `calc(${document.body.clientHeight / scale}px - ${40 * scale}px - 10px)`;
+        }
       }
       else{
-        mainRef.value.style.height = `calc(${document.body.clientHeight}px - 40px)`;
+        if(mainRef.value){
+          mainRef.value.style.height = `calc(${document.body.clientHeight}px - 40px)`;
+        }
+
       }
   },0));
   if(document.createEvent){

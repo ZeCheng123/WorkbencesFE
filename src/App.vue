@@ -1,5 +1,5 @@
 <template>
-  <div style="width:100%; height: calc(100% - 16px);" ref="mainElement">
+  <div style="width:98vw; height: calc(100% - 16px);" ref="mainElement">
     <div class="nav_list" id="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login' && proxy.$route.path!='/validate'">
        <ul>
           <li v-for="(record, index) in routes" :key="index" @click="clickNav(record,index)" >
@@ -85,16 +85,18 @@ watch(() => proxy.$route,
             mainElement.value.style.height = "calc(100% - 16px)";
           }
         }
-
-        if(document.createEvent){
+        nextTick(() =>{
+          console.log("刷新");
+          if(document.createEvent){
           var event = document.createEvent("HTMLEvents");
           event.initEvent("resize",true,true);
           window.dispatchEvent(event);
-        }
-        else if(typeof Event === 'function')
-        {
-          window.dispatchEvent(new Event('resize'));
-        }
+          }
+          else if(typeof Event === 'function')
+          {
+            window.dispatchEvent(new Event('resize'));
+          }
+        })
       }
     );
 
@@ -168,7 +170,7 @@ onMounted(() =>{
   nextTick(() =>{
     if(mainElement.value)
     {
-      let standardScale = 1;
+      const standardScale = (("100%") as any) / (("100%") as any);
       window.addEventListener("resize", _.debounce(function (){
         if(proxy.$route.path!="/login" && proxy.$route.path!="/validate"){
           let docHeight = document.body.clientHeight;
@@ -176,28 +178,22 @@ onMounted(() =>{
           if(docWidth < 1680)
           {
             // let currentSacle = docHeight / docWidth;
-            let currentSacle = docWidth / docHeight;
+            let currentSacle = docHeight / docWidth;
             let [scale, translate]:any = [0,0];
-            console.log("宽："+docWidth,"高:" + docHeight);
-            if(currentSacle < standardScale){
+            if(currentSacle > standardScale){
               // 以高度计算
-              scale = docHeight / 1080;
+              scale = (docHeight - 20) / 1080;
               let shouleWidth = 1920 * scale;
               let offsetWidth = docWidth - shouleWidth;
               translate = offsetWidth > 0 ? `translate(${offsetWidth / 2}px, 0)` : "";
             }
             else{
               // 以宽度计算
-              scale = (docWidth-20) / 1920;
+              scale = (docWidth - 20) / 1920;
               let shouleHeight = 1080 * scale;
               let offsetHeight = docHeight - shouleHeight;
-              translate =  offsetHeight > 0 ? `translate(0, 0)` : "";
+              translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
             }
-            // mainElement.value.style.cssText = `
-            //   transform: scale(${scale}) ${translate};transform-origin: top left;
-            //   min-width: 1920px;
-            //   min-height: 1080px;
-            // `;
             if(mainElement.value){
                 mainElement.value.style.cssText = `
                 transform: scale(${scale}) ${translate};transform-origin: top left;
@@ -208,28 +204,30 @@ onMounted(() =>{
           }
           else{
             if(mainElement.value){
-              mainElement.value.style.cssText = "width: 100%; height: calc(100% - 16px)";
+              mainElement.value.style.cssText = "width: 98vw; height: calc(100% - 16px)";
             }
           }
           let appEl = document.getElementById("app");
           if(appEl && proxy.$route.path!="/main"){
+            // appEl.style.cssText = `padding: 0px 16px 16px 16px;`
             appEl.style.cssText = `padding: 0px 16px 16px 16px;`
           }
         }
         else{
           let appEl = document.getElementById("app");
-          mainElement.value.style.cssText = `width: 100%; height: 100%`;
+          if(mainElement.value){
+            mainElement.value.style.cssText = `width: 98vw; height: 100%`;
+          }
           if(appEl){
             appEl.style.cssText = `padding: 0px 0px 0px 0px;`
           }
         }
       },66));
-      window.addEventListener("orientationchange", () =>{
-        setTimeout(() => {
-          // 在需要刷新的地方调用
-          // window.location.reload();
-        }, 66);
-      })
+      window.addEventListener("orientationchange", _.debounce(function (){
+          window.location.reload();
+          let resizeEvent = new Event('resize')
+          window.dispatchEvent(resizeEvent)
+      },66));
       if(document.createEvent){
         var event = document.createEvent("HTMLEvents");
         event.initEvent("resize",true,true);

@@ -57,7 +57,7 @@
             <img src="@/assets/images/download.png" alt="" /> </template>下载</el-button>
       </span>
     </span>
-    <span class="table">
+    <span class="table" ref="mainTable">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
         <el-table-column prop="po" label="订单编号" />
         <el-table-column prop="storeName__c" label="专卖店名称" />
@@ -100,6 +100,7 @@
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { getOrderList,getOrderListByPage } from '../../api/common.js'
 import { ElMessage } from "element-plus";
+import _ from "lodash"
 
 const { proxy }: any = getCurrentInstance()
 
@@ -202,8 +203,62 @@ const orderStatusPtions = ref([
 
 const tableData = ref([])
 
+const mainTable = ref(null);
+
 onMounted(() => {
   getList(false);
+  const standardScale = (("100%") as any) / (("100%") as any);
+  window.addEventListener("resize", _.debounce(function (){
+    const docHeight = document.body.clientHeight;
+    const docWidth = document.body.clientWidth;
+    if(docWidth < 1680)
+    {
+      const currentSacle = docHeight / docWidth;
+      let [scale, translate]:any = [0,0];
+      if(currentSacle < standardScale){
+        // 以高度计算
+        scale = docHeight / 1080;
+        const shouleWidth = 1920 * scale;
+        const offsetWidth = docWidth - shouleWidth;
+        translate = offsetWidth > 0 ? `translate(${offsetWidth / 2}px, 0)` : "";
+      }
+      else{
+        // 以宽度计算
+        scale = (docWidth-20) / 1920;
+        const shouleHeight = 1080 * scale;
+        const offsetHeight = docHeight - shouleHeight;
+        translate =  offsetHeight > 0 ? `translate(0, ${offsetHeight / 2}px)` : "";
+      }
+      if(currentSacle < 0.52){
+        let height = (document.body.clientHeight / scale) - (242 * scale) - 10;
+        if(mainTable.value){
+          mainTable.value.style.height = `${height}px`;
+        }
+      }
+      else{
+        if(mainTable.value){
+          let height = (document.body.clientHeight * scale) + (242 * scale) + 10;
+        //   mainTable.value.style.height = `unset`;
+          mainTable.value.style.height = `${height}px`;
+        }
+      }
+
+    }
+    else{
+      if(mainTable.value){
+        mainTable.value.style.height = `calc(${document.body.clientHeight}px - 242px)`;
+      }
+    }
+  },66));
+  if(document.createEvent){
+    var event = document.createEvent("HTMLEvents");
+    event.initEvent("resize",true,true);
+    window.dispatchEvent(event);
+  }
+  else if(typeof Event === 'function')
+  {
+    window.dispatchEvent(new Event('resize'));
+  }
 });
 
 const getList = (isTure: boolean) => {

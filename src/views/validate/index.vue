@@ -81,7 +81,7 @@ const getSendCode = () => {
   }
   sendCode({ phone: form.phone }).then(res => {
     let rtData = res.data;
-    alert("111111"+JSON.stringify(rtData));
+    alert("111111"+JSON.stringify(res));
     if (rtData.code == "success") {
       time_down_count.value = 60;
       setTimer();
@@ -157,7 +157,7 @@ const clickBtn = () => {
     let rtData = res.data;
     if (rtData.code == "success") {
       let data = rtData.data || {};
-      // alert("4."+JSON.stringify(data));
+      alert("4."+JSON.stringify(data));
       addExternalUserAction(data)
       // proxy.$router.push("/main");
     }

@@ -345,7 +345,7 @@
                   :value="item.id"
                 />
               </el-select>
-              <span class="custom_item"><img src="@/assets/images/add.png" alt="" /></span>
+              <span class="custom_item" @click="changeToMyPerson"><img src="@/assets/images/add.png" alt="" /></span>
             </el-form-item>
             <el-form-item label="联系方式" prop="contactTelephone">
               <el-input
@@ -541,7 +541,7 @@
                   :value="item.id"
                 />
               </el-select>
-              <span class="custom_item1">
+              <span class="custom_item1"  @click="changeToMyPerson">
                 <img src="@/assets/images/add.png" alt="" />
               </span>
             </el-form-item>
@@ -788,7 +788,6 @@ const defaultStartTime  = new Date();
 
 const route = useRoute()
 const taskid = route.query.id
-const serviceCaseNeoId = route.query.serviceCaseId
 const orderId = route.query.orderId
 // const fieldJobNeoId = route.query.fieldJobNeoId
 const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0)+1:1
@@ -797,7 +796,6 @@ const mergedOrderNo = route.query.mergedOrderNo
 
 const taskDetails=ref({
   taskid:route.query.id,
-  serviceCaseNeoId:route.query.serviceCaseId,
   orderId:route.query.orderId,
   taskStatus:taskStatus,
   accountName:route.query.accountName,
@@ -1276,37 +1274,20 @@ onMounted(()=>{
   }
 })
 
-const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
-  getFieldJob(fieldJobId).then((res : any) => {
-			let data = res.data.data
-			if (data!=undefined&&data.length > 0) {
+// const getTaskDestails = (showMsg: boolean,fieldJobId:any)=>{
+//   getTask(fieldJobId).then((res : any) => {
+// 			let data = res.data.data
+// 			if (data!=undefined&&data.length > 0) {
 
-				if(showMsg)
-				{
-					ElMessage({
-						message: '查询成功',
-						type: 'success'
-					})
-				}
-			} else {
-        if(showMsg){
-          ElMessage({
-            message: '获取数据失败',
-            type: 'error'
-  				})
-        }
+// 			} else {
 				
-			}
+// 			}
 
-		}).catch((error: any) => {
-			// 显示请求失败的提示框
-			ElMessage({
-				message: '请求数据失败，请重试',
-				type: 'error'
-			});
-			console.error('请求数据失败:', error);
-		});
-}
+// 		}).catch((error: any) => {
+// 			// 显示请求失败的提示框
+// 			console.error('请求数据失败:', error);
+// 		});
+// }
 
 ///delivery
 const handleSuccessDelivery = (res) => {
@@ -1560,6 +1541,10 @@ const currentStepToPeiSong=()=>{
 const disabledPastDate=(time:any)=>{
   return time.getTime()< Date.now()-24*60*60*1000
 }
+
+const changeToMyPerson=(()=>{
+  proxy.$router.push('my_personnel')
+})
 </script>
 
 <style lang="scss" scoped>

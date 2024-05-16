@@ -341,8 +341,23 @@
 		mergeTask(params).then(res=>{
 			if(res.data.code=='success'){
 				proxy.$message.success("合并成功!");
-				console.log("mergeTask",res)
+				console.log("mergeTask",res.data)
+				let newTask=res.data.data
 				getList(false)
+				proxy.$router.push({
+					path: "/delivery_tasks_details", query: {
+						id: newTask.id,
+						orderId: newTask.orderId,
+						taskType: newTask.taskType,
+						status: newTask.status,
+						distributorName: newTask.distributorName,
+						followerName: newTask.followerName,
+						accountName: selectData[0]["accountNameLabel"],
+						createdTime: formatDate(new Date()),
+						createdBy: newTask.createdBy,
+						mergedOrderNo: newTask.mergedOrderNo
+					},
+				});
 			}else{
 				proxy.$message.error("合并失败:"+res.data.message);
 			}
@@ -355,6 +370,19 @@
 			console.error('合并交付失败:', error);
 		})
 	};
+	function formatDate(date) {
+		const year = date.getFullYear();
+		const month = padZero(date.getMonth() + 1); // 月份从0开始
+		const day = padZero(date.getDate());
+		const hours = padZero(date.getHours());
+		const minutes = padZero(date.getMinutes());
+		const seconds = padZero(date.getSeconds());
+
+		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	}
+	function padZero(num, length = 2) {
+		return String(num).padStart(length, '0');
+	}
 </script>
 
 <style lang="scss" scoped>

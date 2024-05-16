@@ -319,6 +319,7 @@
               <el-table-column prop="treeSpecies__c" label="树种" />
               <el-table-column prop="paintColor__c" label="油漆颜色 " />
               <el-table-column prop="fscProductSpec" label="尺寸 " />
+              <el-table-column prop="note" label="售后回复 " />
               <el-table-column prop="ticketClassification" label="问题大类">
                 <template #default="scope">
                   <div style="display: flex; align-items: center">
@@ -446,7 +447,7 @@
                 placeholder="查找或输入服务人员姓名">
                 <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
               </el-select>
-              <span class="custom_item"><img src="@/assets/images/add.png" alt="" /></span>
+              <span class="custom_item" @click="changeToMyPerson"><img src="@/assets/images/add.png" alt="" /></span>
             </el-form-item>
             <el-form-item label="联系方式" prop="contactTelephone">
               <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="查找或输入配送司机手机号码" />
@@ -1326,11 +1327,10 @@ const onCahngeUserSelectForDelivery = (event) => {
 
 const SaveServiceData = () => {
   let params = {
-    followerId: editFollowerAndPDescriptForm["followerId"],
-    follower: editFollowerAndPDescriptForm["follower"],
-    followerName: editFollowerAndPDescriptForm["followerName"],
-    processingProcessAndResults:
-      editFollowerAndPDescriptForm["processingProcessAndResults"],
+    followerId: editFollowerAndPDescriptForm["followerId"]==undefined?currentItem.value["followerId"]:editFollowerAndPDescriptForm["followerId"],
+    follower: editFollowerAndPDescriptForm["follower"]==undefined?currentItem.value["follower"]:editFollowerAndPDescriptForm["follower"],
+    followerName: editFollowerAndPDescriptForm["followerName"]==undefined?currentItem.value["followerName"]:editFollowerAndPDescriptForm["followerName"],
+    processingProcessAndResults: editFollowerAndPDescriptForm["processingProcessAndResults"]==undefined?currentItem.value["processingProcessAndResults"]:editFollowerAndPDescriptForm["processingProcessAndResults"],
     id: id.value,
     questionType: currentItem.value["questionType"],
     name: currentItem.value["name"],
@@ -1745,6 +1745,7 @@ const loadingOrderList = (row) => {
                   val["ticketProblem"] = ticketProblemNames.substring(0,ticketProblemNames.length-1);
                   val["responsibleSubject"] = item["responsibleSubject"];
                   val["solutionDetailsId"] = item["id"]
+                  val["note"] = item["note"]
                 }
               });
             } else {
@@ -2246,6 +2247,9 @@ const filterByFormDialog=()=>{
   })
   console.log(tableData2Filter)
 }
+const changeToMyPerson=(()=>{
+  proxy.$router.push('my_personnel')
+})
 </script>
 
 <style lang="scss" scoped>

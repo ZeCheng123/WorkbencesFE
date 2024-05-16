@@ -41,7 +41,7 @@
       <span class="title"
         >售后工单详情 
         <!-- <el-button class="submit_btn">已提交</el-button> -->
-        <!-- <el-button class="return_btn">总部已退回</el-button> -->
+        <el-button v-if="aftersalesHeaderDetails['reasonReturn']!=undefined&&aftersalesHeaderDetails['reasonReturn']!=''" class="return_btn">退回原因:{{ aftersalesHeaderDetails.reasonReturn }}</el-button>
       </span>
       <span class="main_field">
         <span class="row_field">
@@ -69,7 +69,7 @@
             <span class="value">{{ problemDetails.caseNo}}</span>
           </span>
           <span class="field">
-            <span class="label">所有人：</span>
+            <span class="label">总部售后专员：</span>
             <span class="value"></span>
           </span>
         </span>
@@ -486,6 +486,7 @@
               <el-table-column prop="treeSpecies__c" label="树种" />
               <el-table-column prop="paintColor__c" label="油漆颜色 " />
               <el-table-column prop="fscProductSpec" label="尺寸 " />
+              <el-table-column prop="note" label="售后回复 " />
               <el-table-column prop="ticketClassification" label="问题大类">
                 <template #default="scope">
                   <div style="display:flex;align-items:center;">
@@ -1112,6 +1113,17 @@ const submitDialog = () => {
             item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
             item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
             item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
+            if(item["ticketProblem"] && isArray(item["ticketProblem"])){
+                    let ticketProblemNames="";
+                    item["ticketProblem"].forEach((problem)=>{
+                    ticketProblemNames=ticketProblemNames+
+                    afterSalesIssuesList.value.find(
+                        (aSItem) => aSItem["code"] == problem
+                      ).name+","
+                    })
+                    //console.log(ticketProblemNames.substring(0,ticketProblemNames.length-1))
+                    item["ticketProblem"] = ticketProblemNames.substring(0,ticketProblemNames.length-1);
+                  }
           })
           proxy.$message.success("提交成功")
         }else{
@@ -1132,7 +1144,7 @@ const handleProblemTypeChange = (problemType) => {
     dialog2Form.value.afterSalesIssues=[];
 };
 const selectAll=(event)=>{
-  tableData.value.forEach(item=>{
+  ticketSoluDetailsTable.value.forEach(item=>{
     item["checked"]=event
   })
 };

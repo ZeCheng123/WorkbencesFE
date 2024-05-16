@@ -81,6 +81,7 @@ const getSendCode = () => {
   }
   sendCode({ phone: form.phone }).then(res => {
     let rtData = res.data;
+    alert("111111"+JSON.stringify(rtData));
     if (rtData.code == "success") {
       time_down_count.value = 60;
       setTimer();
@@ -177,22 +178,22 @@ const addExternalUserAction = async (data) => {
     userId: userInfo.value.userId,
     userType: 2
   }
-  // alert("5.新增用户接口参数:" + JSON.stringify(params))
+  alert("5.新增用户接口参数:" + JSON.stringify(params))
   addExternalUser(params)
     .then((res: any) => {
-      // alert(JSON.stringify(res.data));
+      alert("6-"+JSON.stringify(res.data));
       if (res?.data?.code == "success") {
         //成功之后再次调用企微登录方法
         getAuth()
       } else {
         console.log("失败")
-        proxy.$message.error("新增失败");
+        proxy.$message.error("新增失败1");
       }
     })
     .catch((error: any) => {
       // alert("新增失败!");
       console.error("新增失败:", error)
-      proxy.$message.error("新增失败",error);
+      proxy.$message.error("新增失败2",error);
     })
 }
 

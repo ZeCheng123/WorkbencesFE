@@ -62,6 +62,11 @@ const routes = [
     component: () => import('../views/aftersalesWorkorderDetails/index.vue')
   },
   {
+    path: '/aftersales_workorder_fordocno',
+    name: '售后详情',
+    component: () => import('../views/aftersalesWorkorderForDocNo/index.vue')
+  },
+  {
     path: '/dispatch_list',
     name: '派工单',
     component: () => import('../views/dispatchList/index.vue')

@@ -316,3 +316,12 @@ export const getInvestigation = (data) =>{
   })
 }
 
+export const getServiceticketByDocNo = (data)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/service-ticket?docNo='+data
+  })
+}
+
+getServiceticketById
+

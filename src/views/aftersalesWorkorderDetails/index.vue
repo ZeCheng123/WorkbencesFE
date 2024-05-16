@@ -80,7 +80,7 @@
           </span>
           <span class="field">
             <span class="label">专卖店名称：</span>
-            <span class="value">{{aftersalesHeaderDetails.storeName}}</span>
+            <span class="value">{{orderDetails.storeName__c}}</span>
           </span>
           <span class="field">
             <span class="label">创建时间：</span>
@@ -93,7 +93,7 @@
         <span class="row_field">
           <span class="field">
             <span class="label">客户姓名：</span>
-            <span class="value">{{aftersalesHeaderDetails.accountName}}</span>
+            <span class="value">{{orderDetails.accountName__C}}</span>
           </span>
           <span class="field">
             <span class="label">客户电话：</span>

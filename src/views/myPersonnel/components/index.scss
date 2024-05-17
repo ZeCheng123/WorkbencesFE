@@ -278,7 +278,7 @@
 
 .custom-row{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     margin: 20px 0px;
 }
@@ -306,3 +306,4 @@
 :deep(.custom-row .el-select){
     width: 256px;
 }
+

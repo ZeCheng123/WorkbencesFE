@@ -371,11 +371,12 @@ const getList = (isTure: boolean) => {
   console.log(form)
   const customerName = form.customerName==undefined?"":form.customerName;
   const customerPhone = form.customerPhone==undefined?"":form.customerPhone;
-  let param = {"customerName": customerName,  "customerPhone": customerPhone,  "status": form.orderStatus,  "from": form.createDate==undefined||form.createDate[0]==undefined?"":form.createDate[0]+" 00:00:00",
+  const workNo = form.workNo==undefined?"":form.workNo;
+  let param = {"ticketNo":workNo,"customerName": customerName,  "customerPhone": customerPhone,  "status": form.orderStatus,  "from": form.createDate==undefined||form.createDate[0]==undefined?"":form.createDate[0]+" 00:00:00",
 		"to":form.createDate==undefined||form.createDate[1]==undefined?"":form.createDate[1]+" 23:59:59",  "pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex}
 		getServiceticketPage(param).then((res : any) => {
 			let data = res.data.data
-			if (data.length > 0) {
+			if (data&&data.length > 0) {
 				tableData.value = data
 				if(isTure)
 				{

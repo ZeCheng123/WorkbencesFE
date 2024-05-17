@@ -864,7 +864,9 @@ onMounted(() => {
 		getDetail(false);
 });
 const getDetail = (isTure: boolean) => {
-  getServiceticketByDocNo(route.query.docNo).then((res : any) => {
+  const encodedDocNo = route.query.docNo;
+  const docNo = encodeURIComponent(encodedDocNo as string)
+  getServiceticketByDocNo(docNo).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
 				aftersalesHeaderDetails.value = data

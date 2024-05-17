@@ -86,6 +86,19 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="skill" label="技能">
+          <template #default="scope">
+            <div>
+              {{
+                scope.row.skill == 1
+                  ? "门"
+                  : scope.row.skill == 2
+                  ? "墙"
+                  : "柜"
+              }}
+            </div>
+          </template>
+        </el-table-column>        
         <el-table-column prop="status" label="人员状态">
           <template #default="scope">
             <div>
@@ -155,6 +168,28 @@
                 <el-select v-model="dialogForm.status"  placeholder="请选择人员状态">
                   <el-option
                     v-for="item in userStatusOptions"
+                    :key="item.code"
+                    :label="item.name"
+                    :value="item.code"
+                  />
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="custom-row">
+              <el-form-item label="人员技能" prop="skill">              
+                <el-select v-model="dialogForm.skill"  placeholder="请选择人员类型">
+                  <el-option
+                    v-for="item in skillOptions"
+                    :key="item.code"
+                    :label="item.name"
+                    :value="item.code"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item v-if="false" label="人员技能" prop="skill">              
+                <el-select v-model="dialogForm.skill"  placeholder="请选择人员类型">
+                  <el-option
+                    v-for="item in skillOptions"
                     :key="item.code"
                     :label="item.name"
                     :value="item.code"
@@ -241,7 +276,8 @@ const dialogForm = ref({
     distributorNo: "HY01",
     distributorName: "梦天集团",
     generalAgentNo: "GD01",
-    generalAgentName: "梦天"
+    generalAgentName: "梦天",
+    skill:""
 })
 
 const dialogFormRule = ref({
@@ -267,6 +303,9 @@ const dialogFormRule = ref({
   status: [
     { required: true, message: "状态不能为空", trigger: "blur" },
   ],
+  skill: [
+    { required: true, message: "人员技能不能为空", trigger: "blur" },
+  ],
 })
 
 
@@ -282,6 +321,21 @@ const userTypeOptions = ref([
   {
     code: 3,
     name: "配送司机",
+  },
+])
+
+const skillOptions = ref([
+  {
+    code: 1,
+    name: "门",
+  },
+  {
+    code: 2,
+    name: "墙",
+  },
+  {
+    code: 3,
+    name: "柜",
   },
 ])
 
@@ -427,7 +481,8 @@ const cacnelAdd = () =>{
       distributorNo: "HY01",
       distributorName: "梦天集团",
       generalAgentNo: "GD01",
-      generalAgentName: "梦天"
+      generalAgentName: "梦天",
+      skill:""
   } as any;
   formRef.value.clearValidate();
   showDialog.value = false
@@ -455,7 +510,8 @@ const comfirmAdd = () =>{
             distributorNo: "HY01",
             distributorName: "梦天集团",
             generalAgentNo: "GD01",
-            generalAgentName: "梦天"
+            generalAgentName: "梦天",
+            skill:""
           } as any;
           showDialog.value = false;
           ElMessage({

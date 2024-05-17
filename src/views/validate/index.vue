@@ -110,6 +110,7 @@ const getAuth = async () => {
           }
           localStorage.setItem("userinfo", JSON.stringify(newData));
           sessionStorage.setItem("userinfo", JSON.stringify(newData));
+          setAuth();
           proxy.$router.push({ path: "/main", query: {} });
         }
         //不存在时需要根据当前返回内容、提示用户输入手机号后再新增用户
@@ -204,6 +205,16 @@ const setTimer = () => {
       clearInterval(timer.value);
     }
   }, 1000)
+}
+
+const setAuth = () =>{
+  let router = proxy.$router?.options?.routes || [];
+  router.forEach(element => {
+    if(element["meta"]){
+      element["meta"]["isAuth"] = true;
+    }
+  });
+  proxy.$router.options.routes = router;
 }
 
 

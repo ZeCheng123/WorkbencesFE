@@ -303,6 +303,7 @@ const operationType = ref("add");
 const mainTable = ref(null);
 
 onMounted(() => {
+  console.log(proxy.$router.options.routes);
   getDataTable()
   const standardScale = (("100%") as any) / (("100%") as any);
   window.addEventListener("resize", _.debounce(function (){

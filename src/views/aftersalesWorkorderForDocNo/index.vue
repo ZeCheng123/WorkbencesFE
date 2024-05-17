@@ -880,10 +880,15 @@ const getDetail = (isTure: boolean) => {
 					})
 				}
 			} else {
-				ElMessage({
-					message: '获取数据失败',
-					type: 'error'
-				})
+        if(res?.data?.code == "invalid_token"){
+          proxy.$router.push({ path: "/404", query: {} });
+        }
+        else{
+          ElMessage({
+            message: '获取数据失败',
+            type: 'error'
+          })
+        }
 			}
 
 		}).catch((error: any) => {

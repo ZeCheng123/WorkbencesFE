@@ -11,6 +11,6 @@ export const userInfoStore = defineStore({
     },
     setUserInfo(info){
       this.userinfo = info;
-    }
+    },
   }
 })

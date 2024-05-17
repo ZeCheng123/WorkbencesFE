@@ -374,13 +374,14 @@ const option3 = computed(() => {
 })
 
 onMounted(() => {
-  // new vconsole();
+  new vconsole();
   proxy.$nextTick(() => {
     initEchart();
   })
   messageDataList();
   statisticalData();
   intervalId.value = setInterval(executeMessageDataList, 60000); // 60000 毫秒等于一分钟
+
 })
 
 

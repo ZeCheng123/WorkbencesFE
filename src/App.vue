@@ -1,6 +1,6 @@
 <template>
   <div style="width:98vw; height: calc(100% - 16px);" ref="mainElement">
-    <div class="nav_list" id="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login' && proxy.$route.path!='/validate'">
+    <div class="nav_list" id="nav_list" v-if="proxy.$route.path!='/main' && proxy.$route.path!='/login' && proxy.$route.path!='/validate' && proxy.$route.path!='/404'">
        <ul>
           <li v-for="(record, index) in routes" :key="index" @click="clickNav(record,index)" >
              <template v-if="index == 0"><img  src="@/assets/images/main_icon.png" alt=""></template>
@@ -244,7 +244,7 @@ onMounted(() =>{
 const detectMobile = () => {
       const userAgent = window.navigator.userAgent;
       isMobile.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-    }
+}
 
 
 const clickNav = (item,index) =>{

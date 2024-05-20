@@ -555,7 +555,7 @@
 import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
-import { getOrderListByNeoId, getServiceCaseItem, getServiceticketByDocNo,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution } from "../../api/common";
+import { getOrderListByNeoId, getServiceCaseItem, getServiceticketByDocNo,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution, getAuthByjinganCode, getTicketSolutionByTicketIdAndAuth, getOrderListByNeoIdAndAuth, getServiceCaseItemAndAuth } from "../../api/common";
 import { Plus } from "@element-plus/icons-vue";
 import { isArray } from "lodash";
 
@@ -814,9 +814,9 @@ const filterList5 = ref([{ label: "油漆颜色", value: "1" }])
 
 const filterList6 = ref([{ label: "尺寸", value: "1" }])
 
-
 const ticketSolutionTable = ref<any>([]);
 const ticketSolutionDetials = ref<any>({});
+const jinganAuth=ref<string>(null);
 
 const uploadDatas = ref({
   files: [],
@@ -861,19 +861,35 @@ const confirmDialog = () =>{
 }
 
 onMounted(() => {
-		getDetail(false);
+  getTokenByjinganCode();
 });
-const getDetail = (isTure: boolean) => {
+
+const getTokenByjinganCode=()=>{
+  const code = route.query.code;
+  const params={
+    code:code
+  }
+  getAuthByjinganCode(params).then((res)=>{
+    let data=res.data
+    if(data.code=="success"){
+      jinganAuth.value=data.data.token
+      getDetail(true,data.data.token)
+    }else{
+      proxy.$router.push({ path: "/404", query: {} });
+    }
+  })
+}
+const getDetail = (isTure: boolean,auth:any) => {
   const encodedDocNo = route.query.docNo;
   const docNo = encodeURIComponent(encodedDocNo as string)
-  getServiceticketByDocNo(docNo).then((res : any) => {
+  getServiceticketByDocNo(docNo,auth).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
 				aftersalesHeaderDetails.value = data
         changeStep(aftersalesHeaderDetails.value["status__c"])
-        getTicketSolutionData();
-        getOrderData();
-        getProblemData();
+        getTicketSolutionData(auth);
+        getOrderData(auth);
+        getProblemData(auth);
 				if(isTure)
 				{
 					ElMessage({
@@ -903,8 +919,8 @@ const getDetail = (isTure: boolean) => {
 		});
 }
 
-const getTicketSolutionData = () =>{
-  getTicketSolutionByTicketId(aftersalesHeaderDetails.value["neoId"]).then((res : any) => {
+const getTicketSolutionData = (auth:any) =>{
+  getTicketSolutionByTicketIdAndAuth(aftersalesHeaderDetails.value["neoId"],auth).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
 				let tableData = data;
@@ -926,8 +942,8 @@ const getTicketSolutionData = () =>{
 		});
 }
 
-const getOrderData = () =>{
-  getOrderListByNeoId(aftersalesHeaderDetails.value["orderNeoId"]).then((res : any) => {
+const getOrderData = (auth:any) =>{
+  getOrderListByNeoIdAndAuth(aftersalesHeaderDetails.value["orderNeoId"],auth).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
 				orderDetails.value=data      
@@ -945,12 +961,12 @@ const getOrderData = () =>{
 		});
 }
 
-const getProblemData = () =>{
+const getProblemData = (auth:any) =>{
   let params={
     id:"",
     neoid:aftersalesHeaderDetails.value["serviceCase__c"]
   }
-  getServiceCaseItem(params).then((res : any) => {
+  getServiceCaseItemAndAuth(params,auth).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
 				problemDetails.value=data      
@@ -1015,7 +1031,7 @@ const handleSelectionChange = (val) => {
 
 //售后处理明细中的产品明细和订单产品数据组合
 const loadingOrderList = () => {
-  getOrderListByNeoId(aftersalesHeaderDetails.value["orderNeoId"]).then((res: any) => {
+  getOrderListByNeoIdAndAuth(aftersalesHeaderDetails.value["orderNeoId"],jinganAuth.value).then((res: any) => {
     if (res.data.code == "success") {
       let orderPo = res.data.data.po //订单po
         let getOrderItems = res.data.data.items;

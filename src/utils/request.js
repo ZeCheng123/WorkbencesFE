@@ -6,12 +6,16 @@ const request = axios.create({
 
 // 请求拦截器
 request.interceptors.request.use(function (config) {
+  console.log(config)
   const userinfo = userInfoStore().getUserInfo();
   // 统一设置用户身份 token
   // let token = userinfo.token ;
   let token = localStorage.getItem("token") || sessionStorage.getItem("token");
   if (token) {
     config.headers["Authorization"] = token;
+  }
+  if(config["Authorization"]){
+    config.headers["Authorization"] = config["Authorization"];
   }
   return config
 }, function (error) {

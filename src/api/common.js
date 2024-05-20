@@ -316,12 +316,51 @@ export const getInvestigation = (data) =>{
   })
 }
 
-export const getServiceticketByDocNo = (data)=>{
+//景安URL带code及售后工单后展示售后详情
+export const getServiceticketByDocNo = (data,auth)=>{
   return request({
     method: 'GET',
-    url: '/md/api/service-ticket?docNo='+data
+    url: '/md/api/service-ticket?docNo='+data,
+    Authorization:auth
   })
 }
 
-getServiceticketById
+//景安URL带code及售后工单后展示售后处理详情
+export const getTicketSolutionByTicketIdAndAuth = (data,auth)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/ticket-solution?ticketId='+data,
+    Authorization:auth
+  })
+}
+
+//景安URL带code及售后工单，根据售后工单中的订单neoid查询订单号
+export const getOrderListByNeoIdAndAuth = (data,auth)=>{
+  return request({
+    method: 'GET',
+    url: '/md/api/order?neoid='+data,
+    Authorization:auth
+  })
+}
+
+//景安URL带code及售后工单，根据售后工单中的服务工单neoid获取问题提报详情
+export const getServiceCaseItemAndAuth = (data,auth) => {
+  return request({
+    method: 'GET',
+    url: `/md/api/service-case?id=${data.id}&neoid=${data.neoid}`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    Authorization:auth
+  })
+}
+
+export const getAuthByjinganCode = (data)=>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/auth/login/jingan',
+  })
+}
+
 

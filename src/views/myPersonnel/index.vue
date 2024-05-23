@@ -523,6 +523,14 @@ const comfirmAdd = () =>{
           }, 500);
         } else {
           console.log("失败")
+          let warnMessage=res?.data?.message
+          if(warnMessage=="user phone existed"){
+            warnMessage="用户已存在，"
+          }          
+          ElMessage({
+          message: warnMessage+operationType.value == "add" ? "新增失败!" : "编辑失败!",
+          type: "warning",
+        })
         }
       })
       .catch((error: any) => {

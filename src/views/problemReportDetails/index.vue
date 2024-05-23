@@ -1334,6 +1334,7 @@ const SaveServiceData = () => {
     id: id.value,
     questionType: currentItem.value["questionType"],
     name: currentItem.value["name"],
+    caseStatus:currentItem.value["caseStatus"]
   };
   createServiceCase(params).then((res) => {
     let resData = res.data;
@@ -1812,7 +1813,7 @@ const bindServiceTicket = (row, editOrNot) => {
       storeNeoId: currentItem.value["storeNeoId"],
       storeName: currentItem.value["storeName"],
       storeNo: orderDetails.value["storeNo"],
-      status__c: "1",
+      status__c: "2",
       reporter__c: userInfo?userInfo["name"]:"",
       reporterPhone__c: userInfo?userInfo["phone"]:"",
       ticketSource__c: "1",

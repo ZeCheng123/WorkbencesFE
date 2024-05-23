@@ -78,10 +78,16 @@
             <div>
               {{
                 scope.row.userType == 1
-                  ? "技工"
+                  ? "安装工程师"
                   : scope.row.userType == 2
-                  ? "经销商"
-                  : "配送司机"
+                  ? "售后专员"
+                  : scope.row.userType == 3
+                  ? "配送司机"
+                  : scope.row.userType == 4
+                  ? "美容工程师"
+                  : scope.row.userType == 5
+                  ? "仓管员"
+                  : "售后管理员"
               }}
             </div>
           </template>
@@ -177,7 +183,7 @@
             </div>
             <div class="custom-row">
               <el-form-item label="人员技能" prop="skill">              
-                <el-select v-model="dialogForm.skill"  placeholder="请选择人员类型">
+                <el-select multiple collapse-tags v-model="dialogForm.skill"  placeholder="请选择人员类型">
                   <el-option
                     v-for="item in skillOptions"
                     :key="item.code"
@@ -302,26 +308,35 @@ const dialogFormRule = ref({
   ],
   status: [
     { required: true, message: "状态不能为空", trigger: "blur" },
-  ],
-  skill: [
-    { required: true, message: "人员技能不能为空", trigger: "blur" },
-  ],
+  ]
 })
 
 
 const userTypeOptions = ref([
   {
     code: 1,
-    name: "技工",
+    name: "安装工程师",
   },
   {
     code: 2,
-    name: "经销商用户",
+    name: "售后人员",
   },
   {
     code: 3,
     name: "配送司机",
   },
+  {
+    code: 4,
+    name: "美容工程师",
+  },
+  {
+    code: 5,
+    name: "仓管员",
+  },
+  {
+    code: 6,
+    name: "售后管理员",
+  }
 ])
 
 const skillOptions = ref([
@@ -495,6 +510,13 @@ const comfirmAdd = () =>{
       if(operationType.value == "edit"){
         delete params["createdTime"]
       }
+      if((params.userType=="1" || params.userType=="4")&&(Array.isArray(params.skill)&&params.skill.length>0)){
+        ElMessage({
+          message: "人员类型为安装工程师或美容工程师时，人员技能不能为空,"+operationType.value == "add" ? "新增失败!" : "编辑失败!",
+          type: "warning",
+        })
+        return;
+      }
       // params["createdTime"] = new Date().toLocaleString();
       addExternalUser(params)
       .then((res: any) => {
@@ -528,9 +550,9 @@ const comfirmAdd = () =>{
             warnMessage="用户已存在，"
           }          
           ElMessage({
-          message: warnMessage+operationType.value == "add" ? "新增失败!" : "编辑失败!",
-          type: "warning",
-        })
+            message: warnMessage + operationType.value == "add" ? "新增失败!" : "编辑失败!",
+            type: "warning",
+          })
         }
       })
       .catch((error: any) => {

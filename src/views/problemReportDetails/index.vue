@@ -413,15 +413,15 @@
       </el-dialog>
     </div>
 
-    <!-- 创建派工单 -->
+    <!-- 创建派工单--维修-->
     <div class="deliveryOrderDialog">
       <el-dialog v-model="deliveryOrderDialog" title="新建配送派工单" width="80%" :show-close="false">
         <div class="step">
           <span class="item">
             <span @click="changeDeliveryOrderStep(1)"
               :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'">1</span>
-            <span :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'">选择配送司机
-              <span class="remark">选择配送货品的司机</span>
+            <span :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'">选择维修工程师
+              <span class="remark">选择维修工程师</span>
             </span>
           </span>
           <span class="item">
@@ -450,7 +450,7 @@
               <span class="custom_item" @click="changeToMyPerson"><img src="@/assets/images/add.png" alt="" /></span>
             </el-form-item>
             <el-form-item label="联系方式" prop="contactTelephone">
-              <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="查找或输入配送司机手机号码" />
+              <el-input v-model="deliveryOrderForm.contactTelephone" placeholder="查找或输入服务人员手机号码" />
             </el-form-item>
 
             <el-form-item label="预约开始" prop="appointmentStartTime">

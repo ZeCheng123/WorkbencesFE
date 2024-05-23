@@ -390,11 +390,7 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="优先级" prop="priority">
-              <!-- <el-input
-                placeholder="1-最高 2-高 3-中 4-低"
-                v-model="deliveryOrderForm.priority"
-              /> -->
+            <!-- <el-form-item label="优先级" prop="priority">
               <el-select v-model="deliveryOrderForm.priority" placeholder="请选择优先级">
                 <el-option
                   v-for="item in priorityOption"
@@ -403,7 +399,7 @@
                   :value="item.code"
                 />
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="派工类型" prop="type">
               <el-input
                 disabled
@@ -594,7 +590,7 @@
             label-width="90px"
             label-position="left"
           >
-            <el-form-item label="优先级" prop="priority">
+            <!-- <el-form-item label="优先级" prop="priority">
               <el-select v-model="installationOrderForm.priority" placeholder="请选择优先级">
                 <el-option
                   v-for="item in priorityOption"
@@ -603,7 +599,7 @@
                   :value="item.code"
                 />
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="派工单备注" class="customLayout">
               <el-input
                 v-model="installationOrderForm.remark"
@@ -846,7 +842,6 @@ const priorityOption = ref([
 let deliveryOrderForm = reactive({
   fieldJobContactName: "",
   contactTelephone: "",
-  priority: "",
   type: "配送派工",
   remark: "",
   appointmentStartTime: "",
@@ -870,9 +865,6 @@ const deliveryOrderRule = reactive({
     { required: true, message: "Please input username", trigger: "blur" },
   ],
   contactTelephone: [{ required: true, message: "Please input phone", trigger: "blur" }],
-  priority: [
-    { required: true, message: "Please input priority", trigger: "blur" },
-  ],
   appointmentStartTime: [
     {
       required: true,
@@ -894,7 +886,6 @@ const installationOrderForm = reactive<any>({
   phone: "",
   remark: "",
   installationTeam: false,
-  priority: "",
   appointmentStartTime: "",
   appointmentEndTime: "",
   fileList: [],
@@ -907,9 +898,6 @@ const installationOrderRule = reactive({
     { required: true, message: "Please input username", trigger: "blur" },
   ],
   phone: [{ required: true, message: "Please input phone", trigger: "blur" }],
-  priority: [
-    { required: true, message: "Please input priority", trigger: "blur" },
-  ],
   appointmentStartTime: [
     { required: true, message: "Please input appointment start time", trigger: "blur" },
   ],
@@ -1034,7 +1022,6 @@ const finishInstallationOrder = async () => {
   let params = {
     fieldJobContactName: orderData.value.accountName__C==undefined?"":orderData.value.accountName__C,
     contactTelephone: orderData.value.contactTel==undefined?"":orderData.value.contactTel,
-    priority: installationOrderForm.priority,
     remark: installationOrderForm.remark,
     haveInstallConditions: false,
     fieldJobOrderId: orderData.value.neoid,
@@ -1066,7 +1053,6 @@ const finishInstallationOrder = async () => {
           installationOrderForm.username = "";
           installationOrderForm.phone = "";
           installationOrderForm.remark = "";
-          installationOrderForm.priority = "";
           installationOrderForm.appointmentStartTime = "";
           installationOrderForm.appointmentEndTime = "";
           installationOrderForm.fileList = [];
@@ -1305,6 +1291,10 @@ const handleDeleteDelivery = (res) => {
 }
 
 const beforeUploadDelivery = (file) => {
+  if (file.size / 1024 / 1024 > 2) {
+    ElMessage.error('上传图片大小不能超过80MB!')
+    return false
+  }
   uploadDataDelivery.value["files"] = [file]
 }
 
@@ -1474,6 +1464,10 @@ const handleDeleteInstall = (res) => {
 }
 
 const beforeUploadInstall = (file) => {
+  if (file.size / 1024 / 1024 > 2) {
+    ElMessage.error('上传图片大小不能超过80MB!')
+    return false
+  }
   uploadDataProblemReport.value["files"] = [file];
 }
 

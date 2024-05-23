@@ -598,7 +598,7 @@ const statisticalData = () => {
       distributionCount.value = distribution.value
       otherCount.value = other.value
       let difference: number = currenMoney - lastMoney
-      let percentageChange = (difference / lastMoney) * 100;
+      let percentageChange = (difference / lastMoney==0?1:lastMoney) * 100;
       percentage.value = Number(percentageChange.toFixed(4))
       if (chart1.value !== null) {
         chart1.value.setOption(

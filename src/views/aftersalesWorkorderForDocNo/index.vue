@@ -864,7 +864,15 @@ onMounted(() => {
   getTokenByjinganCode();
 });
 
+const getQueryByUrl = (key) =>{
+  const index = window.location.href.indexOf("?");
+  const paramsStr = index >= 0 ? window.location.href.substring(index + 1) : window.location.href;
+  const searchParams = new URLSearchParams(paramsStr);
+  return searchParams.get(key);
+}
+
 const getTokenByjinganCode=()=>{
+  console.log(getQueryByUrl("code"));
   const code = route.query.code;
   const params={
     code:code

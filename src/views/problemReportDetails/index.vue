@@ -519,8 +519,26 @@
         <div class="content">
           <el-form :model="editFollowerAndPDescriptForm" :rules="editFollowerAndPDescriptFormRule"
             ref="deditFollowerAndPDescriptFormRef" label-width="90px" label-position="left">
+            <el-form-item label="订单编号" prop="orderNeoId">
+              <el-select filterable v-model="editFollowerAndPDescriptForm.orderNeoId" @change="onChangeOrderSelect"
+                placeholder="请选择订单编号">
+                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid"  />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="客户名称" prop="customerName">
+              <el-input v-model="editFollowerAndPDescriptForm.customerName
+                " placeholder="请输入客户名称" />
+            </el-form-item>
+            <el-form-item label="客户电话" prop="phone">
+              <el-input  v-model="editFollowerAndPDescriptForm.phone
+                " placeholder="请输入客户电话" />
+            </el-form-item>
+            <el-form-item label="问题描述" prop="problemDescription">
+              <el-input type="textarea" v-model="editFollowerAndPDescriptForm.problemDescription
+                " placeholder="请输入问题描述" />
+            </el-form-item>
             <el-form-item label="负责人" prop="followerId">
-              <el-select v-model="editFollowerAndPDescriptForm.followerId" @change="onCahngeUserSelectForEditServiceCase"
+              <el-select filterable v-model="editFollowerAndPDescriptForm.followerId" @change="onCahngeUserSelectForEditServiceCase"
                 placeholder="请选择负责人">
                 <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
               </el-select>
@@ -712,6 +730,7 @@ let remainingSeconds = ref<number>();
 let caseStatus = 0;
 let timeout = "";
 const serviceCaseAttachment = ref([] as any);
+const curOrderForSelect=ref({} as any);
 // 显示遮罩层
 // const loadingInstance = ElLoading.service({ fullscreen: true,lock: true,
 //     text: '等待数据同步完成',
@@ -1164,10 +1183,18 @@ const uploadDatas = ref({
 });
 
 const beforeUpload = (file) => {
+  if (file.size / 1024 / 1024 > 20) {
+    ElMessage.error('上传图片大小不能超过20MB!')
+    return false
+  }
   uploadDatas.value["files"] = [file];
 };
 
 const beforeUploadDelivery = (file) => {
+  if (file.size / 1024 / 1024 > 20) {
+    ElMessage.error('上传图片大小不能超过20MB!')
+    return false
+  }
   uploadDataDelivery.value["files"] = [file];
 };
 
@@ -1261,12 +1288,19 @@ const handleSuccessDelivery = (res) => {
 let editFollowerAndPDescriptForm = reactive({
   processingProcessAndResults: "",
   followerId: null,
+  customerName:"",
+  phone:"",
+  orderNeoId:"",
+  problemDescription:""
 });
 
 const editFollowerAndPDescriptFormRule = reactive({
   followerId: [{ required: true, message: "请选择负责人", trigger: "blur" }],
   processingProcessAndResults: [
     { required: true, message: "请输入经销商处理结论", trigger: "blur" },
+  ],
+  orderNeoId: [
+    { required: true, message: "请选择订单", trigger: "blur" },
   ],
 });
 
@@ -1325,6 +1359,16 @@ const onCahngeUserSelectForDelivery = (event) => {
   }
 };
 
+const onChangeOrderSelect = (event) => {
+  let item = orderList.value.find((val) => val["neoid"] == event);
+  if (item) {
+    editFollowerAndPDescriptForm["customerName"] = item["accountName__C"];
+    editFollowerAndPDescriptForm["phone"] = item["contactTel"];
+    //installationOrderForm.value["customerPhone"] = item["phone"];
+    curOrderForSelect.value=item
+  }
+};
+
 const SaveServiceData = () => {
   let params = {
     followerId: editFollowerAndPDescriptForm["followerId"]==undefined?currentItem.value["followerId"]:editFollowerAndPDescriptForm["followerId"],
@@ -1334,7 +1378,11 @@ const SaveServiceData = () => {
     id: id.value,
     questionType: currentItem.value["questionType"],
     name: currentItem.value["name"],
-    caseStatus:currentItem.value["caseStatus"]
+    caseStatus:currentItem.value["caseStatus"],
+    customerName:editFollowerAndPDescriptForm["customerName"],
+    phone:editFollowerAndPDescriptForm["phone"],
+    problemDescription:editFollowerAndPDescriptForm["problemDescription"],
+    orderNeoId:editFollowerAndPDescriptForm["orderNeoId"]
   };
   createServiceCase(params).then((res) => {
     let resData = res.data;
@@ -1343,11 +1391,21 @@ const SaveServiceData = () => {
         editFollowerAndPDescriptForm["followerName"];
       currentItem.value["processingProcessAndResults"] =
         editFollowerAndPDescriptForm["processingProcessAndResults"];
-      Object.keys(editFollowerAndPDescriptForm).forEach((key) => {
-        if (key !== "followerId") editFollowerAndPDescriptForm[key] = "";
-        if (key == "followerId") editFollowerAndPDescriptForm[key] = null;
-      });
+      currentItem.value["customerName"] =
+        editFollowerAndPDescriptForm["customerName"];
+      currentItem.value["phone"] =
+        editFollowerAndPDescriptForm["phone"];
+      currentItem.value["problemDescription"] =
+        editFollowerAndPDescriptForm["problemDescription"];
+      currentItem.value["orderNeoId"] =
+        editFollowerAndPDescriptForm["orderNeoId"];
+      orderDetails.value=curOrderForSelect.value
+      // Object.keys(editFollowerAndPDescriptForm).forEach((key) => {
+      //   if (key !== "followerId") editFollowerAndPDescriptForm[key] = "";
+      //   if (key == "followerId") editFollowerAndPDescriptForm[key] = null;
+      // });
       proxy.$message.success("保存成功");
+      editServerCasecontentDialog.value = false;
     } else {
       proxy.$message.warning("保存失败");
     }
@@ -1393,6 +1451,19 @@ const getDetailsData = () => {
       editFollowerAndPDescriptForm["processingProcessAndResults"] =
         currentItem.value["processingProcessAndResults"];
       checkedForJXSTiBao.value = currentItem.value["complaintSourceC"].toString()=="4"
+      editFollowerAndPDescriptForm["followerName"] =
+        currentItem.value["followerName"];
+      editFollowerAndPDescriptForm["processingProcessAndResults"] =
+        currentItem.value["processingProcessAndResults"];
+      editFollowerAndPDescriptForm["customerName"] =
+        currentItem.value["customerName"];
+      editFollowerAndPDescriptForm["phone"] =
+        currentItem.value["phone"];
+      editFollowerAndPDescriptForm["problemDescription"] =
+        currentItem.value["problemDescription"];
+      editFollowerAndPDescriptForm["orderNeoId"] =
+        currentItem.value["orderNeoId"];
+      editFollowerAndPDescriptForm["followerId"]=currentItem.value["followerId"]
       var baseUrl =
         "https://sh.mengtian.com.cn:9595/md/api/common/file/direct-download?fileId=";
       if (
@@ -1662,7 +1733,7 @@ const initiateComments = () => {
 };
 
 const editServiceCase = () => {
-  if (currentItem.value["caseStatus"] == "5") {
+  if (currentItem.value["caseStatus"] == "4") {
     proxy.$message.warning("问题提报已完成，无法修改");
     return;
   }

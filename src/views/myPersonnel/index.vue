@@ -80,7 +80,7 @@
                 scope.row.userType == 1
                   ? "安装工程师"
                   : scope.row.userType == 2
-                  ? "售后专员"
+                  ? "售后人员"
                   : scope.row.userType == 3
                   ? "配送司机"
                   : scope.row.userType == 4
@@ -92,8 +92,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="skill" label="技能">
-          <template #default="scope">
+        <el-table-column prop="skillNames" label="技能">
+          <!-- <template #default="scope">
             <div>
               {{
                 scope.row.skill == 1
@@ -103,7 +103,7 @@
                   : "柜"
               }}
             </div>
-          </template>
+          </template> -->
         </el-table-column>        
         <el-table-column prop="status" label="人员状态">
           <template #default="scope">
@@ -273,7 +273,7 @@ const form = ref({
 })
 
 const dialogForm = ref({
-    userType: "",
+    userType: 1,
     name: "",
     phone: "",
     status: 1,
@@ -283,7 +283,7 @@ const dialogForm = ref({
     distributorName: "梦天集团",
     generalAgentNo: "GD01",
     generalAgentName: "梦天",
-    skill:""
+    skill:[]
 })
 
 const dialogFormRule = ref({
@@ -442,6 +442,17 @@ const getDataTable = () => {
       if (dataList.code == "success") {
         // pageConfig.value.total = dataList.total;
         tableData.value = dataList.data
+        tableData.value.forEach((item)=>{
+          let skillNames = "";
+          console.log()
+          item["skill"].forEach((skill) => {
+            skillNames = skillNames +
+            skillOptions.value.find(
+                (aSItem) => aSItem["code"] == skill
+              ).name + ","
+          })
+          item["skillNames"]=skillNames.substring(0,skillNames.length-1);
+        })
         pageConfig.value = {
           pageIndex:
             res.data.current == undefined ? 1 : parseInt(res.data.current),
@@ -497,7 +508,7 @@ const cacnelAdd = () =>{
       distributorName: "梦天集团",
       generalAgentNo: "GD01",
       generalAgentName: "梦天",
-      skill:""
+      skill:[]
   } as any;
   formRef.value.clearValidate();
   showDialog.value = false
@@ -510,9 +521,10 @@ const comfirmAdd = () =>{
       if(operationType.value == "edit"){
         delete params["createdTime"]
       }
-      if((params.userType=="1" || params.userType=="4")&&(Array.isArray(params.skill)&&params.skill.length>0)){
+      if((params.userType==1 || params.userType==4)&&(Array.isArray(params.skill)&&params.skill.length<=0)){
+        const warnMassge="人员类型为安装工程师或美容工程师时，人员技能不能为空,"+(operationType.value == "add" ? "新增失败!" : "编辑失败!")
         ElMessage({
-          message: "人员类型为安装工程师或美容工程师时，人员技能不能为空,"+operationType.value == "add" ? "新增失败!" : "编辑失败!",
+          message: warnMassge,
           type: "warning",
         })
         return;
@@ -533,7 +545,7 @@ const comfirmAdd = () =>{
             distributorName: "梦天集团",
             generalAgentNo: "GD01",
             generalAgentName: "梦天",
-            skill:""
+            skill:[]
           } as any;
           showDialog.value = false;
           ElMessage({
@@ -547,10 +559,11 @@ const comfirmAdd = () =>{
           console.log("失败")
           let warnMessage=res?.data?.message
           if(warnMessage=="user phone existed"){
-            warnMessage="用户已存在，"
-          }          
+            warnMessage="用户已存在，新增失败!"
+          }
+          warnMessage=warnMessage?warnMessage:"编辑失败!"         
           ElMessage({
-            message: warnMessage + operationType.value == "add" ? "新增失败!" : "编辑失败!",
+            message: operationType.value == "add" ? warnMessage : "编辑失败!",
             type: "warning",
           })
         }

@@ -1291,8 +1291,8 @@ const handleDeleteDelivery = (res) => {
 }
 
 const beforeUploadDelivery = (file) => {
-  if (file.size / 1024 / 1024 > 2) {
-    ElMessage.error('上传图片大小不能超过80MB!')
+  if (file.size / 1024 / 1024 > 20) {
+    ElMessage.error('上传图片大小不能超过20MB!')
     return false
   }
   uploadDataDelivery.value["files"] = [file]
@@ -1464,8 +1464,8 @@ const handleDeleteInstall = (res) => {
 }
 
 const beforeUploadInstall = (file) => {
-  if (file.size / 1024 / 1024 > 2) {
-    ElMessage.error('上传图片大小不能超过80MB!')
+  if (file.size / 1024 / 1024 > 20) {
+    ElMessage.error('上传图片大小不能超过20MB!')
     return false
   }
   uploadDataProblemReport.value["files"] = [file];

@@ -528,7 +528,12 @@
               <el-select filterable v-model="editFollowerAndPDescriptForm.orderNeoId" @change="onChangeOrderSelect"
                 placeholder="请选择订单编号" remote reserve-keyword remote-show-suffix :remote-method="remoteMethod"
                 :loading="loadingForSecrchOrder">
-                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid" />
+                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid">
+                  <span style="float: left">{{ item.po }}</span>
+                  <span style="float: right;color: var(--el-text-color-secondary);font-size: 13px;">
+                    {{ item.accountName__C }}--{{ item.contactTel }}--{{ item.productsAmount }}
+                  </span>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="客户名称" prop="customerName">
@@ -2205,6 +2210,7 @@ const getSearchOrderOneList = (orderneoId) => {
       deliveryOrderForm["name"] =
         rtData.data["accountName__C"] + "的维修派工单";
       formDialog.value["orderNo"] = orderDetails.value["po"];
+      orderList.value.push(orderDetails.value)
     } else {
       proxy.$message.error(rtData?.message);
     }

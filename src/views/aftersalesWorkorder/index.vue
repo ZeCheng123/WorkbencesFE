@@ -93,7 +93,7 @@
                 ? approvalStatus.find(
                   (val) => val["code"] == scope.row.approvalStatus
                 )?.name
-                : ""
+                : "待提交"
               }}
             </div>
           </template>

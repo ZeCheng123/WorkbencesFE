@@ -42,6 +42,7 @@
         >售后工单详情 
         <!-- <el-button class="submit_btn">已提交</el-button> -->
         <el-button v-if="aftersalesHeaderDetails['reasonReturn']!=undefined&&aftersalesHeaderDetails['reasonReturn']!=''" class="return_btn">退回原因:{{ aftersalesHeaderDetails.reasonReturn }}</el-button>
+        <el-button type="primary" @click="reSubmitApproval" class="primary_btn">重新提交审批</el-button>      
       </span>
       <span class="main_field">
         <span class="row_field">
@@ -565,7 +566,7 @@
 import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
-import { getOrderListByNeoId, getServiceCaseItem, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution } from "../../api/common";
+import { getOrderListByNeoId, getServiceCaseItem, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution, updateOrCreateServiceticket } from "../../api/common";
 import { Plus } from "@element-plus/icons-vue";
 import { isArray } from "lodash";
 
@@ -1148,6 +1149,36 @@ const selectAll=(event)=>{
     item["checked"]=event
   })
 };
+const reSubmitApproval=()=>{
+  if(aftersalesHeaderDetails==undefined || aftersalesHeaderDetails.value["approvalStatus"]!="2"){
+    proxy.$message.warning("非审批退回状态重新提交")
+    return
+  }
+  let updateParams={
+    id:aftersalesHeaderDetails.value["id"],
+    approvalStatus:1
+  }
+  updateOrCreateServiceticket(updateParams)
+    .then((res) => {
+      let serviceTicketRes = res.data;
+      if (
+        serviceTicketRes.code == "success" &&
+        serviceTicketRes.data != undefined &&
+        serviceTicketRes.data["id"] != undefined
+      ) {
+        ElMessage({
+        message: "重新提交售后工单成功",
+        type: "success",
+      });
+      }
+    })
+    .catch((error: any) => {
+      ElMessage({
+        message: "重新提交售后工单失败,请重试",
+        type: "error",
+      });
+    });
+}
 </script>
 
 <style lang="scss" scoped>

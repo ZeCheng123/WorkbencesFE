@@ -24,8 +24,8 @@
     </span>
     <span class="problem_report_info">
       <span class="title">问题提报详情<span class="titleDateTime">{{
-        caseStatus <= 2 && caseStatus > 0 ? formatTime(remainingSeconds) : ""
-      }}</span></span>
+          caseStatus <= 2 && caseStatus> 0 ? formatTime(remainingSeconds) : ""
+            }}</span></span>
       <span class="main_field">
         <span class="row_field">
           <span class="field">
@@ -41,7 +41,7 @@
             <span class="label">问题类别：</span>
             <span class="value">{{
               currentItem["questionType"] == "1" ? "售后保修" : "投诉建议"
-            }}</span>
+              }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -68,10 +68,10 @@
             <span class="value">{{
               currentItem["complaintSourceC"]
               ? complaintSource.find(
-                (val) => val["code"] == currentItem["complaintSourceC"]
+              (val) => val["code"] == currentItem["complaintSourceC"]
               )?.name
               : ""
-            }}</span>
+              }}</span>
           </span>
           <span class="field">
             <span class="label">提报人：</span>
@@ -110,7 +110,7 @@
             <span class="label">省份：</span>
             <span class="value">{{
               convertProvince(currentItem["province"])
-            }}</span>
+              }}</span>
           </span>
           <span class="field">
             <span class="label">城市：</span>
@@ -120,7 +120,7 @@
             <span class="label">区：</span>
             <span class="value">{{
               convertDistrict(currentItem["district"])
-            }}</span>
+              }}</span>
           </span>
         </span>
         <span class="row_field">
@@ -135,7 +135,7 @@
       <span class="title">相关单据</span>
       <el-button class="btn">{{
         relatedDocumentsAftersalesWorkorderList.length
-      }}个售后工单</el-button>
+        }}个售后工单</el-button>
       <el-button class="btn">{{ relatedDocumentsDispatchList.length }}个派工单</el-button>
       <el-button class="btn">{{ serviceCaseAttachment.length }}个附件</el-button>
       <span class="view" @click="showRelatedDocumentsDialogClick">点击查看</span>
@@ -221,11 +221,11 @@
                 <template #default="scope">
                   <div style="display: flex; align-items: center">
                     {{
-                      scope.row.status__c
-                      ? seviceTicketStatusOptions.find(
-                        (val) => val["code"] == scope.row.status__c
-                      )?.name
-                      : ""
+                    scope.row.status__c
+                    ? seviceTicketStatusOptions.find(
+                    (val) => val["code"] == scope.row.status__c
+                    )?.name
+                    : ""
                     }}
                   </div>
                 </template>
@@ -284,28 +284,33 @@
               <el-option v-for="item in filterList2Clear" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.productType" placeholder="产品大类" @change="categoryFilterChange">
-              <el-option v-for="item in filterList2Category" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in filterList2Category" :key="item.value" :label="item.label"
+                :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.productModel" placeholder="产品型号" @change="fscProductModelFilterChange">
-              <el-option v-for="item in filterList2fscProductModel" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in filterList2fscProductModel" :key="item.value" :label="item.label"
+                :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.treeSpecies" placeholder="树种" @change="treeSpeciesCFilterChange">
-              <el-option v-for="item in filterList2treeSpecies__c" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in filterList2treeSpecies__c" :key="item.value" :label="item.label"
+                :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.paintColor" placeholder="油漆颜色" @change="paintColorCFilterChange">
-              <el-option v-for="item in filterList2paintColor__c" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in filterList2paintColor__c" :key="item.value" :label="item.label"
+                :value="item.value" />
             </el-select>
             <el-select v-model="formDialog.size" placeholder="尺寸" @change="fscProductSpecFilterChange">
-              <el-option v-for="item in filterList2fscProductSpec" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in filterList2fscProductSpec" :key="item.value" :label="item.label"
+                :value="item.value" />
             </el-select>
           </div>
           <div class="table">
             <!-- style="width: 100%;max-height: 200px;overflow: auto; -->
-            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData2Filter" :stripe="false"
-              style="width: 100%; overflow: auto" max-height="200">
+            <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="tableData2Filter"
+              :stripe="false" style="width: 100%; overflow: auto" max-height="200">
               <el-table-column prop="checked" label="全选" width="80px">
                 <template #header>
-                  <el-checkbox  @change="selectAll">全选</el-checkbox >
+                  <el-checkbox @change="selectAll">全选</el-checkbox>
                 </template>
                 <template #default="scope">
                   <el-checkbox v-model="scope.row.checked" />
@@ -324,12 +329,12 @@
                 <template #default="scope">
                   <div style="display: flex; align-items: center">
                     {{
-                      scope.row.ticketClassification
-                      ? problemTypeList.find(
-                        (val) =>
-                          val["code"] == scope.row.ticketClassification
-                      )?.name
-                      : ""
+                    scope.row.ticketClassification
+                    ? problemTypeList.find(
+                    (val) =>
+                    val["code"] == scope.row.ticketClassification
+                    )?.name
+                    : ""
                     }}
                   </div>
                 </template>
@@ -521,8 +526,9 @@
             ref="deditFollowerAndPDescriptFormRef" label-width="90px" label-position="left">
             <el-form-item label="订单编号" prop="orderNeoId">
               <el-select filterable v-model="editFollowerAndPDescriptForm.orderNeoId" @change="onChangeOrderSelect"
-                placeholder="请选择订单编号">
-                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid"  />
+                placeholder="请选择订单编号" remote reserve-keyword remote-show-suffix :remote-method="remoteMethod"
+                :loading="loadingForSecrchOrder">
+                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid" />
               </el-select>
             </el-form-item>
             <el-form-item label="客户名称" prop="customerName">
@@ -530,7 +536,7 @@
                 " placeholder="请输入客户名称" />
             </el-form-item>
             <el-form-item label="客户电话" prop="phone">
-              <el-input  v-model="editFollowerAndPDescriptForm.phone
+              <el-input v-model="editFollowerAndPDescriptForm.phone
                 " placeholder="请输入客户电话" />
             </el-form-item>
             <el-form-item label="问题描述" prop="problemDescription">
@@ -538,8 +544,8 @@
                 " placeholder="请输入问题描述" />
             </el-form-item>
             <el-form-item label="负责人" prop="followerId">
-              <el-select filterable v-model="editFollowerAndPDescriptForm.followerId" @change="onCahngeUserSelectForEditServiceCase"
-                placeholder="请选择负责人">
+              <el-select filterable v-model="editFollowerAndPDescriptForm.followerId"
+                @change="onCahngeUserSelectForEditServiceCase" placeholder="请选择负责人">
                 <el-option v-for="item in extralUserData" :key="item.name" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
@@ -572,11 +578,11 @@
                   <template #default="scope">
                     <div style="display: flex; align-items: center">
                       {{
-                        scope.row.status__c
-                        ? seviceTicketStatusOptions.find(
-                          (val) => val["code"] == scope.row.status__c
-                        )?.name
-                        : ""
+                      scope.row.status__c
+                      ? seviceTicketStatusOptions.find(
+                      (val) => val["code"] == scope.row.status__c
+                      )?.name
+                      : ""
                       }}
                     </div>
                   </template>
@@ -606,11 +612,11 @@
                   <template #default="scope">
                     <div style="display: flex; align-items: center">
                       {{
-                        scope.row.fieldJobType__c
-                        ? technicianTypeOption.find(
-                          (val) => val["code"] == scope.row.fieldJobType__c
-                        )?.name
-                        : "配送派工单"
+                      scope.row.fieldJobType__c
+                      ? technicianTypeOption.find(
+                      (val) => val["code"] == scope.row.fieldJobType__c
+                      )?.name
+                      : "配送派工单"
                       }}
                     </div>
                   </template>
@@ -620,11 +626,11 @@
                   <template #default="scope">
                     <div style="display: flex; align-items: center; color: blue">
                       {{
-                        scope.row.stage__c
-                        ? dispatchWorkerStatusOption.find(
-                          (val) => val["code"] == scope.row.stage__c
-                        )?.name
-                        : "待开始"
+                      scope.row.stage__c
+                      ? dispatchWorkerStatusOption.find(
+                      (val) => val["code"] == scope.row.stage__c
+                      )?.name
+                      : "待开始"
                       }}
                     </div>
                   </template>
@@ -1166,6 +1172,9 @@ const showMainDialog = ref(false);
 
 const showMainDialog2 = ref(false);
 
+//远程搜索订单模糊查询加载
+const loadingForSecrchOrder = ref(false)
+
 const dialogType = ref(1);
 
 const createDeliveryOrder = () => {
@@ -1411,6 +1420,9 @@ const SaveServiceData = () => {
     }
   });
 };
+
+
+
 const relatedDocumentsProblemReportingList = ref([]);
 
 const relatedDocumentsAftersalesWorkorderList = ref([]);
@@ -1420,7 +1432,6 @@ onMounted(() => {
   getProvinceList();
   getCityList();
   getDistrictList();
-  getSearchOrderList();
   getExtralUserData(false);
   postfieldjobeList(); //相关派工单记录
   postserviceticketList(); //相关售后工单记录
@@ -1431,7 +1442,6 @@ const otherMethod = () => {
   getProvinceList();
   getCityList();
   getDistrictList();
-  getSearchOrderList();
   getExtralUserData(false);
   postfieldjobeList(); //相关派工单记录
   postserviceticketList(); //相关售后工单记录
@@ -1520,21 +1530,15 @@ const changeDeliveryOrderStep = (step) => {
 };
 
 //获取订单列表
-const getSearchOrderList = () => {
+const getSearchOrderList = (po:string) => {
   let params = {
-    deliveryDate: "",
-    status__c: "",
-    orderType__c: "",
-    transactionDate: "",
-    po: "",
-    accountName: "",
-    accountPhone: "",
+    po:po
   };
   getOrderList(params).then((res) => {
     let rtData = res.data;
     if (rtData.code == "success") {
       orderList.value = rtData.data;
-    } else {
+    } else {      
       proxy.$message.error(rtData?.message);
     }
   });
@@ -2322,6 +2326,12 @@ const filterByFormDialog=()=>{
 const changeToMyPerson=(()=>{
   proxy.$router.push('my_personnel')
 })
+
+const remoteMethod=(query: string)=>{
+  if(query && query.length>=4){
+    getSearchOrderList(query)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

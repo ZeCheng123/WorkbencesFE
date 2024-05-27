@@ -885,9 +885,7 @@ const getSearchOrderList = () => {
     "status__c": "",
     "orderType__c": "",
     "transactionDate": "",
-    "po": "",
-    "accountName": "",
-    "accountPhone": ""
+    "accountName": ""
   }
   getOrderList(params).then(res => {
     let rtData = res.data;

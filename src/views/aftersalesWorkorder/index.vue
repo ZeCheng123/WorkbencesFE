@@ -85,6 +85,19 @@
         <el-table-column prop="accountName" label="客户名称" />
         <el-table-column prop="text5" label="处理方式" />
         <el-table-column prop="createdTime" label="创建时间" />
+        <el-table-column prop="approvalStatus" label="审批状态">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              {{
+                scope.row.approvalStatus
+                ? approvalStatus.find(
+                  (val) => val["code"] == scope.row.approvalStatus
+                )?.name
+                : ""
+              }}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="status__c" label="售后状态" >
           <template #default="scope">
 				  		<div style="display:flex;align-items:center;">
@@ -230,6 +243,28 @@ const seviceTicketStatusOptions = ref([
   }
 ])
 
+const  approvalStatus = ref([
+  {
+    name: "待提交",
+    code: "0",
+  },
+  {
+    name: "审批中",
+    code: "1",
+  },
+  {
+    name: "审批拒绝",
+    code: "2",
+  },
+  {
+    name: "审批通过",
+    code: "3",
+  },
+  {
+    name: "撤回",
+    code: "4",
+  },
+]);
 
 const pageConfig = ref({
 		  pageIndex: 1,

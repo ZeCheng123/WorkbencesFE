@@ -1946,7 +1946,7 @@ const bindServiceTicket = (row, editOrNot) => {
           curItemServiceTicket.value = row;
           currentDialogStep.value = 2;
           loadingOrderList(formDialog.value.orderNo);
-          if (currentItem.value["caseStatus"] === 2) {
+          if (currentItem.value["caseStatus"] !== 3  || currentItem.value["caseStatus"] !== 4) {
             let paramsTime = {
               id: currentItem.value["id"],
               questionType: currentItem.value["questionType"],

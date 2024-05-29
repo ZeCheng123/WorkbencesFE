@@ -905,6 +905,7 @@ const solutionTypeList = ref<any>([
   { code: "4", name: "公司售后(收费)" },
   { code: "5", name: "公司售后返修" },
   { code: "6", name: "加盟商售后返修" },
+  { code: "7", name: "售后补单(家装)" },
   { code: "8", name: "现场维修(公司)" },
 ])
 

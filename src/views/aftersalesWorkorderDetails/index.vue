@@ -194,10 +194,10 @@
               />
             </el-select>
           </span>
-          <span class="item">
+          <!-- <span class="item">
             <span class="label">责任人</span>
             <el-input v-model="dialog2Form.responsiblePerson"></el-input>
-          </span>
+          </span> -->
           <span class="item">
             <span class="label">问题描述</span>
             <el-input v-model="dialog2Form.problemDesc"></el-input>
@@ -488,6 +488,21 @@
               <el-table-column prop="treeSpecies__c" label="树种" />
               <el-table-column prop="paintColor__c" label="油漆颜色 " />
               <el-table-column prop="fscProductSpec" label="尺寸 " />
+              <el-table-column prop="solution" label="处理方式 ">
+                <template #default="scope">
+                  <div style="display: flex; align-items: center">
+                    {{
+                    scope.row.solution
+                    ? solutionTypeList.find(
+                    (val) =>
+                    val["code"] == scope.row.solution
+                    )?.name
+                    : ""
+                    }}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="subtotalLossAmount" label="损失金额 " />
               <el-table-column prop="note" label="售后回复 " />
               <el-table-column prop="ticketClassification" label="问题大类">
                 <template #default="scope">
@@ -505,7 +520,7 @@
                   </div>
                 </template> -->
               </el-table-column>
-              <el-table-column prop="" label="责任人 " />
+              <!-- <el-table-column prop="" label="责任人 " /> -->
               <el-table-column prop="descriptionOfTicketProblem" label="问题描述 " />
             </el-table>
           </div>
@@ -518,8 +533,8 @@
             <el-select multiple collapse-tags v-model="dialog2Form.afterSalesIssues" placeholder="">
               <el-option v-for="item in afterSalesIssuesListForSelect" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
-            <span class="label required">责任人</span>
-            <el-input v-model="dialog2Form.responsiblePerson" style="width: 240px" placeholder="请输入责任人" />
+            <!-- <span class="label required">责任人</span>
+            <el-input v-model="dialog2Form.responsiblePerson" style="width: 240px" placeholder="请输入责任人" /> -->
           </div>
           <div class="responsibilityPerson">
             <span class="label required">问题描述</span>
@@ -605,6 +620,17 @@ const problemTypeList = ref<any>([
   {code:"1",name:"经销商问题"},
   {code:"2",name:"公司问题"},
   {code:"3",name:"物流问题"}
+])
+
+const solutionTypeList = ref<any>([
+  { code: "1", name: "补偿处理" },
+  { code: "2", name: "现场处理" },
+  { code: "3", name: "售后重做" },
+  { code: "4", name: "公司售后(收费)" },
+  { code: "5", name: "公司售后返修" },
+  { code: "6", name: "加盟商售后返修" },
+  { code: "7", name: "售后补单(家装)" },
+  { code: "8", name: "现场维修(公司)" },
 ])
 
 const afterSalesIssuesList = ref<any>([
@@ -1056,7 +1082,6 @@ const loadingOrderList = () => {
                   
                 }
               })
-              console.log("tableData222", tableData.value)
             } else {
               console.info("details没数据")
             }
@@ -1083,7 +1108,7 @@ const submitDialog = () => {
     item["paintColor"] = item["paintColor__c"] //油漆颜色
     item["ticketClassification"] = dialog2Form.value.problemType //问题大类
     item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
-    item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
+    // item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
     item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
   })
 
@@ -1113,7 +1138,7 @@ const submitDialog = () => {
             item["paintColor"] = item["paintColor__c"] //油漆颜色
             item["ticketClassification"] = dialog2Form.value.problemType //问题大类
             item["ticketProblem"] = dialog2Form.value.afterSalesIssues //售后问题
-            item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
+            // item["personLiable"] = dialog2Form.value.responsiblePerson //责任主体
             item["descriptionOfTicketProblem"] = dialog2Form.value.problemDesc //问题描述
             if(item["ticketProblem"] && isArray(item["ticketProblem"])){
                     let ticketProblemNames="";

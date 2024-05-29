@@ -125,6 +125,7 @@
           <el-table-column prop="text2" label="生产单号" />
           <el-table-column prop="text3" label="售后审核员" />
           <el-table-column prop="text4" label="处理方式" />
+          <el-table-column prop="text9" label="冲款金额" />
           <el-table-column prop="text5" label="状态" />
           <el-table-column prop="text6" label="退回原因" />
           <el-table-column prop="text7" label="创建时间" />

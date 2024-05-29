@@ -503,6 +503,7 @@ const messageDataList = () => {
   };
   getServiceCasePage(params).then((res) => {
     let rtData = res.data;
+    const rtsData = rtData.data.filter(item => item.complaintSourceC !== 4);//过滤经销商数据
     if (rtData.code == "success") {
       //将状态为待处理处理事件超3小时、已处理超24小时数据提取出来
       const CasePageList = rtData.data

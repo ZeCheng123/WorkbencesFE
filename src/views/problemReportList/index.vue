@@ -364,6 +364,7 @@ const viewDetails = (row) => {
   let createdTime = row["createdTime"]
   let name = row["name"]
   let questionType = row["questionType"]
+  let complaintSourceC = row["complaintSourceC"]
   let getParams = "id=" + id;
   let params = {}
   if (neoid != undefined) {
@@ -376,9 +377,12 @@ const viewDetails = (row) => {
         caseStatus: 2,
         dealerAcceptanceTime: moment().format('YYYY-MM-DD HH:mm:ss')
       }
-      console.info("params", params)
     }
-    processingTime(params, getParams)
+    if(complaintSourceC !== 4){
+      processingTime(params, getParams)
+    }else{
+      proxy.$router.push(`/problem_report_details?${getParams}`);
+    }
   }
 };
 

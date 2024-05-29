@@ -1852,6 +1852,8 @@ const loadingOrderList = (row) => {
                   val["responsibleSubject"] = item["responsibleSubject"];
                   val["solutionDetailsId"] = item["id"]
                   val["note"] = item["note"]
+                  val["solution"] = item["solution"]
+                  val["subtotalLossAmount"] = item["subtotalLossAmount"]
                 }
               });
             } else {

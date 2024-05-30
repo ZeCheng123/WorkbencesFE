@@ -183,7 +183,7 @@
                   color: #165dff;
                   cursor: pointer;
                 "
-                @click="console.log(scope)"
+                @click="dispatchNoteDetails(scope.row)"
               >
                 <span>查看</span>
                 <!-- &nbsp;&nbsp;<span>批量提货</span> -->
@@ -758,6 +758,31 @@
         </template>
       </el-dialog>
     </div>
+    <!-- 查看其他信息 -->
+    <div class="relatedDocumentsDialog">
+      <el-dialog v-model="ShowRelatedFieldDialogs" title="包装清单详情" width="95%" :show-close="false">
+        <div class="content">
+          <el-table :data="screenTableDataInvoice" :stripe="false" style="width: 100%" max-height="500">
+            <el-table-column prop="name" label="编号" />
+            <el-table-column prop="quantity" label="数量" />
+            <el-table-column prop="packageNo" label="包装编号" />
+            <el-table-column prop="moduleName" label="部件名称" />
+            <el-table-column prop="moduleSpec" label="部件尺寸" />
+            <el-table-column prop="moduleModel" label="型号" />
+            <el-table-column prop="unit" label="单位" />
+            <el-table-column prop="installationSite" label="安装位置" />
+            <el-table-column prop="openCloseWay" label="开启方式" />
+            <el-table-column prop="room" label="房间名" />
+            <el-table-column prop="comments" label="备注" />
+          </el-table>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button type="primary" class="primary_btn" @click="ShowRelatedFieldDialogs = false">返回</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -775,7 +800,7 @@ import _ from "lodash"
 const { proxy }: any = getCurrentInstance()
 
 
-
+const size = ref('default')
 const currentStep2 = ref(4)
 
 const commentList = ref<any>([])
@@ -789,6 +814,7 @@ const orderId = route.query.orderId
 const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0)+1:1
 const taskType = route.query.taskType
 const mergedOrderNo = route.query.mergedOrderNo
+const ShowRelatedFieldDialogs = ref(false)
 
 const taskDetails=ref({
   taskid:route.query.id,
@@ -956,6 +982,8 @@ const tableDataInvoice = ref([
   // },
 ] as any)
 
+const screenTableDataInvoice = ref([])
+
 const tableDataDispatch = ref([] as any)
 
 const mainRef = ref<any>(null);
@@ -1091,6 +1119,13 @@ const viewOrderDetails = (row:any) =>{
       status_c:row.status_c
     },
   });
+}
+
+//包装清单详情
+const dispatchNoteDetails = (row:any) =>{
+  const matched = tableDataInvoice.value.find(item => item.name === row.name);
+  screenTableDataInvoice.value = matched ? matched.items : null;
+  ShowRelatedFieldDialogs.value = true
 }
 
 const finishDeliveryOrder =  () => {

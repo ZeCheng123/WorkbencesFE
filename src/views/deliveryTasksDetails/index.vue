@@ -4,8 +4,8 @@
       <span class="title">任务状态</span>
       <span class="step">
         <span class="item">
-          <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
-          <span :class="currentStep >= 1 ? 'name_selected' : 'name'"
+          <span :class="currentStep == 2 ? 'num_selected' : 'num'">1</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'"
             >待处理</span
           >
         </span>

@@ -2005,6 +2005,20 @@ const checkSyncStatusForServiceTicket = (id) => {
         loadingInstance.close();
         currentDialogStep.value = 2;
         loadingOrderList(formDialog.value.orderNo);
+        if (currentItem.value["caseStatus"] !== 3  || currentItem.value["caseStatus"] !== 4) {
+            let paramsTime = {
+              id: currentItem.value["id"],
+              questionType: currentItem.value["questionType"],
+              name: currentItem.value["name"],
+              caseStatus: 3,
+              dealerProcessingTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+              processingProcessAndResults: formDialog.value.remark
+            };
+            processingTime(paramsTime);
+            setTimeout(() => {
+              otherMethod();
+            }, 100);
+          }
       } else {
         // 数据未被同步成功，继续间隔1秒查询
         setTimeout(() => {
@@ -2119,7 +2133,7 @@ const finishDeliveryOrder = () => {
       let data = res.data.data;
       tableDataDispatch.value.push(data);
       if (data != undefined) {
-        if (currentItem.value["caseStatus"] === 2) {
+        if (currentItem.value["caseStatus"] !== 3 || currentItem.value["caseStatus"] !== 4) {
           let paramsTime = {
             id: currentItem.value["id"],
             questionType: currentItem.value["questionType"],

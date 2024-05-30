@@ -53,6 +53,19 @@
         <el-table-column prop="caseNo" label="问题编号" />
         <el-table-column prop="name" label="客户姓名" />
         <el-table-column prop="problemDescription" label="问题描述" />
+        <el-table-column prop="questionType" label="问题类别">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              {{
+                scope.row.questionType
+                ? casequestionType.find(
+                  (val) => val["code"] == scope.row.questionType
+                )?.name
+                : ""
+              }}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="complaintSourceC" label="来源">
           <template #default="scope">
             <div style="display: flex; align-items: center">
@@ -240,6 +253,20 @@ const caseSource = ref([
   },
 ]);
 
+const casequestionType = ref([
+  {
+    name: "售后保修",
+    code: "1",
+  },
+  {
+    name: "投诉建议",
+    code: "2",
+  },
+  {
+    name: "售前咨询",
+    code: "3",
+  }
+])
 
 const caseStatus = ref([
   {

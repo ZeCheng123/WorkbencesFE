@@ -191,9 +191,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" label="发货单编号" />
-          <el-table-column prop="status" label="发货单状态" />
-          <el-table-column prop="shipVia" label="出库方式" />
-          <el-table-column prop="shipCarrier" label="供应基地" />
+          <el-table-column prop="deliveryStatus" label="发货单状态" />
+          <el-table-column prop="shippingMethod" label="出库方式" />
+          <el-table-column prop="supplyBase" label="供应基地" />
           <el-table-column prop="createdTime" label="创建时间" />
         </el-table>
       </span>
@@ -760,7 +760,7 @@
     </div>
     <!-- 查看其他信息 -->
     <div class="relatedDocumentsDialog">
-      <el-dialog v-model="ShowRelatedFieldDialogs" title="包装清单详情" width="95%" :show-close="false">
+      <el-dialog v-model="ShowRelatedFieldDialogs" title="包装清单明细" width="95%" :show-close="false">
         <div class="content">
           <el-table :data="screenTableDataInvoice" :stripe="false" style="width: 100%" max-height="500">
             <el-table-column prop="name" label="编号" />

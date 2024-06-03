@@ -1122,7 +1122,7 @@ const submitDialog = () => {
   console.info("selectDataselectData", selectData)
 
   // dialog2Form.value["details"] = selectData
-  if (!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues || !dialog2Form.value.responsiblePerson || !dialog2Form.value.problemDesc) {
+  if (!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues  || !dialog2Form.value.problemDesc) {
     proxy.$message.error("必填选项不能为空!");
   } else {    
     setTimeout(() => {

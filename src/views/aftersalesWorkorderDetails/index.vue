@@ -88,6 +88,20 @@
             <span class="value">{{ aftersalesHeaderDetails.createdTime }}</span>
           </span>
         </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">冲款金额汇总:</span>
+            <span class="value">{{ aftersalesHeaderDetails.chargeAmtSum }}</span>
+          </span>
+          <span class="field">
+            <span class="label">处理方式汇总:</span>
+            <span class="value">{{ aftersalesHeaderDetails.solutionSummary__c }}</span>
+          </span>
+          <span class="field">
+            <span class="label"></span>
+            <span class="value"></span>
+          </span>
+        </span>
       </span>
       <span class="title">客户信息</span>
       <span class="other_field">
@@ -124,8 +138,8 @@
           <el-table-column prop="name" label="售后处理记录编号" />
           <el-table-column prop="text2" label="生产单号" />
           <el-table-column prop="text3" label="售后审核员" />
-          <el-table-column prop="text4" label="处理方式" />
-          <el-table-column prop="chargeAmtSum" label="冲款金额" />
+          <!-- <el-table-column prop="text4" label="处理方式" /> -->
+          <!-- <el-table-column prop="chargeAmtSum" label="冲款金额" /> -->
           <el-table-column prop="text5" label="状态" />
           <el-table-column prop="text6" label="退回原因" />
           <el-table-column prop="text7" label="创建时间" />

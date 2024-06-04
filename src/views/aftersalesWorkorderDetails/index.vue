@@ -9,11 +9,11 @@
         </span>
         <span class="item">
           <span :class="currentStep == 2 ? 'num_selected' : 'num'">2</span>
-          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已定损</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">售后审核</span>
         </span>
         <span class="item">
           <span :class="currentStep == 3 ? 'num_selected' : 'num'">3</span>
-          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">售后审核</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已定损</span>
         </span>
         <span class="item">
           <span :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>

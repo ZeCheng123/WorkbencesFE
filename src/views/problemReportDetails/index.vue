@@ -1159,12 +1159,44 @@ const seviceTicketStatusOptions = ref([
   //   code: "10",
   //   name: "已结案",
   // }
+  // {
+  //   code: "1",
+  //   name: "开始",
+  // },
+  // {
+  //   code: "2",
+  //   name: "已提报问题",
+  // },
+  // {
+  //   code: "3",
+  //   name: "售后审核",
+  // },
+  // {
+  //   code: "4",
+  //   name: "已定损",
+  // },
+  // {
+  //   code: "5",
+  //   name: "定责发起",
+  // },
+  // {
+  //   code: "6",
+  //   name: "已提交OA审批",
+  // },
+  // {
+  //   code: "7",
+  //   name: "已追责",
+  // },
+  // {
+  //   code: "8",
+  //   name: "已追责",
+  // },
+  // {
+  //   code: "8",
+  //   name: "结束",
+  // },
   {
     code: "1",
-    name: "开始",
-  },
-  {
-    code: "2",
     name: "已提报问题",
   },
   {
@@ -1172,15 +1204,15 @@ const seviceTicketStatusOptions = ref([
     name: "售后审核",
   },
   {
-    code: "4",
+    code: "2",
     name: "已定损",
   },
   {
-    code: "5",
+    code: "4",
     name: "定责发起",
   },
   {
-    code: "6",
+    code: "5",
     name: "已提交OA审批",
   },
   {
@@ -1188,13 +1220,9 @@ const seviceTicketStatusOptions = ref([
     name: "已追责",
   },
   {
-    code: "8",
-    name: "已追责",
-  },
-  {
-    code: "8",
-    name: "结束",
-  },
+    code: "10",
+    name: "已结案",
+  }
 ]);
 
 const currentDialogStep = ref(1);
@@ -1921,7 +1949,7 @@ const bindServiceTicket = (row, editOrNot) => {
       storeNeoId: currentItem.value["storeNeoId"],
       storeName: currentItem.value["storeName"],
       storeNo: orderDetails.value["storeNo"],
-      status__c: "2",
+      status__c: "1",
       reporter__c: userInfo?userInfo["name"]:"",
       reporterPhone__c: userInfo?userInfo["phone"]:"",
       ticketSource__c: "1",

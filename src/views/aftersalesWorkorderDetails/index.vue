@@ -95,7 +95,7 @@
           </span>
           <span class="field">
             <span class="label">处理方式汇总:</span>
-            <span class="value">{{ aftersalesHeaderDetails.solutionSummary__c }}</span>
+            <span class="value">{{ aftersalesHeaderDetails.solutionSummary }}</span>
           </span>
           <span class="field">
             <span class="label"></span>

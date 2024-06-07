@@ -108,7 +108,7 @@
         <el-table-column prop="status" label="人员状态">
           <template #default="scope">
             <div>
-              {{ scope.row.status == 1 ? "在职" : "离职" }}
+              {{ (!scope.row.hasOwnProperty('status') || scope.row.status == 1) ? "在职" : "离职" }}
             </div>
           </template>
         </el-table-column>

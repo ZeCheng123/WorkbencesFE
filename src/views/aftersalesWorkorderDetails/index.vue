@@ -98,6 +98,24 @@
             <span class="value">{{ aftersalesHeaderDetails.solutionSummary }}</span>
           </span>
           <span class="field">
+            <span class="label">审批状态:</span>
+            <span class="value">{{ approvalList(aftersalesHeaderDetails.approvalStatus) }}</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">售后回复:</span>
+            <span class="value">{{ aftersalesHeaderDetails.noteSummary }}</span>
+          </span>
+          <span class="field">
+            <span class="label"></span>
+            <span class="value"></span>
+          </span>
+          <span class="field">
+            <span class="label"></span>
+            <span class="value"></span>
+          </span>
+          <span class="field">
             <span class="label"></span>
             <span class="value"></span>
           </span>
@@ -798,6 +816,14 @@ const handleWayList = ref<any>([{
   value: "1"
 }])
 
+const approvalStatusList = ref<any>([
+  {code:"0",name:"待提交"},
+  {code:"1",name:"审批中"},
+  {code:"2",name:"审批拒绝"},
+  {code:"3",name:"审批通过"},
+  {code:"4",name:"撤回"}
+])
+
 const showMainDialog2 = ref(false)
 
 const showMainDialog3 = ref(false)
@@ -874,6 +900,15 @@ const uploadDatas = ref({
   files: [],
   name: "files",
 });
+
+const approvalList = (code) => {
+  let item = approvalStatusList.value.find((val) => val["code"] == code);
+  if (code && item) {
+    return item["name"];
+  } else {
+    return "";
+  }
+};
 
 const beforeUpload = (file) => {
   uploadDatas.value["files"] = [file];

@@ -120,7 +120,7 @@
           :data="tableDataServiceEvaluation"
           :stripe="false"
           style="width: 100%"
-          max-height="100"
+          max-height="200"
         >
           <el-table-column prop="sNumber" label="序号" />
           <el-table-column prop="type" label="评价类型" />

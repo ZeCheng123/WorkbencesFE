@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <span class="header">
+    <!-- <span class="header">
       <span class="title">资质阶段</span>
       <span class="step">
         <span class="item" @click="changeStep(1)">
@@ -16,9 +16,9 @@
           <span :class="currentStep >= 3 ? 'name_selected' : 'name'">已退出</span>
         </span>
       </span>
-    </span>
+    </span> -->
     <span class="base_info">
-      <span class="title">基本信息</span>
+      <!-- <span class="title">基本信息</span>
       <span class="main_field">
         <span class="row_field">
           <span class="field">
@@ -63,8 +63,8 @@
             <span class="value">示例</span>
           </span>
         </span>
-      </span>
-      <span class="title">其他字段</span>
+      </span> -->
+      <!-- <span class="title">其他字段</span>
       <span class="other_field">
         <span class="row_field">
           <span class="field">
@@ -94,7 +94,7 @@
             <span class="value">示例</span>
           </span>
         </span>
-      </span>
+      </span> -->
       <span class="title" style="margin-top: 18px">管理人员</span>
       <span class="table">
         <el-table

@@ -128,6 +128,14 @@
             <span class="label">经销商内部提报：</span>
             <el-checkbox v-model="checkedForJXSTiBao" disabled></el-checkbox>
           </span>
+          <span class="field" v-if="currentItem['complaintSourceC'].toString()=='2'">
+            <span class="label">是否现场处理：</span>
+            <el-checkbox v-model="checkedwhetherProcess" disabled></el-checkbox>
+          </span>
+          <span class="field">
+            <span class="label"></span>
+            <span class="value"></span>
+          </span>
         </span>
       </span>
     </span>
@@ -751,6 +759,7 @@ const provinceList = ref([]);
 const cityList = ref([]);
 const districtList = ref([]);
 const checkedForJXSTiBao=ref(false);
+const checkedwhetherProcess=ref(false);
 let solutionId = "";
 let remainingSeconds = ref<number>();
 let caseStatus = 0;
@@ -1443,6 +1452,7 @@ const getDetailsData = () => {
       editFollowerAndPDescriptForm["processingProcessAndResults"] =
         currentItem.value["processingProcessAndResults"];
       checkedForJXSTiBao.value = currentItem.value["complaintSourceC"].toString()=="4"
+      checkedwhetherProcess.value = currentItem.value["complaintSourceC"].toString()=="2"
       editFollowerAndPDescriptForm["followerName"] =
         currentItem.value["followerName"];
       editFollowerAndPDescriptForm["processingProcessAndResults"] =

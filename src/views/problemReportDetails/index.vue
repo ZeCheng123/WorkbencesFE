@@ -590,7 +590,7 @@
           <span class="tableItem">
             <span class="tableTitle"> 1. 售后工单 </span>
             <span class="tableContent">
-              <el-table :data="relatedDocumentsAftersalesWorkorderList" :stripe="false" style="width: 100%">
+              <el-table :data="relatedDocumentsAftersalesWorkorderList" :stripe="false" style="width: 100%;height:200px;">
                 <el-table-column prop="name" label="售后工单编号" />
                 <el-table-column prop="serviceTicketType__c" label="类别" />
                 <el-table-column prop="text3" label="负责人" />
@@ -1118,93 +1118,16 @@ const seviceTicketStatusOptions = ref([
     code: "",
     name: "全部",
   },
-  // },
-  // {
-  //   code: "1",
-  //   name: "已提报问题",
-  // },
-  // {
-  //   code: "2",
-  //   name: "已定损",
-  // },
-  // {
-  //   code: "3",
-  //   name: "核实/维护问题产品中",
-  // },
-  // {
-  //   code: "4",
-  //   name: "定责发起",
-  // },
-  // {
-  //   code: "5",
-  //   name: "已提交OA审批",
-  // },
-  // {
-  //   code: "6",
-  //   name: "已定责",
-  // },
-  // {
-  //   code: "7",
-  //   name: "已追责",
-  // },
-  // {
-  //   code: "8",
-  //   name: "已财务审核",
-  // },
-  // {
-  //   code: "9",
-  //   name: "已经销商审核",
-  // },
-  // {
-  //   code: "10",
-  //   name: "已结案",
-  // }
-  // {
-  //   code: "1",
-  //   name: "开始",
-  // },
-  // {
-  //   code: "2",
-  //   name: "已提报问题",
-  // },
-  // {
-  //   code: "3",
-  //   name: "售后审核",
-  // },
-  // {
-  //   code: "4",
-  //   name: "已定损",
-  // },
-  // {
-  //   code: "5",
-  //   name: "定责发起",
-  // },
-  // {
-  //   code: "6",
-  //   name: "已提交OA审批",
-  // },
-  // {
-  //   code: "7",
-  //   name: "已追责",
-  // },
-  // {
-  //   code: "8",
-  //   name: "已追责",
-  // },
-  // {
-  //   code: "8",
-  //   name: "结束",
-  // },
   {
     code: "1",
     name: "已提报问题",
   },
   {
-    code: "3",
+    code: "2",
     name: "售后审核",
   },
   {
-    code: "2",
+    code: "3",
     name: "已定损",
   },
   {
@@ -1958,6 +1881,7 @@ const bindServiceTicket = (row, editOrNot) => {
       productionOrderNo__c: orderDetails.value["productionOrderNo__c"],
       region__c: orderDetails.value["region__c"],
     };
+    console.info("params",params)
   }
   updateOrCreateServiceticket(params)
     .then((res) => {

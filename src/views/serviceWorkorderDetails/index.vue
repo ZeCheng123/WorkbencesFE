@@ -286,10 +286,8 @@
     </div>
     <div class="showMainDialog2">
       <el-dialog v-model="showMainDialog2" width="25%" :show-close="false">
-        <span class="title">{{
-          dialogType == "1" ? "完善问题描述" : "定义处理方式"
-        }}</span>
-        <span class="content" v-if="dialogType == '1'">
+        <span class="title">{{dialogType == 1 ? "完善问题描述" : "定义处理方式" }}</span>
+        <span class="content" v-if="dialogType == 1">
           <span class="item">
             <span class="label">问题大类</span>
             <el-select placeholder="">

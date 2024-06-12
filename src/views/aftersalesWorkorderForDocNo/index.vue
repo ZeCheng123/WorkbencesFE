@@ -5,6 +5,36 @@
       <span class="step">
         <span class="item" >
           <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
+          <span :class="currentStep >= 1 ? 'name_selected' : 'name'">已提报问题</span>
+        </span>
+        <span class="item">
+          <span :class="currentStep == 3 ? 'num_selected' : 'num'">2</span>
+          <span :class="currentStep >= 3 ? 'name_selected' : 'name'">售后审核</span>
+        </span>
+        <span class="item">
+          <span :class="currentStep == 2 ? 'num_selected' : 'num'">3</span>
+          <span :class="currentStep >= 2 ? 'name_selected' : 'name'">已定损</span>
+        </span>
+        <span class="item">
+          <span :class="currentStep == 4 ? 'num_selected' : 'num'">4</span>
+          <span :class="currentStep >= 4 ? 'name_selected' : 'name'">定责发起</span>
+        </span>
+        <span class="item">
+          <span :class="currentStep == 5 ? 'num_selected' : 'num'">5</span>
+          <span :class="currentStep >= 5 ? 'name_selected' : 'name'">已提交OA审批</span>
+        </span>
+        <span class="item">
+          <span :class="currentStep == 7 ? 'num_selected' : 'num'">7</span>
+          <span :class="currentStep >= 7 ? 'name_selected' : 'name'">已追责</span>
+        </span>
+        <span class="item">
+          <span :class="currentStep == 10 ? 'num_selected' : 'num'">10</span>
+          <span :class="currentStep >= 10 ? 'name_selected' : 'name'">已结案</span>
+        </span>
+      </span>
+      <!-- <span class="step">
+        <span class="item" >
+          <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
           <span :class="currentStep >= 1 ? 'name_selected' : 'name'">开始</span>
         </span>
         <span class="item">
@@ -35,7 +65,7 @@
           <span :class="currentStep == 8 ? 'num_selected' : 'num'">8</span>
           <span :class="currentStep >= 8 ? 'name_selected' : 'name'">结束</span>
         </span>
-      </span>
+      </span> -->
     </span>
     <span class="order_info">
       <span class="title"

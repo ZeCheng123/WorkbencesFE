@@ -307,6 +307,15 @@ export const getDispatchNoteList = (data) =>{
   })
 }
 
+//更新或修改发货单
+export const updateDispatchNote = (data) =>{
+  return request({
+    method: 'POST',
+    data:data,
+    url: '/md/api/dispatch-note'
+  })
+}
+
 //获取安装派工服务评价
 export const getInvestigation = (data) =>{
   return request({

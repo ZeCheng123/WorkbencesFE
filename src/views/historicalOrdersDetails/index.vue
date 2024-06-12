@@ -519,10 +519,6 @@ const dispatchWorkerStatusOption = ref([
 const seviceTicketStatusOptions = ref([
   {
     code: "1",
-    name: "开始",
-  },
-  {
-    code: "2",
     name: "已提报问题",
   },
   {
@@ -530,15 +526,15 @@ const seviceTicketStatusOptions = ref([
     name: "售后审核",
   },
   {
-    code: "4",
+    code: "2",
     name: "已定损",
   },
   {
-    code: "5",
+    code: "4",
     name: "定责发起",
   },
   {
-    code: "6",
+    code: "5",
     name: "已提交OA审批",
   },
   {
@@ -546,13 +542,45 @@ const seviceTicketStatusOptions = ref([
     name: "已追责",
   },
   {
-    code: "8",
-    name: "已追责",
-  },
-  {
-    code: "8",
-    name: "结束",
+    code: "10",
+    name: "已结案",
   }
+  // {
+  //   code: "1",
+  //   name: "开始",
+  // },
+  // {
+  //   code: "2",
+  //   name: "已提报问题",
+  // },
+  // {
+  //   code: "3",
+  //   name: "售后审核",
+  // },
+  // {
+  //   code: "4",
+  //   name: "已定损",
+  // },
+  // {
+  //   code: "5",
+  //   name: "定责发起",
+  // },
+  // {
+  //   code: "6",
+  //   name: "已提交OA审批",
+  // },
+  // {
+  //   code: "7",
+  //   name: "已追责",
+  // },
+  // {
+  //   code: "8",
+  //   name: "已追责",
+  // },
+  // {
+  //   code: "8",
+  //   name: "结束",
+  // }
 ])
 
 const otherField = ref<any>({

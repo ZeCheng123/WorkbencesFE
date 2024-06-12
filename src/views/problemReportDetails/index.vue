@@ -1132,11 +1132,11 @@ const seviceTicketStatusOptions = ref([
     name: "已提报问题",
   },
   {
-    code: "2",
+    code: "3",
     name: "售后审核",
   },
   {
-    code: "3",
+    code: "2",
     name: "已定损",
   },
   {

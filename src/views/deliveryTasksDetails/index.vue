@@ -191,6 +191,23 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" label="发货单编号" />
+          <el-table-column prop="packageCnt" label="包装数量" />
+          <el-table-column prop="actualPkgCnt" label="实际包装数量">
+            <template #default="scope">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  color: #165dff;
+                  cursor: pointer;
+                "
+                @click="actualPkgCntRow(scope.row)"
+              >
+                <span>{{ scope.row.actualPkgCnt == null ? 0 : scope.row.actualPkgCnt}}</span>
+                <!-- &nbsp;&nbsp;<span>批量提货</span> -->
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="deliveryStatus" label="发货单状态" />
           <el-table-column prop="shippingMethod" label="出库方式" />
           <el-table-column prop="supplyBase" label="供应基地" />
@@ -783,6 +800,24 @@
         </template>
       </el-dialog>
     </div>
+    <!-- 实际包装数量修改 -->
+    <div class="relatedDocumentsDialog">
+      <el-dialog
+        v-model="actualPkgCntDialogs"
+        title="修改实际包装数量"
+        width="500"
+      >
+      <el-input v-model="actualPkgCnt" min = "0" type="number" style="width: 240px" placeholder="输入修改数量" />
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="actualPkgCntDialogs = false">取消</el-button>
+          <el-button type="primary" @click="updateactualPkgCnt()">
+            确认
+          </el-button>
+      </div>
+    </template>
+  </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -792,7 +827,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getExternalUser, getFieldJob ,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase, updateTask, getOrderList, getDispatchNoteList} from "../../api/common";
+import { addFieldJob, getExternalUser, getFieldJob ,updateDispatchNote,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase, updateTask, getOrderList, getDispatchNoteList} from "../../api/common";
 import { AnyARecord } from "dns";
 import { update } from "lodash";
 import _ from "lodash"
@@ -802,7 +837,8 @@ const { proxy }: any = getCurrentInstance()
 
 const size = ref('default')
 const currentStep2 = ref(4)
-
+const actualPkgCnt = ref(0)
+const dialogVisible = ref(false)
 const commentList = ref<any>([])
 
 const defaultStartTime  = new Date();
@@ -815,6 +851,7 @@ const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(
 const taskType = route.query.taskType
 const mergedOrderNo = route.query.mergedOrderNo
 const ShowRelatedFieldDialogs = ref(false)
+const actualPkgCntDialogs = ref(false)
 
 const taskDetails=ref({
   taskid:route.query.id,
@@ -1128,6 +1165,44 @@ const dispatchNoteDetails = (row:any) =>{
   ShowRelatedFieldDialogs.value = true
 }
 
+//修改实际包装数量
+let rowList = ref(null)
+const actualPkgCntRow = (row:any) =>{
+  rowList.value = row
+  actualPkgCntDialogs.value = true
+  actualPkgCnt.value = row.actualPkgCnt
+}
+
+const updateactualPkgCnt = () =>{
+  if(actualPkgCnt.value < 0){
+    ElMessage({
+      message: '实际包装数量不能小于0',
+      type: 'error'
+    })
+    return "";
+  }
+  let params = {
+    id:rowList.value.id,
+    neoId:rowList.value.neoId,
+    actualPkgCnt:actualPkgCnt.value
+  }
+  console.info("paramsinfo",params)
+  updateDispatchNote(params).then((res : any) => {
+    console.info("resinfo",res)
+    ElMessage({
+      message: '修改成功',
+      type: 'success'
+    })
+    otherMethod()
+	}).catch((error: any) => {
+    ElMessage({
+      message: '实际包装数量修改失败：'+ error.message,
+      type: 'error'
+    })
+	});
+  actualPkgCntDialogs.value = false
+}
+
 const finishDeliveryOrder =  () => {
   let params = deliveryOrderForm;
   params["fieldJobContactName"]=orderData.value.accountName__C==undefined?"":orderData.value.accountName__C.toString();
@@ -1246,6 +1321,11 @@ const initiateComments = () => {
     })
     .catch(() => {})
 }
+
+const otherMethod = () => {
+  getOrderByOne(false,orderId)
+};
+
 onMounted(()=>{
   // getFieldJobByGet(true,fieldJobNeoId)
   getOrderByOne(false,orderId)

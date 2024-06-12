@@ -444,7 +444,7 @@
                 :before-upload="beforeUploadDelivery"
                 v-model:file-list="deliveryOrderForm.fileList"
                 class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :action= apiuploadUrl
                 :show-file-list="true"
                 list-type="picture-card"
               >
@@ -638,7 +638,7 @@
                 :file-list="installationOrderForm.fileList"
                 list-type="picture-card"
                 class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :action= apiuploadUrl
                 :show-file-list="true"
               >
                 <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
@@ -750,7 +750,7 @@
                 :file-list="problemReportingForm.fileList"
                 list-type="picture-card"
                 class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :action= apiuploadUrl
                 :show-file-list="true"
               >
                 <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
@@ -831,6 +831,9 @@ import { addFieldJob, getExternalUser, getFieldJob ,updateDispatchNote,getOrderL
 import { AnyARecord } from "dns";
 import { update } from "lodash";
 import _ from "lodash"
+import { BASE_URL } from "../../api/config"
+
+const apiuploadUrl = `${BASE_URL}/md/api/common/file/upload`;
 
 const { proxy }: any = getCurrentInstance()
 
@@ -1025,9 +1028,11 @@ const tableDataDispatch = ref([] as any)
 
 const mainRef = ref<any>(null);
 
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const headers = ref({
     Content: "application/json",
-    Authorization: ``, // Here you can add your token
+    Authorization: `${token}`, // Here you can add your token
     isImage: "true",
     needFileId: "true",
     "Trace-Id": "",

@@ -190,7 +190,7 @@
                 :before-upload="beforeUpload"
                 list-type="picture-card"
                 class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload"
+                :action= apiuploadUrl
                 :show-file-list="true"
                 v-model:file-list="problemReportingForm.fileList"
               >
@@ -224,6 +224,9 @@
 import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import {getServiceCaseList, getOrderList,createServiceCase } from '../../api/common.js'
+import { BASE_URL } from "../../api/config"
+
+const apiuploadUrl = `${BASE_URL}/md/api/common/file/upload`;
 
 const { proxy }: any = getCurrentInstance();
 
@@ -233,9 +236,11 @@ const pageConfig = ref({
   total: 0
 });
 
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const headers = ref({
     Content: "application/json",
-    Authorization: ``, // Here you can add your token
+    Authorization: `${token}`, // Here you can add your token
     isImage: "true",
     needFileId: "true",
     "Trace-Id": "",

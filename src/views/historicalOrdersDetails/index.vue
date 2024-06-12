@@ -263,7 +263,7 @@
             <el-form-item label="上传图片" class="custom_upload">
               <el-upload :on-success="handleSuccess" :on-remove="handleDelete" :auto-upload="true" :data="uploadData"
                 :headers="headers" :before-upload="beforeUpload" list-type="picture-card" class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                :action= apiuploadUrl :show-file-list="true"
                 v-model:file-list="problemReportingForm.fileList">
                 <el-icon>
                   <Plus />
@@ -461,6 +461,9 @@ import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
 import { getOrderListById, getLoginInfo, getServiceCaseItem, getFieldJob, getOrderList, createServiceCase, getServiceticketPage, getServiceticketList, updateOrderData, getFeildJobList } from '../../api/common.js'
 import _ from "lodash"
+import { BASE_URL } from "../../api/config"
+
+const apiuploadUrl = `${BASE_URL}/md/api/common/file/upload`;
 
 const { proxy }: any = getCurrentInstance()
 const size = ref('default')
@@ -1020,12 +1023,14 @@ const uploadData = ref({
   name: "files"
 })
 
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const headers = ref({
-  Content: "application/json",
-  Authorization: ``, // Here you can add your token
-  isImage: "true",
-  needFileId: "true",
-  "Trace-Id": "",
+    Content: "application/json",
+    Authorization: `${token}`, // Here you can add your token
+    isImage: "true",
+    needFileId: "true",
+    "Trace-Id": "",
 })
 
 const beforeUpload = (file) => {

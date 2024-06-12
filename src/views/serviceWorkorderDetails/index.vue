@@ -322,7 +322,7 @@
             <el-upload
               class="upload"
               drag
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              :action= apiuploadUrl
               multiple
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -511,6 +511,9 @@ import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router"
 import { getServiceCaseItem } from '../../api/common.js'
+import { BASE_URL } from "../../api/config"
+
+const apiuploadUrl = `${BASE_URL}/md/api/common/file/upload`;
 
 const { proxy }: any = getCurrentInstance()
 

@@ -589,7 +589,7 @@
               </el-upload> -->
               <el-upload :on-success="handleSuccess" :on-remove="handleDelete" :auto-upload="true" :data="uploadDatas"
                 :headers="headers" :before-upload="beforeUpload" list-type="picture-card" class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                :action= apiuploadUrl :show-file-list="true"
                 v-model:file-list="dialog2Form.fileList">
                 <el-icon>
                   <Plus />
@@ -617,7 +617,9 @@ import { useRoute } from "vue-router";
 import { getOrderListByNeoId, getServiceCaseItem, getServiceticketById,getTicketSolutionById, getTicketSolutionByTicketId, getTicketSolutionByneoID, getticketsolution, updateOrCreateServiceticket } from "../../api/common";
 import { Plus } from "@element-plus/icons-vue";
 import { isArray } from "lodash";
+import { BASE_URL } from "../../api/config"
 
+const apiuploadUrl = `${BASE_URL}/md/api/common/file/upload`;
 const { proxy }: any = getCurrentInstance()
 
 const currentStep = ref(4)
@@ -839,13 +841,15 @@ const filterList = ref({
   value6: "1",
 })
 
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const headers = ref({
-  Content: "application/json",
-  Authorization: ``, // Here you can add your token
-  isImage: "true",
-  needFileId: "true",
-  "Trace-Id": "",
-});
+    Content: "application/json",
+    Authorization: `${token}`, // Here you can add your token
+    isImage: "true",
+    needFileId: "true",
+    "Trace-Id": "",
+})
 
 const tableData = ref([
   // {

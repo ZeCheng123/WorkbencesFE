@@ -420,7 +420,7 @@
               </el-upload> -->
               <el-upload :on-success="handleSuccess" :on-remove="handleDelete" :auto-upload="true" :data="uploadDatas"
                 :headers="headers" :before-upload="beforeUpload" list-type="picture-card" class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                :action= apiuploadUrl :show-file-list="true"
                 v-model:file-list="dialog2Form.fileList">
                 <el-icon>
                   <Plus />
@@ -520,7 +520,7 @@
               <el-upload :on-success="handleSuccessDelivery" :on-remove="handleDeleteDelivery" :auto-upload="true"
                 :data="uploadDataDelivery" :headers="headers" :before-upload="beforeUploadDelivery"
                 v-model:file-list="deliveryOrderForm.fileList" class="avatar-uploader"
-                action="https://sh.mengtian.com.cn:9595/md/api/common/file/upload" :show-file-list="true"
+                :action= apiuploadUrl :show-file-list="true"
                 list-type="picture-card">
                 <el-icon class="avatar-uploader-icon">
                   <Plus />
@@ -730,6 +730,9 @@ import {
   getServiceticketById,
 } from "../../api/common.js";
 import moment from "moment";
+import { BASE_URL } from "../../api/config"
+
+const apiuploadUrl = `${BASE_URL}/md/api/common/file/upload`;
 
 const { proxy }: any = getCurrentInstance();
 const defaultStartTime = new Date();
@@ -1309,13 +1312,15 @@ const uploadData = ref({
   name: "files",
 });
 
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const headers = ref({
-  Content: "application/json",
-  Authorization: ``, // Here you can add your token
-  isImage: "true",
-  needFileId: "true",
-  "Trace-Id": "",
-});
+    Content: "application/json",
+    Authorization: `${token}`, // Here you can add your token
+    isImage: "true",
+    needFileId: "true",
+    "Trace-Id": "",
+})
 
 const getExtralUserData = (showMsg: boolean) => {
   let params = { userType: 1, name: "", phone: "" };

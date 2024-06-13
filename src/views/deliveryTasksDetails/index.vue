@@ -142,7 +142,37 @@
         </span> -->
       </span>
     </span>
-    <span class="related_item_order">
+    <span class="related_item_order" v-if="tableDataTaskList && tableDataTaskList.length > 0">
+      <span class="table_title">相关项>子任务</span>
+      <span class="table_content">
+        <el-table :data="tableDataTaskList" :stripe="false" style="width: 100%" max-height="115">
+          <!-- <el-table-column prop="id" label="操作" width="80px">
+            <template #default="scope">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  color: #165dff;
+                  cursor: pointer;
+                "
+                @click="viewOrderDetails(scope.row)"
+              >
+                查看
+              </div>
+            </template>
+          </el-table-column> -->
+          <el-table-column prop="id" label="任务编号" />
+          <el-table-column prop="status" label="状态">
+					  <template #default="scope">
+						  <div style="display:flex;align-items:center;">
+							  {{scope.row.status?(orderStatusPtions.find(val=>val["code"]==scope.row.status)?.name):"待处理"}}
+						  </div>
+					  </template>
+				  </el-table-column>
+        </el-table>
+      </span>
+    </span>
+    <span class="related_item_order" >
       <span class="table_title">相关项>订单</span>
       <span class="table_content">
         <el-table :data="tableDataOrder" :stripe="false" style="width: 100%" max-height="115">
@@ -827,7 +857,7 @@ import { ref, computed, getCurrentInstance, reactive ,onMounted} from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox,FormInstance} from "element-plus"
 import { useRoute } from "vue-router"
-import { addFieldJob, getExternalUser, getFieldJob ,updateDispatchNote,getOrderListById,getFeildJobList,getDispatchNoteByGet, createServiceCase, updateTask, getOrderList, getDispatchNoteList} from "../../api/common";
+import { addFieldJob, getExternalUser, getFieldJob ,updateDispatchNote,getOrderListById,getFeildJobList,getDispatchNoteByGet,getLoginInfo, createServiceCase, updateTask, getOrderList, getDispatchNoteList} from "../../api/common";
 import { AnyARecord } from "dns";
 import { update } from "lodash";
 import _ from "lodash"
@@ -999,6 +1029,8 @@ const installationOrderDialog = ref(false)
 
 const showProblemReportingDialog = ref(false)
 
+const tableDataTaskList = ref([])
+
 const tableDataOrder = ref([
   // {
   //   text1: "",
@@ -1021,6 +1053,33 @@ const tableDataInvoice = ref([
   //   text6: "2024-02-21 10:30:50",
   // },
 ] as any)
+
+const orderStatusPtions = ref([
+		{
+			code: "",
+			name: "全部",
+		},
+		{
+			code: "1",
+			name: "待处理",
+		},
+		{
+			code: "2",
+			name: "入库",
+		},
+		{
+			code: "3",
+			name: "配送",
+		},
+		{
+			code: "4",
+			name: "安装",
+		},
+		{
+			code: "5",
+			name: "完成",
+		}
+	])
 
 const screenTableDataInvoice = ref([])
 
@@ -1335,6 +1394,7 @@ onMounted(()=>{
   // getFieldJobByGet(true,fieldJobNeoId)
   getOrderByOne(false,orderId)
   getExtralUserData(false)
+  subtaskList()
   // getFieldList(false,orderId)
   const standardScale = (("100%") as any) / (("100%") as any);
   window.addEventListener("resize", _.debounce(function (){
@@ -1649,6 +1709,19 @@ const currentStepToPeiSong=()=>{
       //   message: 'Delete canceled',
       // })
     })
+}
+
+const subtaskList =()=>{
+  let params={
+    mergeTaskId:taskDetails.value.taskid
+  }
+  console.info("mergeTaskId",taskDetails.value.taskid)
+  getLoginInfo(params).then((res:any)=>{
+    console.info("resss",res)
+    if(res?.data?.code == "success"){
+      tableDataTaskList.value = res.data.data
+    }
+  })
 }
 
 //日期控件不能选择小于当前日期的时间

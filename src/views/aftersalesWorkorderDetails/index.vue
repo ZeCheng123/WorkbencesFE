@@ -1167,6 +1167,7 @@ const submitDialog = () => {
 
   let params = {
     id:ticketSolutionTable.value[0]["id"],
+    orderId:orderDetails.value["neoid"],
     serviceTicket:aftersalesHeaderDetails.value["id"],
     serviceTicketId: parseInt(ticketSolutionTable.value[0]["serviceTicketId"]),
     serviceCaseId:parseInt(ticketSolutionTable.value[0]["serviceCaseId"]),

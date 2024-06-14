@@ -548,10 +548,56 @@
           <el-form :model="editFollowerAndPDescriptForm" :rules="editFollowerAndPDescriptFormRule"
             ref="deditFollowerAndPDescriptFormRef" label-width="90px" label-position="left">
             <el-form-item label="订单编号" prop="orderNeoId">
-              <el-select filterable v-model="editFollowerAndPDescriptForm.orderNeoId" @change="onChangeOrderSelect"
+              <!-- <el-select filterable v-model="editFollowerAndPDescriptForm.orderNeoId" @change="onChangeOrderSelect"
                 placeholder="请选择订单编号" remote reserve-keyword remote-show-suffix :remote-method="remoteMethod"
                 :loading="loadingForSecrchOrder">
                 <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid">
+                  <span style="float: left">{{ item.po }}</span>
+                  <span style="float: right;color: var(--el-text-color-secondary);font-size: 13px;">
+                    {{ item.accountName__C }}--{{ item.contactTel }}--{{ item.productsAmount }}
+                  </span>
+                </el-option>
+              </el-select> -->
+              <!-- <el-select
+                  v-model="editFollowerAndPDescriptForm.orderNeoId"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  :reserve-keyword="false"
+                  @change="onChangeOrderSelect"
+                  remote
+                  remote-show-suffix 
+                  :remote-method="remoteMethod"
+                  placeholder="请选择订单编号"
+                  :loading="loadingForSecrchOrder"
+                >
+                  <el-option
+                    v-for="item in orderList"
+                    :key="item.po"
+                    :label="item.po"
+                    :value="item.neoid"
+                  ></el-option>
+              </el-select> -->
+                <el-select
+                  v-model="editFollowerAndPDescriptForm.orderNeoId"
+                  filterable
+                  allow-create
+                  remote-show-suffix
+                  default-first-option
+                  remote
+                  placeholder="请选择订单编号"
+                  @change="onChangeOrderSelect"
+                  :remote-method="remoteMethod"
+                  reserve-keyword
+                  :loading="loadingForSecrchOrder"
+                  >
+                <el-option
+                  v-for="item in orderList"
+                  :key="item.po"
+                  :label="item.po"
+                  :value="item.neoid"
+                  >
                   <span style="float: left">{{ item.po }}</span>
                   <span style="float: right;color: var(--el-text-color-secondary);font-size: 13px;">
                     {{ item.accountName__C }}--{{ item.contactTel }}--{{ item.productsAmount }}
@@ -1647,6 +1693,7 @@ const submitDialog = () => {
     item["id"] = solutionId != "" ? item["solutionDetailsId"] : null;
   });
   let params = {
+    orderId:orderDetails.value["neoid"],
     serviceTicket: curItemServiceTicket.value["id"],
     serviceTicketId: curItemServiceTicket.value["neoId"],
     serviceCaseId: parseInt(currentItem.value["neoid"]),
@@ -1863,6 +1910,7 @@ const bindServiceTicket = (row, editOrNot) => {
       serviceCase__c: currentItem.value["neoid"],
       serviceCaseNeoId: currentItem.value["neoid"],
       distributorDemands__c: editOrNot==true?row.distributorDemands__c:formDialog.value.remark,
+      orderNeoId: orderDetails.value["neoid"],
     };
     createOrNot = false;
   } else {

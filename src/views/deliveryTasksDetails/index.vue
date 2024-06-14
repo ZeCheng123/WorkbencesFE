@@ -252,7 +252,8 @@
           <el-table-column prop="view" label="操作" width="160px">
             <template #default="scope">
               <div style="display: flex; align-items: center; color: #165dff; cursor: pointer;">
-                <span @click="viewDispatchDetails(scope.row)">查看</span>
+                <span style="margin-right: 10px;" @click="viewDispatchDetails(scope.row)">查看</span>
+                <span @click="viewDispatchWorkers(scope.row)">编辑</span>
               </div>
             </template>
           </el-table-column>
@@ -701,6 +702,213 @@
         </template>
       </el-dialog>
     </div>
+
+    <div class="deliveryOrderDialog">
+      <el-dialog
+        v-model="editdeliveryOrderDialog"
+        title="编辑配送派工单"
+        width="80%"
+        :show-close="false"
+      >
+        <div class="step">
+          <span class="item">
+            <span
+              @click="changeDeliveryOrderStep(1)"
+              :class="currentDeliveryOrderStep == 1 ? 'num_selected' : 'num'"
+              >1</span
+            >
+            <span
+              :class="currentDeliveryOrderStep >= 1 ? 'name_selected' : 'name'"
+              >选择配送司机
+              <span class="remark">选择配送货品的司机</span>
+            </span>
+          </span>
+        </div>
+        <div class="content">
+          <el-form
+            v-if="currentDeliveryOrderStep == 1"
+            :model="deliveryOrderForm"
+            :rules="deliveryOrderRule"
+            ref="deliveryOrderFormRef"
+            label-width="90px"
+            label-position="left"
+          >
+          <el-form-item label="人员名称" prop="followerId">              
+              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+              <span class="custom_item" @click="changeToMyPerson"><img src="@/assets/images/add.png" alt="" /></span>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="contactTelephone">
+              <el-input
+                v-model="deliveryOrderForm.contactTelephone"
+                placeholder="查找或输入配送司机手机号码"
+              />
+            </el-form-item>
+            
+            <el-form-item label="预约开始" prop="appointmentStartTime">
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentStartTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
+              />
+            </el-form-item>
+            <el-form-item label="预约结束" prop="appointmentEndTime">
+              <el-date-picker
+                v-model="deliveryOrderForm.appointmentEndTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
+              />
+            </el-form-item>
+          </el-form>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button class="cancel_btn" @click="deliveryOrderDialog = false"
+              >取消</el-button
+            >
+            <el-button
+              v-if="currentDeliveryOrderStep == 1"
+              type="primary"
+              class="primary_btn"
+              @click="editdeliveryOrderNextStep"
+              >提交</el-button
+            >
+          </div>
+        </template>
+      </el-dialog>
+    </div>
+    <div class="installationOrderDialog">
+      <el-dialog
+        v-model="editationOrderDialog"
+        title="编辑安装派工单"
+        width="80%"
+        :show-close="false"
+      >
+        <div class="step">
+          <span class="item">
+            <span
+              @click="changeInstallationOrderStep(1)"
+              :class="
+                currentInstallationOrderStep == 1 ? 'num_selected' : 'num'
+              "
+              >1</span
+            >
+            <span
+              :class="
+                currentInstallationOrderStep >= 1 ? 'name_selected' : 'name'
+              "
+              >选择安装技工
+              <span class="remark">选择负责安装的技工</span>
+            </span>
+          </span>
+        </div>
+        <div class="content">
+          <el-form
+            v-if="currentInstallationOrderStep == 1"
+            :model="installationOrderForm"
+            :rules="installationOrderRule"
+            label-width="80px"
+            label-position="left"
+          >            
+            <el-form-item label="人员名称" prop="username">
+              <!-- <el-input
+                placeholder="查找或输入服务人员姓名"
+                v-model="installationOrderForm.username"
+              /> -->
+              <el-select v-model="installationOrderForm.username" @change="onCahngeUserSelectForInstallion" placeholder="查找或输入服务人员姓名">
+                <el-option
+                  v-for="item in extralUserData"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+              <span class="custom_item1"  @click="changeToMyPerson">
+                <img src="@/assets/images/add.png" alt="" />
+              </span>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="phone">
+              <el-input
+                placeholder="输入联系方式"
+                v-model="installationOrderForm.phone"
+              />
+            </el-form-item>
+            <el-form-item label="预约开始" prop="appointmentStartTime">
+              <el-date-picker
+                v-model="installationOrderForm.appointmentStartTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                ::default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
+              />
+            </el-form-item>
+            <el-form-item label="预约结束" prop="appointmentEndTime">
+              <el-date-picker
+                v-model="installationOrderForm.appointmentEndTime"
+                type="datetime"
+                placeholder="日期/时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                :default-time="defaultStartTime"
+                :disabled-date="disabledPastDate"
+              />
+            </el-form-item>
+            <el-form-item label="安装小组">
+              <span style="width: 300px">
+                <el-checkbox
+                  v-model="installationOrderForm.installationTeam"
+                ></el-checkbox>
+              </span>
+            </el-form-item>
+            <el-form-item
+              v-if="installationOrderForm.installationTeam"
+              label="添加组员"
+            >
+              <span class="custom_item">
+                <img src="@/assets/images/add.png" alt="" />
+              </span>
+            </el-form-item>
+          </el-form>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button
+              class="cancel_btn"
+              @click="installationOrderDialog = false"
+              >取消</el-button
+            >
+            <el-button
+              v-if="currentInstallationOrderStep == 1"
+              type="primary"
+              class="primary_btn"
+              @click="installationOrderNextStep"
+              >提交</el-button
+            >
+            <!-- <el-button
+              v-if="currentInstallationOrderStep == 2"
+              type="primary"
+              class="primary_btn"
+              @click="finishInstallationOrder"
+              >完成</el-button
+            > -->
+          </div>
+        </template>
+      </el-dialog>
+    </div>
+
+
     <div class="problemReportingDialog">
       <el-dialog
         v-model="showProblemReportingDialog"
@@ -1025,6 +1233,10 @@ const problemReportingRule = reactive({
 
 const deliveryOrderDialog = ref(false)
 
+const editdeliveryOrderDialog = ref(false)
+
+const editationOrderDialog = ref(false)
+
 const installationOrderDialog = ref(false)
 
 const showProblemReportingDialog = ref(false)
@@ -1140,6 +1352,10 @@ const deliveryOrderNextStep = () => {
   currentDeliveryOrderStep.value = 2
 }
 
+const editdeliveryOrderNextStep = () =>{
+
+}
+
 const installationOrderNextStep = () => {
   currentInstallationOrderStep.value = 2
 }
@@ -1210,6 +1426,21 @@ const viewDispatchDetails = (row:any) =>{
     proxy.$router.push({ path: "/dispatch_details", 
       query: {id:row.id} 
 		});
+}
+
+//编辑派工人员
+const viewDispatchWorkers = (row:any)=>{
+  console.info("rowssssccccc",row)
+  if(currentStep.value == 4){
+    editdeliveryOrderDialog.value = true
+  }else if(currentStep.value == 5){
+    editationOrderDialog.value = true
+  }else{
+    ElMessage({
+				message: '订单已完成，无法修改派工单',
+				type: 'error'
+		});
+  }
 }
 
 const viewOrderDetails = (row:any) =>{
@@ -1715,9 +1946,7 @@ const subtaskList =()=>{
   let params={
     mergeTaskId:taskDetails.value.taskid
   }
-  console.info("mergeTaskId",taskDetails.value.taskid)
   getLoginInfo(params).then((res:any)=>{
-    console.info("resss",res)
     if(res?.data?.code == "success"){
       tableDataTaskList.value = res.data.data
     }

@@ -818,16 +818,12 @@
         <div class="content">
           <el-form
             v-if="currentInstallationOrderStep == 1"
-            :model="editinstallationOrderForm"
+            :model="editdeliveryOrderForm"
             :rules="installationOrderRule"
             label-width="80px"
             label-position="left"
           >            
             <el-form-item label="人员名称" prop="followerId">
-              <!-- <el-input
-                placeholder="查找或输入服务人员姓名"
-                v-model="installationOrderForm.username"
-              /> -->
               <el-select v-model="editdeliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
                 <el-option
                   v-for="item in extralUserData"
@@ -869,12 +865,12 @@
             <el-form-item label="安装小组">
               <span style="width: 300px">
                 <el-checkbox
-                  v-model="editinstallationOrderForm.installationTeam"
+                  v-model="editdeliveryOrderForm.installationTeam"
                 ></el-checkbox>
               </span>
             </el-form-item>
             <el-form-item
-              v-if="editinstallationOrderForm.installationTeam"
+              v-if="editdeliveryOrderForm.installationTeam"
               label="添加组员"
             >
               <span class="custom_item">
@@ -1095,7 +1091,6 @@ const mergedOrderNo = route.query.mergedOrderNo
 const ShowRelatedFieldDialogs = ref(false)
 const actualPkgCntDialogs = ref(false)
 
-
 const taskDetails=ref({
   taskid:route.query.id,
   orderId:route.query.orderId,
@@ -1163,14 +1158,15 @@ let deliveryOrderForm = reactive({
   address:""
 })
 
-let editdeliveryOrderForm = reactive({
+const editdeliveryOrderForm = ref({
   id:"",
   neoId:"",
   // fieldJobContactName: "",
   followerPhone: "",
-  appointmentStartTime: "",
-  appointmentEndTime: "",
+  appointmentStartTime:"",
+  appointmentEndTime:"",
   followerId:null,
+  installationTeam:false
 })
 
 const deliveryOrderRule = reactive({
@@ -1376,11 +1372,11 @@ const deliveryOrderNextStep = () => {
 //编辑修改负责人
 const editdeliveryOrderNextStep = () =>{
   let params = {
-    id:editdeliveryOrderForm.id,
-    neoId:editdeliveryOrderForm.neoId,
-    followerId:editdeliveryOrderForm.followerId,
-    appointmentEndTime:editdeliveryOrderForm.appointmentEndTime,
-    appointmentStartTime:editdeliveryOrderForm.appointmentStartTime,
+    id:editdeliveryOrderForm.value.id,
+    neoId:editdeliveryOrderForm.value.neoId,
+    followerId:editdeliveryOrderForm.value.followerId,
+    appointmentEndTime:editdeliveryOrderForm.value.appointmentEndTime,
+    appointmentStartTime:editdeliveryOrderForm.value.appointmentStartTime,
     // fieldJobContactName:editdeliveryOrderForm.fieldJobContactName,
     // contactTelephone:editdeliveryOrderForm.contactTelephone
   }
@@ -1484,10 +1480,14 @@ const viewDispatchWorkers = (row:any)=>{
 				type: 'error'
 		});
   }
-  editdeliveryOrderForm = row
-  editdeliveryOrderForm.appointmentStartTime = JSON.parse(JSON.stringify(row.appointmentStartTime))
-  editdeliveryOrderForm.appointmentEndTime = JSON.parse(JSON.stringify(row.appointmentEndTime))
-  console.info("editdeliveryOrderForm",editdeliveryOrderForm)
+  // editdeliveryOrderForm.value = row
+  editdeliveryOrderForm.value.id = row.id
+  editdeliveryOrderForm.value.neoId = row.neoId
+  editdeliveryOrderForm.value.followerPhone = row.followerPhone
+  editdeliveryOrderForm.value.appointmentStartTime = row.appointmentStartTime
+  editdeliveryOrderForm.value.appointmentEndTime = row.appointmentEndTime
+  editdeliveryOrderForm.value.followerId = row.followerId
+  editdeliveryOrderForm.value.installationTeam = row.installationTeam
 }
 
 const viewOrderDetails = (row:any) =>{
@@ -1944,8 +1944,8 @@ const onCahngeUserSelectForDelivery = (event) => {
   if(item){
     deliveryOrderForm["fieldJobContactName"] = item["name"];
     deliveryOrderForm["contactTelephone"] = item["phone"];
-    editdeliveryOrderForm["followerPhone"] = item["phone"];
-    editdeliveryOrderForm["fieldJobContactName"] = item["name"];
+    editdeliveryOrderForm.value.followerPhone = item["phone"];
+    // editdeliveryOrderForm.value.fieldJobContactName = item["name"];
     // editdeliveryOrderForm["contactTelephone"] = item["phone"];
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }

@@ -374,7 +374,7 @@ const option3 = computed(() => {
 })
 
 onMounted(() => {
-  new vconsole();
+  // new vconsole();
   proxy.$nextTick(() => {
     initEchart();
   })

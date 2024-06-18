@@ -393,6 +393,7 @@
     }
 }
 
+
 .showMainDialog{
     .step{
         width: 100%;
@@ -599,6 +600,10 @@
     }
 }
 
+
+:deep(.editcontentDialog .el-select__input){
+    width: 100% !important;
+}
 
 :deep(.showMainDialog .el-dialog){
     margin: 10px auto;

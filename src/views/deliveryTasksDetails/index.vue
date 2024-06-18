@@ -258,6 +258,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="caseNo" label="派工单编号" />
+          <el-table-column prop="followerName" label="派工单负责人" />
           <el-table-column prop="stage__c" label="状态">
              <template #default="scope">
                <span style="color: blue;">{{scope.row["stage__c"] == "0" ? "待开始" : scope.row["stage__c"] == "1" ? "进行中" : "已完成"}}</span>
@@ -270,9 +271,9 @@
 						</div>
 					</template>
         </el-table-column>
-          <el-table-column prop="appointmentStartTime" label="计划开始时间" />
-          <el-table-column prop="appointmentEndTime" label="计划结束时间" />
-          <el-table-column prop="createdTime" label="创建时间" />
+        <el-table-column prop="appointmentStartTime" label="计划开始时间" />
+        <el-table-column prop="appointmentEndTime" label="计划结束时间" />
+        <el-table-column prop="createdTime" label="创建时间" />
         </el-table>
       </span>
     </span>
@@ -727,14 +728,14 @@
         <div class="content">
           <el-form
             v-if="currentDeliveryOrderStep == 1"
-            :model="deliveryOrderForm"
+            :model="editdeliveryOrderForm"
             :rules="deliveryOrderRule"
             ref="deliveryOrderFormRef"
             label-width="90px"
             label-position="left"
           >
           <el-form-item label="人员名称" prop="followerId">              
-              <el-select v-model="deliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
+              <el-select v-model="editdeliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
                 <el-option
                   v-for="item in extralUserData"
                   :key="item.name"
@@ -746,36 +747,36 @@
             </el-form-item>
             <el-form-item label="联系方式" prop="contactTelephone">
               <el-input
-                v-model="deliveryOrderForm.contactTelephone"
+                v-model="editdeliveryOrderForm.followerPhone"
                 placeholder="查找或输入配送司机手机号码"
               />
             </el-form-item>
             
             <el-form-item label="预约开始" prop="appointmentStartTime">
               <el-date-picker
-                v-model="deliveryOrderForm.appointmentStartTime"
+                v-model="editdeliveryOrderForm.appointmentStartTime"
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
                 :default-time="defaultStartTime"
-                :disabled-date="disabledPastDate"
+                :disabled-date="editdisabledPastDate"
               />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
               <el-date-picker
-                v-model="deliveryOrderForm.appointmentEndTime"
+                v-model="editdeliveryOrderForm.appointmentEndTime"
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
                 :default-time="defaultStartTime"
-                :disabled-date="disabledPastDate"
+                :disabled-date="editdisabledPastDate"
               />
             </el-form-item>
           </el-form>
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button class="cancel_btn" @click="deliveryOrderDialog = false"
+            <el-button class="cancel_btn" @click="editdeliveryOrderDialog = false"
               >取消</el-button
             >
             <el-button
@@ -791,7 +792,7 @@
     </div>
     <div class="installationOrderDialog">
       <el-dialog
-        v-model="editationOrderDialog"
+        v-model="editinstallationOrderDialog"
         title="编辑安装派工单"
         width="80%"
         :show-close="false"
@@ -817,17 +818,17 @@
         <div class="content">
           <el-form
             v-if="currentInstallationOrderStep == 1"
-            :model="installationOrderForm"
+            :model="editinstallationOrderForm"
             :rules="installationOrderRule"
             label-width="80px"
             label-position="left"
           >            
-            <el-form-item label="人员名称" prop="username">
+            <el-form-item label="人员名称" prop="followerId">
               <!-- <el-input
                 placeholder="查找或输入服务人员姓名"
                 v-model="installationOrderForm.username"
               /> -->
-              <el-select v-model="installationOrderForm.username" @change="onCahngeUserSelectForInstallion" placeholder="查找或输入服务人员姓名">
+              <el-select v-model="editdeliveryOrderForm.followerId" @change="onCahngeUserSelectForDelivery" placeholder="查找或输入服务人员姓名">
                 <el-option
                   v-for="item in extralUserData"
                   :key="item.name"
@@ -839,41 +840,41 @@
                 <img src="@/assets/images/add.png" alt="" />
               </span>
             </el-form-item>
-            <el-form-item label="联系方式" prop="phone">
+            <el-form-item label="联系方式" prop="followerPhone">
               <el-input
                 placeholder="输入联系方式"
-                v-model="installationOrderForm.phone"
+                v-model="editdeliveryOrderForm.followerPhone"
               />
             </el-form-item>
             <el-form-item label="预约开始" prop="appointmentStartTime">
               <el-date-picker
-                v-model="installationOrderForm.appointmentStartTime"
+                v-model="editdeliveryOrderForm.appointmentStartTime"
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
                 ::default-time="defaultStartTime"
-                :disabled-date="disabledPastDate"
+                :disabled-date="editdisabledPastDate"
               />
             </el-form-item>
             <el-form-item label="预约结束" prop="appointmentEndTime">
               <el-date-picker
-                v-model="installationOrderForm.appointmentEndTime"
+                v-model="editdeliveryOrderForm.appointmentEndTime"
                 type="datetime"
                 placeholder="日期/时间"
                 value-format="YYYY-MM-DD HH:mm:ss"
                 :default-time="defaultStartTime"
-                :disabled-date="disabledPastDate"
+                :disabled-date="editdisabledPastDate"
               />
             </el-form-item>
             <el-form-item label="安装小组">
               <span style="width: 300px">
                 <el-checkbox
-                  v-model="installationOrderForm.installationTeam"
+                  v-model="editinstallationOrderForm.installationTeam"
                 ></el-checkbox>
               </span>
             </el-form-item>
             <el-form-item
-              v-if="installationOrderForm.installationTeam"
+              v-if="editinstallationOrderForm.installationTeam"
               label="添加组员"
             >
               <span class="custom_item">
@@ -886,14 +887,14 @@
           <div class="dialog-footer">
             <el-button
               class="cancel_btn"
-              @click="installationOrderDialog = false"
+              @click="editinstallationOrderDialog = false"
               >取消</el-button
             >
             <el-button
               v-if="currentInstallationOrderStep == 1"
               type="primary"
               class="primary_btn"
-              @click="installationOrderNextStep"
+              @click="editdeliveryOrderNextStep"
               >提交</el-button
             >
             <!-- <el-button
@@ -1094,6 +1095,7 @@ const mergedOrderNo = route.query.mergedOrderNo
 const ShowRelatedFieldDialogs = ref(false)
 const actualPkgCntDialogs = ref(false)
 
+
 const taskDetails=ref({
   taskid:route.query.id,
   orderId:route.query.orderId,
@@ -1161,6 +1163,16 @@ let deliveryOrderForm = reactive({
   address:""
 })
 
+let editdeliveryOrderForm = reactive({
+  id:"",
+  neoId:"",
+  // fieldJobContactName: "",
+  followerPhone: "",
+  appointmentStartTime: "",
+  appointmentEndTime: "",
+  followerId:null,
+})
+
 const deliveryOrderRule = reactive({
   followerId: [
     { required: true, message: "Please input username", trigger: "blur" },
@@ -1194,6 +1206,15 @@ const installationOrderForm = reactive<any>({
   appointmentEndTime: "",
   fileList: [],
   filePath: [],
+  fieldJobContactName:""
+})
+
+const editinstallationOrderForm = reactive<any>({
+  username: "",
+  phone: "",
+  remark: "",
+  appointmentStartTime: "",
+  appointmentEndTime: "",
   fieldJobContactName:""
 })
 
@@ -1235,7 +1256,7 @@ const deliveryOrderDialog = ref(false)
 
 const editdeliveryOrderDialog = ref(false)
 
-const editationOrderDialog = ref(false)
+const editinstallationOrderDialog = ref(false)
 
 const installationOrderDialog = ref(false)
 
@@ -1352,7 +1373,26 @@ const deliveryOrderNextStep = () => {
   currentDeliveryOrderStep.value = 2
 }
 
+//编辑修改负责人
 const editdeliveryOrderNextStep = () =>{
+  let params = {
+    id:editdeliveryOrderForm.id,
+    neoId:editdeliveryOrderForm.neoId,
+    followerId:editdeliveryOrderForm.followerId,
+    appointmentEndTime:editdeliveryOrderForm.appointmentEndTime,
+    appointmentStartTime:editdeliveryOrderForm.appointmentStartTime,
+    // fieldJobContactName:editdeliveryOrderForm.fieldJobContactName,
+    // contactTelephone:editdeliveryOrderForm.contactTelephone
+  }
+  addFieldJob(params).then((res : any) => {
+    console.info("res.data.code",res.data.code)
+    console.info("res.data",res.data)
+    if(res.data.code == "success"){
+      editdeliveryOrderDialog.value = false
+      editinstallationOrderDialog.value = false
+      otherMethod()
+    }
+  })
 
 }
 
@@ -1362,8 +1402,11 @@ const installationOrderNextStep = () => {
 
 const extralUserData=ref<any>([])
 
+const editinstallationOrderNextStep = async () => {
+
+}
+
 const finishInstallationOrder = async () => {
-  console.log(installationOrderForm);
   let params = {
     fieldJobContactName: orderData.value.accountName__C==undefined?"":orderData.value.accountName__C,
     contactTelephone: orderData.value.contactTel==undefined?"":orderData.value.contactTel,
@@ -1430,17 +1473,21 @@ const viewDispatchDetails = (row:any) =>{
 
 //编辑派工人员
 const viewDispatchWorkers = (row:any)=>{
-  console.info("rowssssccccc",row)
+  console.info("row",row)
   if(currentStep.value == 4){
     editdeliveryOrderDialog.value = true
   }else if(currentStep.value == 5){
-    editationOrderDialog.value = true
+    editinstallationOrderDialog.value = true
   }else{
     ElMessage({
 				message: '订单已完成，无法修改派工单',
 				type: 'error'
 		});
   }
+  editdeliveryOrderForm = row
+  editdeliveryOrderForm.appointmentStartTime = JSON.parse(JSON.stringify(row.appointmentStartTime))
+  editdeliveryOrderForm.appointmentEndTime = JSON.parse(JSON.stringify(row.appointmentEndTime))
+  console.info("editdeliveryOrderForm",editdeliveryOrderForm)
 }
 
 const viewOrderDetails = (row:any) =>{
@@ -1748,7 +1795,6 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
     getOrderList(params).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined) {
-        console.log("orderlist:",data)
         tableDataOrder.value=data     
 			}
   })
@@ -1887,6 +1933,8 @@ const onCahngeUserSelectForInstallion = (event) => {
   if(item){
     installationOrderForm["fieldJobContactName"] = item["name"];
     installationOrderForm["phone"]=item["phone"];
+    editinstallationOrderForm["fieldJobContactName"] = item["name"];
+    editinstallationOrderForm["phone"]=item["phone"];
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
 }
@@ -1895,7 +1943,10 @@ const onCahngeUserSelectForDelivery = (event) => {
   let item = extralUserData.value.find(val => val["id"] == event);
   if(item){
     deliveryOrderForm["fieldJobContactName"] = item["name"];
-    deliveryOrderForm["contactTelephone"] = item["phone"];    
+    deliveryOrderForm["contactTelephone"] = item["phone"];
+    editdeliveryOrderForm["followerPhone"] = item["phone"];
+    editdeliveryOrderForm["fieldJobContactName"] = item["name"];
+    // editdeliveryOrderForm["contactTelephone"] = item["phone"];
     //installationOrderForm.value["customerPhone"] = item["phone"];
   }
 }
@@ -1958,6 +2009,9 @@ const disabledPastDate=(time:any)=>{
   return time.getTime()< Date.now()-24*60*60*1000
 }
 
+const editdisabledPastDate=(time:any)=>{
+  return time.getTime() < Date.now();
+}
 const changeToMyPerson=(()=>{
   proxy.$router.push('my_personnel')
 })

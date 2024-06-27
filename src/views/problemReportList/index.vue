@@ -131,7 +131,7 @@
             <el-form-item label="订单编号" prop="orderNo">
               <el-select v-model="problemReportingForm.orderNo" filterable @change="onCahngeOrderNo"
                 placeholder="请选择订单编号">
-                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid" />
+                <el-option v-for="item in orderList" :key="item.po" :label="`${item.po} -- ${item.productionOrderNo__c}`" :value="item.neoid" />
               </el-select>
             </el-form-item>
             <el-form-item label="提报人姓名" prop="customerName">

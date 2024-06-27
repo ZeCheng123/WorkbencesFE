@@ -75,10 +75,17 @@
           </span>
         </span>
         <span class="row_field">
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content='aftersalesHeaderDetails.distributorDemands__c'
+          placement="top"
+          >
           <span class="field">
             <span class="label">升级备注：</span>
             <span class="value">{{ aftersalesHeaderDetails.distributorDemands__c }}</span>
           </span>
+        </el-tooltip>
           <span class="field">
             <span class="label">专卖店名称：</span>
             <span class="value">{{orderDetails.storeName__c}}</span>
@@ -103,10 +110,18 @@
           </span>
         </span>
         <span class="row_field">
+          <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content='aftersalesHeaderDetails.noteSummary'
+          placement="top"
+          >
           <span class="field">
             <span class="label">售后回复:</span>
             <span class="value">{{ aftersalesHeaderDetails.noteSummary }}</span>
           </span>
+          </el-tooltip>
+
           <span class="field">
             <span class="label"></span>
             <span class="value"></span>
@@ -138,10 +153,17 @@
           </span>
         </span>
         <span class="row_field">
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content='aftersalesHeaderDetails.customerAddress__c'
+          placement="top"
+          >
           <span class="field">
             <span class="label">客户地址：</span>
             <span class="value">{{ aftersalesHeaderDetails.customerAddress__c }}</span>
           </span>
+        </el-tooltip>
         </span>
       </span>
     </span>
@@ -1093,7 +1115,6 @@ const multipleSelection = ref([])
 //经销商填写售后处理描述
 dialog2Form.value = ref({})
 const handleSelectionChange = (val) => {
-  console.info("选择的数据：", val)
   multipleSelection.value = val
 }
 
@@ -1145,14 +1166,15 @@ const loadingOrderList = () => {
 }
 //升级到总部售后提交按钮
 const submitDialog = () => {
-  console.info("fileIdfileId", fileIdList)
   const selectData = ticketSoluDetailsTable.value.filter(item => item.checked)
-
-  console.info("过滤：", selectData["id"])
   if (selectData.length <= 0) {
     proxy.$message.error("必须勾选数据!");
     return;
   }
+  if (!fileIdList.value || fileIdList.value.length === 0) {
+    proxy.$message.warning("请上传问题图片");
+    return;
+  } 
   let selectDataClone=JSON.parse(JSON.stringify(selectData));
   selectDataClone.forEach(item => {
     item["picture"] = fileIdList.value //图片id
@@ -1173,8 +1195,6 @@ const submitDialog = () => {
     serviceCaseId:parseInt(ticketSolutionTable.value[0]["serviceCaseId"]),
     details: selectDataClone
   }
-  console.info("selectDataselectData", selectData)
-
   // dialog2Form.value["details"] = selectData
   if (!dialog2Form.value.problemType || !dialog2Form.value.afterSalesIssues  || !dialog2Form.value.problemDesc) {
     proxy.$message.error("必填选项不能为空!");

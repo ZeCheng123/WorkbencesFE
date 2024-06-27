@@ -262,7 +262,9 @@
     }
 }
 
-
+:deep(.problemReportingDialog .el-select__input){
+    width: 100% !important;
+}
 
 ////////////////////////////
 :deep(.problemReportingDialog .el-dialog){

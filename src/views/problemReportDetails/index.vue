@@ -195,12 +195,16 @@
             <span class="label required">订单编号:</span>
             <el-input disabled v-model="formDialog.orderNo" placeholder="订单编号" style="width: auto"></el-input>
           </span>
+          <span class="form_row_shengji">
+            <span class="label required">生产单号:</span>
+            <el-input disabled v-model="formDialog.productionOrderNo__c" placeholder="生产单号" style="width: auto"></el-input>
+          </span>
           <div class="form_row_shengji">
             <span class="label required">经销商需求描述:</span>
             <el-input v-model="formDialog.remark" placeholder="输入升级描述" style="width: auto"></el-input>
           </div>
           <div class="search">
-            <span class="label required">客户历史售后工单</span>
+            <span class="label required">客户已有{{ serviceTicket.length ? serviceTicket.length : 0 }}个历史售后工单</span>
           </div>
           <div class="table">
             <el-table ref="multipleTableRef" :selection-change="handleSelectionChange" :data="serviceTicket"
@@ -223,7 +227,20 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="distributorNo" label="经销商名称" />
+              <!-- <el-table-column prop="distributorNo" label="经销商名称" /> -->
+              <el-table-column prop="status__c" label="审批状态">
+                <template #default="scope">
+                  <div style="display: flex; align-items: center">
+                    {{
+                    scope.row.approvalStatus
+                    ? seviceTicketapprovalStatus.find(
+                    (val) => val["code"] == scope.row.approvalStatus
+                    )?.name
+                    : ""
+                    }}
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column prop="storeName" label="专卖店名称" />
               <el-table-column prop="status__c" label="状态">
                 <template #default="scope">
@@ -238,11 +255,15 @@
                   </div>
                 </template>
               </el-table-column>
+              <el-table-column width="150" prop="serviceCase__c" label="问题编号" />
               <el-table-column prop="reporter__c" label="提报人" />
               <el-table-column prop="problemDescription__c" label="问题描述 " />
+              <el-table-column prop="noteSummary" label="售后回复 " />
+              <el-table-column prop="solutionSummary" label="处理方式汇总 " />
               <el-table-column prop="distributorDemands__c" label="经销商需求描述 " />
               <el-table-column prop="createdTime" label="创建时间 " />
-              <el-table-column prop="operate" label="操作">
+              
+              <!-- <el-table-column prop="operate" label="操作">
                 <template #default="scope">
                   <el-checkbox disabled v-if="scope.row.operate" v-model="scope.row.operate" :value="scope.row.operate"
                     style="
@@ -251,7 +272,6 @@
                       --el-checkbox-disabled-checked-input-fill: #ff8127;
                       --el-checkbox-text-color: #ff8127;
                     ">已绑定</el-checkbox>
-                  <!-- <el-checkbox v-else v-model="scope.row.operate">点击绑定</el-checkbox> -->
                   <div v-else style="
                       display: flex;
                       align-items: center;
@@ -261,7 +281,7 @@
                     点击绑定
                   </div>
                 </template>
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
           </div>
 
@@ -433,7 +453,7 @@
           <div class="dialog-footer">
             <el-button class="cancel_btn" @click="showMainDialog = false">取消</el-button>
             <el-button v-if="currentDialogStep == 1" @click="currentDialogStepBut" type="primary" class="primary_btn"
-              style="margin-left: 50px !important">下一步</el-button>
+              style="margin-left: 50px !important">新建售后工单</el-button>
             <el-button v-if="currentDialogStep == 2" @click="submitDialog" type="primary" class="primary_btn"
               style="margin-left: 50px !important">提交</el-button>
           </div>
@@ -826,6 +846,7 @@ let isSynced = false;
 
 const formDialog = ref<any>({
   orderNo: "",
+  productionOrderNo__c:"",
   remark: "",
   searchValue: "",
   orderType: "",
@@ -1171,6 +1192,29 @@ const dispatchWorkerStatusOption = ref([
   },
 ]);
 
+const seviceTicketapprovalStatus = ref([
+  {
+    code: "0",
+    name: "待提交",
+  },
+  {
+    code: "1",
+    name: "审批中",
+  },
+  {
+    code: "2",
+    name: "审批拒绝",
+  },
+  {
+    code: "3",
+    name: "审批通过",
+  },
+  {
+    code: "4",
+    name: "撤回",
+  }
+])
+
 const seviceTicketStatusOptions = ref([
   {
     code: "",
@@ -1369,7 +1413,7 @@ const headers = ref({
 })
 
 const getExtralUserData = (showMsg: boolean) => {
-  let params = { userType: 1, name: "", phone: "" };
+  let params = { userType: 2, name: "", phone: "" };
   getExternalUser(params).then((res: any) => {
     let data = res.data.data;
     if (data != undefined && data.length > 0) {
@@ -1679,6 +1723,10 @@ const submitDialog = () => {
     proxy.$message.error("必须勾选数据!");
     return;
   }
+  if (!fileIdList.value || fileIdList.value.length === 0) {
+    proxy.$message.warning("请上传问题图片");
+    return;
+  }  
   let selectDataClone = JSON.parse(JSON.stringify(selectData));
   selectDataClone.forEach((item) => {
     item["picture"] = fileIdList.value; //图片id fileIdList.value
@@ -2267,6 +2315,8 @@ const getSearchOrderOneList = (orderneoId) => {
       deliveryOrderForm["name"] =
         rtData.data["accountName__C"] + "的维修派工单";
       formDialog.value["orderNo"] = orderDetails.value["po"];
+      formDialog.value["productionOrderNo__c"] = orderDetails.value["productionOrderNo__c"];
+
       orderList.value.push(orderDetails.value)
     } else {
       proxy.$message.error(rtData?.message);

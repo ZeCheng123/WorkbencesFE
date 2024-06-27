@@ -168,11 +168,12 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted } from "vue"
+import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted,defineComponent  } from "vue"
 import { getServiceCasePage, createServiceCase, getOrderListByPage, getFieldJobByPage, getTaskByPage } from '../../api/common.js'
 import  vconsole  from "vconsole"
 import * as echarts from "echarts"
 import moment from 'moment';
+
 const { proxy }: any = getCurrentInstance()
 const timer = ref(null)
 
@@ -381,7 +382,6 @@ onMounted(() => {
   messageDataList();
   statisticalData();
   intervalId.value = setInterval(executeMessageDataList, 60000); // 60000 毫秒等于一分钟
-
 })
 
 

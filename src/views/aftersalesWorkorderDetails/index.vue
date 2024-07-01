@@ -71,7 +71,7 @@
           </span>
           <span class="field">
             <span class="label">总部售后专员：</span>
-            <span class="value"></span>
+            <span class="value">{{aftersalesHeaderDetails.hqAfterSaleOwner}}</span>
           </span>
         </span>
         <span class="row_field">

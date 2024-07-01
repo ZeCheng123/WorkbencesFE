@@ -1357,12 +1357,15 @@ const changeInstallationOrderStep = (step) => {
   currentInstallationOrderStep.value = step
 }
 
+//创建配送派工单
 const createDeliveryOrder = () => {
   deliveryOrderDialog.value = true
+  getExtralUserData(false,3)
 }
 
 const createInstallationOrder = () => {
   installationOrderDialog.value = true
+  getExtralUserData(false,1)
 }
 
 const deliveryOrderNextStep = () => {
@@ -1472,8 +1475,10 @@ const viewDispatchWorkers = (row:any)=>{
   console.info("row",row)
   if(currentStep.value == 4){
     editdeliveryOrderDialog.value = true
+    getExtralUserData(false,3)
   }else if(currentStep.value == 5){
     editinstallationOrderDialog.value = true
+    getExtralUserData(false,1)
   }else{
     ElMessage({
 				message: '订单已完成，无法修改派工单',
@@ -1671,7 +1676,7 @@ const otherMethod = () => {
 onMounted(()=>{
   // getFieldJobByGet(true,fieldJobNeoId)
   getOrderByOne(false,orderId)
-  getExtralUserData(false)
+  // getExtralUserData(false,0)
   subtaskList()
   // getFieldList(false,orderId)
   const standardScale = (("100%") as any) / (("100%") as any);
@@ -1859,9 +1864,9 @@ const getDispatchNoteByOrder = (showMsg: boolean,orderNo:any)=>{
   })
 }
 
-const getExtralUserData = (showMsg: boolean)=>{
+const getExtralUserData = (showMsg: boolean,userType)=>{
 
-  let params={"userType": 1,"name": "","phone": ""};
+  let params={"userType": userType,"name": "","phone": ""};
   getExternalUser(params).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined&&data.length>0) {

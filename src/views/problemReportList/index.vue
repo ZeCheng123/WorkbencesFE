@@ -24,7 +24,21 @@
               <el-option v-for="item in caseStatus" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
           </el-form-item>
-          <span style="width: 336px; height: 32px"></span>
+          <el-form-item label="问题类别">
+            <el-select v-model="form.questionType" placeholder="请选择问题类别">
+              <el-option v-for="item in casequestionType" :key="item.code" :label="item.name" :value="item.code" />
+            </el-select>
+          </el-form-item>
+          <!-- <span style="width: 336px; height: 32px"></span> -->
+        </el-form>
+
+        <el-form :model="form"  label-width="80px" label-position="left">
+          <el-form-item label="来源">
+            <el-select v-model="form.complaintSourceC" placeholder="请选择来源">
+              <el-option v-for="item in caseSource" :key="item.code" :label="item.name" :value="item.code" />
+            </el-select>
+          </el-form-item>
+          <!-- <span style="width: 336px; height: 32px"></span> -->
         </el-form>
       </span>
       <span class="right">
@@ -223,6 +237,8 @@ const form = reactive({
   createDate: [],
   tableData: [],
   orderStatus: "",
+  complaintSourceC:"",
+  questionType:""
 });
 
 const filterMethodOptions = ref([

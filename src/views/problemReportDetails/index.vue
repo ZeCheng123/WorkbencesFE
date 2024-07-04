@@ -2346,6 +2346,7 @@ const completeServiceCase = () => {
     id: id.value,
     questionType: currentItem.value["questionType"],
     name: currentItem.value["name"],
+    dealerCompletionTime:moment().format("YYYY-MM-DD HH:mm:ss")
   };
   createServiceCase(params)
     .then((res) => {

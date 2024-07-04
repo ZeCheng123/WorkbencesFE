@@ -65,9 +65,9 @@
             <span class="label">订单编号：</span>
             <span class="value">{{orderDetails.po}}</span>
           </span>
-          <span class="field">
+          <span class="field" @click="caseNoJump()">
             <span class="label">服务工单：</span>
-            <span class="value">{{ problemDetails.caseNo}}</span>
+            <span class="value" style="color: #165dff;cursor: pointer;">{{ problemDetails.caseNo}}</span>
           </span>
           <span class="field">
             <span class="label">总部售后专员：</span>
@@ -935,6 +935,10 @@ const approvalList = (code) => {
     return "";
   }
 };
+
+const caseNoJump = () =>{
+  proxy.$router.push(`/problem_report_details?id=${problemDetails.value.id}&neoid = ${problemDetails.value["neoid"]}`);
+}
 
 const beforeUpload = (file) => {
   uploadDatas.value["files"] = [file];

@@ -1472,7 +1472,6 @@ const viewDispatchDetails = (row:any) =>{
 
 //编辑派工人员
 const viewDispatchWorkers = (row:any)=>{
-  console.info("row",row)
   if(currentStep.value == 4){
     editdeliveryOrderDialog.value = true
     getExtralUserData(false,3)
@@ -1481,7 +1480,7 @@ const viewDispatchWorkers = (row:any)=>{
     getExtralUserData(false,1)
   }else{
     ElMessage({
-				message: '订单已完成，无法修改派工单',
+				message: '无法修改派工单!',
 				type: 'error'
 		});
   }

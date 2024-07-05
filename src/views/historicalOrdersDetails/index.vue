@@ -931,7 +931,7 @@ const getSearchOrderList = () => {
 
 //问题提报提交
 const submitProblemReporting = () => {
-  console.log("problemReportingForm.value",problemReportingForm.value["fileId"])
+  // console.log("problemReportingForm.value",problemReportingForm.value["fileId"])
   for (let key in problemReportingForm.value) {
     if (key != "fileList" && key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm.value[key] == "") {
       proxy.$message.error("必填字段不能为空!");
@@ -1006,7 +1006,7 @@ const onCahngeOrderNo = (event) => {
 }
 
 const handleSuccess = (res) => {
-  console.log(res);
+  // console.log(res);
   if (res.code == "success") {
     let path = res.data.map(val => val["fileUrl"]);
     problemReportingForm.value["filePath"] = problemReportingForm.value["filePath"].concat(path)
@@ -1038,7 +1038,7 @@ const beforeUpload = (file) => {
 }
 
 const viewTaskDetails = (row: any) => {
-		console.log(row)
+		// console.log(row)
 		// proxy.$router.push("/delivery_tasks_details?id="+id)
 		proxy.$router.push({ path: "/delivery_tasks_details", query: {
 			id:row.id,

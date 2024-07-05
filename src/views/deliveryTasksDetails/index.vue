@@ -1384,8 +1384,8 @@ const editdeliveryOrderNextStep = () =>{
     // contactTelephone:editdeliveryOrderForm.contactTelephone
   }
   addFieldJob(params).then((res : any) => {
-    console.info("res.data.code",res.data.code)
-    console.info("res.data",res.data)
+    // console.info("res.data.code",res.data.code)
+    // console.info("res.data",res.data)
     if(res.data.code == "success"){
       editdeliveryOrderDialog.value = false
       editinstallationOrderDialog.value = false
@@ -1532,7 +1532,7 @@ const updateactualPkgCnt = () =>{
     neoId:rowList.value.neoId,
     actualPkgCnt:actualPkgCnt.value
   }
-  console.info("paramsinfo",params)
+  // console.info("paramsinfo",params)
   updateDispatchNote(params).then((res : any) => {
     console.info("resinfo",res)
     ElMessage({
@@ -1607,7 +1607,7 @@ const OpenProblemReportingDialog = () => {
 }
 
 const submitProblemReporting = () => {
-  console.log("problemReportingForm",problemReportingForm)
+  // console.log("problemReportingForm",problemReportingForm)
   for(let key in problemReportingForm){
     if(key != "orderNo" && key != "fileList" && key != "filePath" && problemReportingForm[key] == ""){
       proxy.$message.error("必填字段不能为空!");
@@ -1739,7 +1739,7 @@ onMounted(()=>{
 
 ///delivery
 const handleSuccessDelivery = (res) => {
-  console.log(res);
+  // console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileId"]);
     if(path[0]){
@@ -1891,7 +1891,7 @@ const getExtralUserData = (showMsg: boolean,userType)=>{
 
 ///install
 const handleSuccessInstall = (res) => {
-  console.log(res);
+  // console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileId"]);
     if(path[0]){
@@ -1910,7 +1910,7 @@ const beforeUploadProblemReport = (file) => {
 }
 
 const handleSuccessProblemReport = (res) => {
-  console.log(res);
+  // console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileId"]);
     if(path[0]){

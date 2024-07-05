@@ -444,7 +444,6 @@ const getDataTable = () => {
         tableData.value = dataList.data
         tableData.value.forEach((item)=>{
           let skillNames = "";
-          console.log()
           item["skill"].forEach((skill) => {
             skillNames = skillNames +
             skillOptions.value.find(

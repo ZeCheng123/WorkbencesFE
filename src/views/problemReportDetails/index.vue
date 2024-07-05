@@ -1992,7 +1992,7 @@ const bindServiceTicket = (row, editOrNot) => {
       productionOrderNo__c: orderDetails.value["productionOrderNo__c"],
       region__c: orderDetails.value["region__c"],
     };
-    console.info("params",params)
+    // console.info("params",params)
   }
   updateOrCreateServiceticket(params)
     .then((res) => {

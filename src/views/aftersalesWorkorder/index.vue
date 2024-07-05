@@ -400,7 +400,7 @@ onMounted(() => {
   }
 });
 const getList = (isTure: boolean) => {
-  console.log(form)
+  // console.log(form)
   const customerName = form.customerName==undefined?"":form.customerName;
   const customerPhone = form.customerPhone==undefined?"":form.customerPhone;
   const workNo = form.workNo==undefined?"":form.workNo;

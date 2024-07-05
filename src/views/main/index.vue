@@ -168,11 +168,12 @@
 
 
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted,defineComponent  } from "vue"
+import { ref, computed, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted,defineComponent,watch  } from "vue"
 import { getServiceCasePage, createServiceCase, getOrderListByPage, getFieldJobByPage, getTaskByPage } from '../../api/common.js'
 import  vconsole  from "vconsole"
 import * as echarts from "echarts"
 import moment from 'moment';
+import { useRoute } from 'vue-router'
 
 const { proxy }: any = getCurrentInstance()
 const timer = ref(null)
@@ -211,6 +212,7 @@ let lastMonthTask = ref(0)
 let currentMonthTask = ref(0)
 let taskNumber = ref<number>(0)
 const currentTooltips = ref(1)
+const isMainPage = ref(true); 
 
 const option1 = computed(() => {
   return {
@@ -374,16 +376,20 @@ const option3 = computed(() => {
   }
 })
 
+const route = useRoute()
+
 onMounted(() => {
   // new vconsole();
   proxy.$nextTick(() => {
-    initEchart();
+      initEchart();
   })
   messageDataList();
   statisticalData();
-  intervalId.value = setInterval(executeMessageDataList, 60000); // 60000 毫秒等于一分钟
+  if(route.path === "/main"){
+    intervalId.value = setInterval(executeMessageDataList, 60000); // 60000 毫秒等于一分钟
+    console.info("route",route)
+  }
 })
-
 
 const initEchart = () => {
   timer.value = setInterval(() => {

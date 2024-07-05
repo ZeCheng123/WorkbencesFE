@@ -257,6 +257,10 @@ const orderStatusOptions = ref([
 
 const caseSource = ref([
   {
+    name: "全部",
+    code: "",
+  },
+  {
     name: "配送技工",
     code: "1",
   },
@@ -275,6 +279,10 @@ const caseSource = ref([
 ]);
 
 const casequestionType = ref([
+  {
+    name: "全部",
+    code: "",
+  },
   {
     name: "售后保修",
     code: "1",
@@ -456,7 +464,7 @@ const OpenProblemReportingDialog = () => {
 };
 
 const submitProblemReporting = () => {
-  console.log("problemReportingForm", problemReportingForm.value);
+  // console.log("problemReportingForm", problemReportingForm.value);
   for (let key in problemReportingForm.value) {
     if (
       key != "orderNo" &&
@@ -517,6 +525,8 @@ const getTableDataList = () => {
     "to": form.createDate==undefined||form.createDate[1] == undefined ? "" : form.createDate[1]+" 23:59:59",
     "pageSize": pageConfig.value.pageSize,
     "pageNo": pageConfig.value.pageIndex,
+    "questionType":form.questionType ==  undefined ? "" : form.questionType,
+    "complaintSource":form.complaintSourceC ==  undefined ? "" : form.complaintSourceC
   };
   getServiceCasePage(params).then((res) => {
     let rtData = res.data;
@@ -588,7 +598,7 @@ const onCahngeOrderNo = (event) => {
 };
 
 const handleSuccess = (res) => {
-  console.log(res);
+  // console.log(res);
   if (res.code == "success") {
     let path = res.data.map((val) => val["fileId"]);
     problemReportingForm.value["filePath"] =
@@ -608,13 +618,14 @@ const beforeUpload = (file) => {
 };
 //重置按钮
 const resetting = () => {
-  console.log("aaaa");
   form.problemNo = "";
   form.customerName = "";
   form.customerPhone = "";
   form.filterMethod = "";
   form.createDate = [];
   form.orderStatus = "";
+  form.complaintSourceC = "";
+  form.questionType = "";
   getTableDataList();
 };
 const handleCurrentChange = (val: number) => {

@@ -1088,7 +1088,7 @@ const handleUploaded = (rep) => {
 }
 
 const handleSuccess = (res) => {
-  console.log(res);
+  // console.log(res);
   if (res.code == "success") {
     fileIdList.value = fileIdList.value.concat(
     res.data.map((item) => item.fileId)
@@ -1147,7 +1147,6 @@ const loadingOrderList = () => {
                   val["category1"] = item["category1"];
                   if(val["ticketProblem"] && isArray(val["ticketProblem"])){
                     let ticketProblemNames="";
-                    console.log()
                     val["ticketProblem"].forEach((problem)=>{
                     ticketProblemNames=ticketProblemNames+
                     afterSalesIssuesList.value.find(

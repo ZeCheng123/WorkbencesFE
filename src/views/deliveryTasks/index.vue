@@ -237,7 +237,7 @@
 	])
 
 	const viewDetails = (row: any) => {
-		console.log(row)
+		// console.log(row)
 		// proxy.$router.push("/delivery_tasks_details?id="+id)
 		proxy.$router.push({ path: "/delivery_tasks_details", query: {
 			id:row.id,
@@ -264,7 +264,7 @@
 		"createdTimeEnd":form.createDate==undefined?"":form.createDate[1],"pageSize":pageConfig.value.pageSize,"pageNo":pageConfig.value.pageIndex,
 		"accountName":customerName,"accountPhone":customerPhone,"taskNumber":orderNo
 		}
-		console.log(param)
+		// console.log(param)
 		getTaskByPage(param).then((res : any) => {
 			let data = res.data.data
 			if (data.length > 0) {
@@ -341,7 +341,7 @@
 		mergeTask(params).then(res=>{
 			if(res.data.code=='success'){
 				proxy.$message.success("合并成功!");
-				console.log("mergeTask",res.data)
+				// console.log("mergeTask",res.data)
 				let newTask=res.data.data
 				getList(false)
 				proxy.$router.push({

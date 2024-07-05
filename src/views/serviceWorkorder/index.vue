@@ -451,7 +451,7 @@ const onCahngeOrderNo = (event) => {
 }
 
 const handleSuccess = (res) => {
-  console.log(res);
+  // console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileUrl"]);
     problemReportingForm.value["filePath"] = problemReportingForm.value["filePath"].concat(path)

@@ -91,7 +91,6 @@ const getAuth = async () => {
   return new Promise(function (resolve) {
     wecom({ code: code.value, userType: 2 }).then(res => {
       let rtData = res.data;
-      console.info("wecom",res)
       if (rtData.code == "success") {
         let data = rtData.data || {};
         userInfo.value = data;

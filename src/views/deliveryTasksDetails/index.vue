@@ -221,6 +221,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" label="发货单编号" />
+          <el-table-column prop="productionOrderNo" label="生产单号" />
           <el-table-column prop="packageCnt" label="包装数量" />
           <el-table-column prop="actualPkgCnt" label="实际包装数量">
             <template #default="scope">
@@ -234,7 +235,6 @@
                 @click="actualPkgCntRow(scope.row)"
               >
                 <span>{{ scope.row.actualPkgCnt == null ? 0 : scope.row.actualPkgCnt}}</span>
-                <!-- &nbsp;&nbsp;<span>批量提货</span> -->
               </div>
             </template>
           </el-table-column>

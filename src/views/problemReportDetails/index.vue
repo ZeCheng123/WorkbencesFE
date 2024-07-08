@@ -2026,21 +2026,21 @@ const bindServiceTicket = (row, editOrNot) => {
         }
         if (!editOrNot) {
           ElMessage({
-            message: "绑定售后工单成功",
+            message: "新建售后工单成功",
             type: "success",
           });
         }
 
       } else {
         ElMessage({
-          message: "绑定售后工单失败,请重试",
+          message: "新建售后工单失败,请重试",
           type: "error",
         });
       }
     })
     .catch((error: any) => {
       ElMessage({
-        message: "绑定售后工单失败,请重试",
+        message: "新建售后工单失败,请重试",
         type: "error",
       });
     });

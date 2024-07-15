@@ -37,7 +37,7 @@
           </span>
           <span class="field">
             <span class="label">问题类别：</span>
-            <span class="value">{{currentItem["questionType"] == "1" ? "售后保修" : "投诉建议"}}</span>
+            <span class="value">{{currentItem["questionType"] == "1" ? "售后报修" : "投诉建议"}}</span>
           </span>
         </span>
         <span class="row_field">

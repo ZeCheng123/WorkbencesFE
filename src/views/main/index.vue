@@ -385,7 +385,7 @@ onMounted(() => {
   })
   messageDataList();
   statisticalData();
-  if(route.path === "/main"){
+  if (route.path === "/main") {
     intervalId.value = setInterval(executeMessageDataList, 60000); // 60000 毫秒等于一分钟
   }
 })
@@ -461,7 +461,6 @@ function padZero(num, length = 2) {
 
 function executeMessageDataList() {
   // 调用 messageDataList 方法
-  console.info("route",route)
   messageDataList();
   statisticalData();
 }

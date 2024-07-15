@@ -132,72 +132,16 @@ const orderStatusPtions = ref([
     name: "全部",
   },
   {
-    code: "0",
-    name: "正在录单",
-  },
-  {
-    code: "1",
-    name: "已打单",
-  },
-  {
-    code: "2",
-    name: "已入成品库",
-  },
-  {
-    code: "3",
-    name: "已提交",
-  },
-  {
-    code: "4",
-    name: "已生产下单",
-  },
-  {
-    code: "5",
+    code: "已发货",
     name: "已发货",
   },
   {
-    code: "6",
-    name: "已订单审核",
+    code: "已财务审批",
+    name: "已财务审批",
   },
   {
-    code: "7",
-    name: "已财务审核",
-  },
-  {
-    code: "8",
-    name: "已经销商确认",
-  },
-  {
-    code: "9",
-    name: "已物料产能稽核",
-  },
-  {
-    code: "10",
-    name: "已物流到货",
-  },
-  {
-    code: "11",
-    name: "已白坏稽核",
-  },
-  {
-    code: "12",
-    name: "已经销商收货",
-  },
-  {
-    code: "13",
-    name: "已油漆",
-  },
-  {
-    code: "14",
-    name: "订单完结",
-  },
-  {
-    code: "15",
-    name: "已包装",
-  },
-  {
-    code: "16",
-    name: "锁定",
+    code: "已废弃",
+    name: "已废弃",
   }
 ])
 
@@ -266,6 +210,7 @@ const getList = (isTure: boolean) => {
   const customerName = form.customerName
   const customerPhone = form.customerPhone
   const customerStatus= form.orderStatus
+  const orderStatus = form.orderStatus
   // let param = { "po": orderNo, "account_name__c": customerName }
   let param = { "pageNo": pageConfig.value.pageIndex, "pageSize": pageConfig.value.pageSize }
   if(orderNo!=""){
@@ -276,6 +221,9 @@ const getList = (isTure: boolean) => {
   }
   if(customerPhone!=""){
     param["accountPhone"]=customerPhone
+  }
+  if(orderStatus!=""){
+    param["status__c"]=orderStatus
   }
   if(customerStatus!=""){
     param["status__c"]=customerStatus

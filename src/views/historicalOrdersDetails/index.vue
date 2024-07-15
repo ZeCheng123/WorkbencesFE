@@ -1050,7 +1050,8 @@ const viewTaskDetails = (row: any) => {
 			followerName:row.followerName,
 			accountName:row.accountName,
 			createdTime:row.createdTime,
-			createdBy:row.createdBy
+			createdBy:row.createdBy,
+      mergedOrderNo:row.mergedOrderNo
 			} ,
 		});
 	}

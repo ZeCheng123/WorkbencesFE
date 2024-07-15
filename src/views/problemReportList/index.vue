@@ -169,7 +169,7 @@
             <el-form-item label="上传图片" class="custom_upload">
               <el-upload :on-success="handleSuccess" :on-remove="handleDelete" :auto-upload="true" :data="uploadData"
                 :headers="headers" :before-upload="beforeUpload" list-type="picture-card" class="avatar-uploader"
-                :action= apiuploadUrl :show-file-list="true"
+                :action= apiuploadUrl :show-file-list="true" @submit.native.prevent
                 v-model:file-list="problemReportingForm.fileList">
                 <el-icon>
                   <Plus />
@@ -284,7 +284,7 @@ const casequestionType = ref([
     code: "",
   },
   {
-    name: "售后保修",
+    name: "售后报修",
     code: "1",
   },
   {

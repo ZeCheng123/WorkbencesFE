@@ -1369,29 +1369,45 @@ const createInstallationOrder = () => {
 }
 
 const deliveryOrderNextStep = () => {
-  currentDeliveryOrderStep.value = 2
+  if(deliveryOrderForm.appointmentStartTime <= deliveryOrderForm.appointmentEndTime){
+    currentDeliveryOrderStep.value = 2
+  }else{
+    ElMessage({
+				message: '预约时间有误!',
+				type: 'error'
+		});
+  }
+  
 }
 
 //编辑修改负责人
 const editdeliveryOrderNextStep = () =>{
-  let params = {
-    id:editdeliveryOrderForm.value.id,
-    neoId:editdeliveryOrderForm.value.neoId,
-    followerId:editdeliveryOrderForm.value.followerId,
-    appointmentEndTime:editdeliveryOrderForm.value.appointmentEndTime,
-    appointmentStartTime:editdeliveryOrderForm.value.appointmentStartTime,
-    // fieldJobContactName:editdeliveryOrderForm.fieldJobContactName,
-    // contactTelephone:editdeliveryOrderForm.contactTelephone
-  }
-  addFieldJob(params).then((res : any) => {
-    // console.info("res.data.code",res.data.code)
-    // console.info("res.data",res.data)
-    if(res.data.code == "success"){
-      editdeliveryOrderDialog.value = false
-      editinstallationOrderDialog.value = false
-      otherMethod()
+  if (editdeliveryOrderForm.value.appointmentStartTime <= editdeliveryOrderForm.value.appointmentEndTime) {
+    let params = {
+      id: editdeliveryOrderForm.value.id,
+      neoId: editdeliveryOrderForm.value.neoId,
+      followerId: editdeliveryOrderForm.value.followerId,
+      appointmentEndTime: editdeliveryOrderForm.value.appointmentEndTime,
+      appointmentStartTime: editdeliveryOrderForm.value.appointmentStartTime,
+      // fieldJobContactName:editdeliveryOrderForm.fieldJobContactName,
+      // contactTelephone:editdeliveryOrderForm.contactTelephone
     }
-  })
+    addFieldJob(params).then((res: any) => {
+      // console.info("res.data.code",res.data.code)
+      // console.info("res.data",res.data)
+      if (res.data.code == "success") {
+        editdeliveryOrderDialog.value = false
+        editinstallationOrderDialog.value = false
+        otherMethod()
+      }
+    })
+  }else{
+    ElMessage({
+      message: '计划日期有误!',
+      type: 'error'
+  	})
+  }
+
 
 }
 

@@ -181,7 +181,7 @@
                 </el-select>
               </el-form-item>
             </div>
-            <div class="custom-row">
+            <div v-if="dialogForm.userType===1 || userTypeRow === 1" class="custom-row">
               <el-form-item label="人员技能" prop="skill">              
                 <el-select multiple collapse-tags v-model="dialogForm.skill"  placeholder="请选择人员类型">
                   <el-option
@@ -263,6 +263,7 @@ const pageConfig = ref({
 })
 
 const formRef = ref();
+let userTypeRow = null;
 
 const showDialog = ref(false);
 
@@ -584,6 +585,7 @@ const editPersonel = (item) =>{
   dialogForm.value = newItem;
   operationType.value = "edit";
   showDialog.value = true
+  userTypeRow = item.userType
 }
 
 const handleCurrentChange = (pageIndex) =>{

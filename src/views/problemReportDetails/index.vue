@@ -1301,7 +1301,15 @@ const filterList = ref({
 });
 
 const deliveryOrderNextStep = () => {
-  currentDeliveryOrderStep.value = 2;
+  if(deliveryOrderForm.appointmentStartTime <= deliveryOrderForm.appointmentEndTime){
+    currentDeliveryOrderStep.value = 2
+  }else{
+    ElMessage({
+				message: '预约时间有误!',
+				type: 'error'
+		});
+  }
+  // currentDeliveryOrderStep.value = 2;
 };
 
 const taskDetails = ref({

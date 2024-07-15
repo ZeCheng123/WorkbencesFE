@@ -23,15 +23,15 @@
             :class="currentStep == 4 ? 'num_selected' : 'num'"
             >3</span
           >
-          <span :class="currentStep >= 4 ? 'name_selected' : 'name'">已配送</span>
+          <span :class="currentStep >= 4 ? 'name_selected' : 'name'">配送</span>
         </span>
         <span class="item">
           <span :class="currentStep == 5 ? 'num_selected' : 'num'">4</span>
-          <span :class="currentStep >= 5 ? 'name_selected' : 'name'">已安装</span>
+          <span :class="currentStep >= 5 ? 'name_selected' : 'name'">安装</span>
         </span>
         <span class="item">
           <span :class="currentStep == 6 ? 'num_selected' : 'num'">5</span>
-          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">已评价</span>
+          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">已交付</span>
         </span>
       </span>
     </span>

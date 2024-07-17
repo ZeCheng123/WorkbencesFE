@@ -181,7 +181,7 @@
                 </el-select>
               </el-form-item>
             </div>
-            <div v-if="dialogForm.userType===1 || userTypeRow === 1" class="custom-row">
+            <div v-if="dialogForm.userType===1" class="custom-row">
               <el-form-item label="人员技能" prop="skill">              
                 <el-select multiple collapse-tags v-model="dialogForm.skill"  placeholder="请选择人员类型">
                   <el-option
@@ -263,7 +263,7 @@ const pageConfig = ref({
 })
 
 const formRef = ref();
-let userTypeRow = null;
+// let userTypeRow = null;
 
 const showDialog = ref(false);
 
@@ -521,8 +521,8 @@ const comfirmAdd = () =>{
       if(operationType.value == "edit"){
         delete params["createdTime"]
       }
-      if((params.userType==1 || params.userType==4)&&(Array.isArray(params.skill)&&params.skill.length<=0)){
-        const warnMassge="人员类型为安装工程师或美容工程师时，人员技能不能为空,"+(operationType.value == "add" ? "新增失败!" : "编辑失败!")
+      if((params.userType==1)&&(Array.isArray(params.skill)&&params.skill.length<=0)){
+        const warnMassge="安装工程师的人员技不能为空,"+(operationType.value == "add" ? "新增失败!" : "编辑失败!")
         ElMessage({
           message: warnMassge,
           type: "warning",
@@ -585,7 +585,7 @@ const editPersonel = (item) =>{
   dialogForm.value = newItem;
   operationType.value = "edit";
   showDialog.value = true
-  userTypeRow = item.userType
+  // userTypeRow = item.userType
 }
 
 const handleCurrentChange = (pageIndex) =>{

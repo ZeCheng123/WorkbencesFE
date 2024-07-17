@@ -463,7 +463,7 @@
 
     <!-- 创建派工单--维修-->
     <div class="deliveryOrderDialog">
-      <el-dialog v-model="deliveryOrderDialog" title="新建配送派工单" width="80%" :show-close="false">
+      <el-dialog v-model="deliveryOrderDialog" title="新建维修派工单" width="80%" :show-close="false">
         <div class="step">
           <span class="item">
             <span @click="changeDeliveryOrderStep(1)"
@@ -1421,7 +1421,7 @@ const headers = ref({
 })
 
 const getExtralUserData = (showMsg: boolean) => {
-  let params = { userType: 2, name: "", phone: "" };
+  let params = { userType: 1, name: "", phone: "" };
   getExternalUser(params).then((res: any) => {
     let data = res.data.data;
     if (data != undefined && data.length > 0) {

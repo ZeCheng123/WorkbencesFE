@@ -1522,13 +1522,16 @@ const relatedDocumentsProblemReportingList = ref([]);
 const relatedDocumentsAftersalesWorkorderList = ref([]);
 
 onMounted(() => {
+  // console.info("route.fullPath",route)
   getDetailsData();
   getProvinceList();
   getCityList();
   getDistrictList();
   getExtralUserData(false);
-  postfieldjobeList(); //相关派工单记录
-  postserviceticketList(); //相关售后工单记录
+  // postfieldjobeList(); //相关派工单记录
+  // postserviceticketList(); //相关售后工单记录
+  sessionStorage.removeItem("problem_report_details");
+  localStorage.removeItem("problem_report_details");
 });
 
 const otherMethod = () => {
@@ -1543,6 +1546,7 @@ const otherMethod = () => {
 
 //问题提报详情
 const getDetailsData = () => {
+  var that=this;
   getServiceCaseItem({
     id: id.value,
     neoid: neoid.value == undefined ? "" : neoid.value,
@@ -1585,19 +1589,37 @@ const getDetailsData = () => {
           picture: picture,
         });
       }
+      if (caseStatus === 1) {
+        let params = {
+          id: id,
+          questionType: rtData.data.questionType,
+          name: rtData.data.name,
+          caseStatus: 2,
+          dealerAcceptanceTime: moment().format('YYYY-MM-DD HH:mm:ss')
+        }
+        processingTime(params);
+        caseStatus=2
+        currentItem.value["caseStatus"]=caseStatus
+        currentItem.value["dealerAcceptanceTime"]=params.dealerAcceptanceTime
+      }
+
       if (caseStatus === 2) {
-        let dealerAcceptanceTime = currentItem.value["dealerAcceptanceTime"]; //初始时间
+        let dealerAcceptanceTime = currentItem.value["dealerAcceptanceTime"] ; //初始时间
         let initialTime = new Date(dealerAcceptanceTime).getTime();
         let endTime = initialTime + 24 * 60 * 60 * 1000; // 结束时间（24小时后）
         remainingSeconds = ref(Math.floor((endTime - Date.now()) / 1000)); // 剩余秒数
         startTimer(remainingSeconds, endTime);
       }
       getSearchOrderOneList(rtData.data["orderNeoId"]);
+      neoid.value=rtData.data.neoid;
+      postfieldjobeList(); //相关派工单记录
+      postserviceticketList(); //相关售后工单记录
     } else {
       proxy.$message.error(rtData?.message);
     }
   });
 };
+
 
 const startTimer = (remainingSeconds, endTime) => {
   const interval = setInterval(() => {

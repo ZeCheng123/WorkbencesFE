@@ -379,6 +379,10 @@ const option3 = computed(() => {
 const route = useRoute()
 
 onMounted(() => {
+  let storedPath = sessionStorage.getItem("problem_report_details") || localStorage.getItem("problem_report_details");
+  if(storedPath){
+    proxy.$router.push(storedPath);
+  }
   // new vconsole();
   proxy.$nextTick(() => {
       initEchart();

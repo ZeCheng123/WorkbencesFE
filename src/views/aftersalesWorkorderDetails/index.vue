@@ -979,6 +979,8 @@ const confirmDialog = () =>{
 
 onMounted(() => {
 		getDetail(false);
+    sessionStorage.removeItem("aftersales_workorder_details");
+    localStorage.removeItem("aftersales_workorder_details");
 });
 const getDetail = (isTure: boolean) => {
 		getServiceticketById(route.query.id).then((res : any) => {

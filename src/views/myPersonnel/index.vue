@@ -92,19 +92,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="skillNames" label="技能">
-          <!-- <template #default="scope">
-            <div>
-              {{
-                scope.row.skill == 1
-                  ? "门"
-                  : scope.row.skill == 2
-                  ? "墙"
-                  : "柜"
-              }}
-            </div>
-          </template> -->
-        </el-table-column>        
+        <!-- <el-table-column style="display: none;" prop="driverType" label="司机类型"></el-table-column> -->
+        <el-table-column prop="skillNames" label="技能"></el-table-column>
         <el-table-column prop="status" label="人员状态">
           <template #default="scope">
             <div>
@@ -203,6 +192,18 @@
                 </el-select>
               </el-form-item>
             </div>
+            <div v-if="dialogForm.userType===3" class="custom-row">
+              <el-form-item label="司机类型" prop="driverType">              
+                <el-select collapse-tags v-model="dialogForm.driverType"  placeholder="请选择司机类型">
+                  <el-option
+                    v-for="item in driverTypeList"
+                    :key="item.code"
+                    :label="item.name"
+                    :value="item.code"
+                  />
+                </el-select>
+              </el-form-item>
+            </div>
             <div class="custom-row">
               <el-form-item label="门店编码">              
                 <el-input placeholder="请输入门店编码" v-model="dialogForm.storeNo"/>
@@ -284,7 +285,8 @@ const dialogForm = ref({
     distributorName: "梦天集团",
     generalAgentNo: "GD01",
     generalAgentName: "梦天",
-    skill:[]
+    skill:[],
+    driverType:null,
 })
 
 const dialogFormRule = ref({
@@ -352,6 +354,21 @@ const skillOptions = ref([
   {
     code: 3,
     name: "柜",
+  },
+])
+
+const driverTypeList = ref([
+  {
+    code: 1,
+    name: "内部",
+  },
+  {
+    code: 2,
+    name: "翔焱",
+  },
+  {
+    code: 3,
+    name: "其他",
   },
 ])
 
@@ -529,6 +546,15 @@ const comfirmAdd = () =>{
         })
         return;
       }
+      if((params.userType==3)&&(Array.isArray(params.driverType))){
+        const warnMassge="配送工程师的司机类型不能为空,"+(operationType.value == "add" ? "新增失败!" : "编辑失败!")
+        ElMessage({
+          message: warnMassge,
+          type: "warning",
+        })
+        return;
+      }
+      
       // params["createdTime"] = new Date().toLocaleString();
       addExternalUser(params)
       .then((res: any) => {
@@ -582,6 +608,7 @@ const comfirmAdd = () =>{
 
 const editPersonel = (item) =>{
   let newItem = JSON.parse(JSON.stringify(item));
+  console.info("newItem",newItem)
   dialogForm.value = newItem;
   operationType.value = "edit";
   showDialog.value = true

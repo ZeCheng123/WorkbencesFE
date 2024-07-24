@@ -616,7 +616,7 @@
                 :disabled-date="disabledPastDate"
               />
             </el-form-item>
-            <el-form-item label="安装小组">
+            <!-- <el-form-item label="安装小组">
               <span style="width: 300px">
                 <el-checkbox
                   v-model="installationOrderForm.installationTeam"
@@ -630,7 +630,7 @@
               <span class="custom_item">
                 <img src="@/assets/images/add.png" alt="" />
               </span>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
           <el-form
             v-if="currentInstallationOrderStep == 2"
@@ -862,7 +862,7 @@
                 :disabled-date="editdisabledPastDate"
               />
             </el-form-item>
-            <el-form-item label="安装小组">
+            <!-- <el-form-item label="安装小组">
               <span style="width: 300px">
                 <el-checkbox
                   v-model="editdeliveryOrderForm.installationTeam"
@@ -876,7 +876,7 @@
               <span class="custom_item">
                 <img src="@/assets/images/add.png" alt="" />
               </span>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
         </div>
         <template #footer>

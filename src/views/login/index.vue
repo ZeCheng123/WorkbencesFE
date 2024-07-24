@@ -14,8 +14,13 @@ const userinfoStore = userInfoStore();
 const route = useRoute()
 onMounted(() =>{
   if (route.redirectedFrom.fullPath.includes('problem_report_details?id')){
+    //服务工单
     sessionStorage.setItem("problem_report_details", route.redirectedFrom.fullPath);
     localStorage.setItem("problem_report_details", route.redirectedFrom.fullPath);
+  }else if(route.redirectedFrom.fullPath.includes('aftersales_workorder_details?id')){
+    //售后工单
+    sessionStorage.setItem("aftersales_workorder_details", route.redirectedFrom.fullPath);
+    localStorage.setItem("aftersales_workorder_details", route.redirectedFrom.fullPath);
   }
     // 企业微信授权接口地址
     setTimeout(() => {

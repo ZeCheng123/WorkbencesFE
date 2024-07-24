@@ -379,7 +379,7 @@ const option3 = computed(() => {
 const route = useRoute()
 
 onMounted(() => {
-  let storedPath = sessionStorage.getItem("problem_report_details") || localStorage.getItem("problem_report_details");
+  let storedPath = (sessionStorage.getItem("problem_report_details") || localStorage.getItem("problem_report_details")) || (sessionStorage.getItem("aftersales_workorder_details") || localStorage.getItem("aftersales_workorder_details"));
   if(storedPath){
     proxy.$router.push(storedPath);
   }

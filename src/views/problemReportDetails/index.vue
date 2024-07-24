@@ -1420,6 +1420,7 @@ const headers = ref({
     "Trace-Id": "",
 })
 
+
 const getExtralUserData = (showMsg: boolean) => {
   let params = { userType: 1, name: "", phone: "" };
   getExternalUser(params).then((res: any) => {
@@ -1591,7 +1592,7 @@ const getDetailsData = () => {
       }
       if (caseStatus === 1) {
         let params = {
-          id: id,
+          id: id.value,
           questionType: rtData.data.questionType,
           name: rtData.data.name,
           caseStatus: 2,

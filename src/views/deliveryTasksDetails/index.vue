@@ -616,21 +616,23 @@
                 :disabled-date="disabledPastDate"
               />
             </el-form-item>
-            <!-- <el-form-item label="安装小组">
+            <el-form-item label="安装小组">
               <span style="width: 300px">
                 <el-checkbox
                   v-model="installationOrderForm.installationTeam"
                 ></el-checkbox>
               </span>
             </el-form-item>
-            <el-form-item
-              v-if="installationOrderForm.installationTeam"
-              label="添加组员"
-            >
-              <span class="custom_item">
-                <img src="@/assets/images/add.png" alt="" />
-              </span>
-            </el-form-item> -->
+            <el-form-item label="添加组员" prop="installationTeam" v-if="installationOrderForm.installationTeam">              
+                <el-select multiple collapse-tags v-model="installationOrderForm.memberList"  placeholder="请选择组员">
+                  <el-option
+                    v-for="item in extralUserData"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.phone"
+                  />
+                </el-select>
+            </el-form-item>
           </el-form>
           <el-form
             v-if="currentInstallationOrderStep == 2"
@@ -1202,7 +1204,8 @@ const installationOrderForm = reactive<any>({
   appointmentEndTime: "",
   fileList: [],
   filePath: [],
-  fieldJobContactName:""
+  fieldJobContactName:"",
+  memberList:[]
 })
 
 const editinstallationOrderForm = reactive<any>({
@@ -1422,6 +1425,11 @@ const editinstallationOrderNextStep = async () => {
 }
 
 const finishInstallationOrder = async () => {
+  let result = ""
+  if(Object.keys(installationOrderForm.memberList).length != 0){
+    result = Object.values(installationOrderForm.memberList).join(';');
+  }
+  
   let params = {
     fieldJobContactName: orderData.value.accountName__C==undefined?"":orderData.value.accountName__C,
     contactTelephone: orderData.value.contactTel==undefined?"":orderData.value.contactTel,
@@ -1440,7 +1448,8 @@ const finishInstallationOrder = async () => {
     followerId:installationOrderForm.username,
     address:orderData.value.customerAddress==undefined?"":orderData.value.customerAddress,
     status:1,
-    source__c:1
+    source__c:1,
+    groupMember__c:result
   }
     addFieldJob(params).then((res : any) => {
 			let data = res.data.data;
@@ -1880,8 +1889,7 @@ const getDispatchNoteByOrder = (showMsg: boolean,orderNo:any)=>{
 }
 
 const getExtralUserData = (showMsg: boolean,userType)=>{
-
-  let params={"userType": userType,"name": "","phone": ""};
+  let params= {"userType": userType,"name": "","phone": ""} ;
   getExternalUser(params).then((res : any) => {
 			let data = res.data.data
 			if (data!=undefined&&data.length>0) {

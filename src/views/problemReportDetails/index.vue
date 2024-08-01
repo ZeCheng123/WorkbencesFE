@@ -1422,7 +1422,7 @@ const headers = ref({
 
 
 const getExtralUserData = (showMsg: boolean) => {
-  let params = { userType: 1, name: "", phone: "" };
+  let params = { userTypes: [1,4], name: "", phone: "" };
   getExternalUser(params).then((res: any) => {
     let data = res.data.data;
     if (data != undefined && data.length > 0) {

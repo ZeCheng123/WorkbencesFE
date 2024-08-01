@@ -95,10 +95,10 @@
 					</template>
         </el-table-column>
         <el-table-column prop="createdTime" label="创建时间" />
-        <el-table-column prop="stage__c" label="派工状态" >
+        <el-table-column prop="status" label="派工状态" >
           <template #default="scope">
 				  		<div style="display:flex;align-items:center;">
-						{{scope.row.stage__c?(dispatchWorkerStatusOption.find(val=>val["code"]==scope.row.stage__c)?.name):"待开始"}}
+						{{scope.row.status?(dispatchWorkerStatusOption.find(val=>val["code"]==scope.row.status)?.name):"待开始"}}
 						</div>
 					</template>
         </el-table-column>
@@ -198,6 +198,10 @@ const dispatchWorkerStatusOption = ref([
 			code: "2",
 			name: "已完成",
 		},
+		{
+			code: "3",
+			name: "已评价",
+		}
 ])
 
 const mainTable = ref(null);

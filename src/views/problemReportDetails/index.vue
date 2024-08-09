@@ -89,6 +89,37 @@
           </span>
         </span>
       </span>
+      <span class="title">经销商内部定责定损信息</span>
+      <span class="other_field">
+        <span class="row_field">
+          <span class="field">
+            <span class="label">损失金额：</span>
+            <span class="value">{{ currentItem["amountLoss"] }}</span>
+          </span>
+          <span class="field">
+            <span class="label">责任环节：</span>
+            <span class="value">{{ currentItem["responsibility"] }}</span>
+          </span>
+          <span class="field">
+            <span class="label">责任人：</span>
+            <span class="value">{{ currentItem["personInCharge"] }}</span>
+          </span>
+        </span>
+        <span class="row_field">
+          <span class="field">
+            <span class="label">责任人承担金额：</span>
+            <span class="value">{{ currentItem["responsiblePersonShallBearAmount"] }}</span>
+          </span>
+          <span class="field">
+            <span class="label">公司承担金额：</span>
+            <span class="value">{{ currentItem["amountBorneCompany"] }}</span>
+          </span>
+          <span class="field">
+            <span class="label"></span>
+            <span class="value"></span>
+          </span>
+        </span>
+      </span>
       <span class="title">其他字段</span>
       <span class="other_field">
         <span class="row_field">

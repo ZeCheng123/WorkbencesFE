@@ -599,37 +599,6 @@
           <el-form :model="editFollowerAndPDescriptForm" :rules="editFollowerAndPDescriptFormRule"
             ref="deditFollowerAndPDescriptFormRef" label-width="90px" label-position="left">
             <el-form-item label="订单编号" prop="orderNeoId">
-              <!-- <el-select filterable v-model="editFollowerAndPDescriptForm.orderNeoId" @change="onChangeOrderSelect"
-                placeholder="请选择订单编号" remote reserve-keyword remote-show-suffix :remote-method="remoteMethod"
-                :loading="loadingForSecrchOrder">
-                <el-option v-for="item in orderList" :key="item.po" :label="item.po" :value="item.neoid">
-                  <span style="float: left">{{ item.po }}</span>
-                  <span style="float: right;color: var(--el-text-color-secondary);font-size: 13px;">
-                    {{ item.accountName__C }}--{{ item.contactTel }}--{{ item.productsAmount }}
-                  </span>
-                </el-option>
-              </el-select> -->
-              <!-- <el-select
-                  v-model="editFollowerAndPDescriptForm.orderNeoId"
-                  multiple
-                  filterable
-                  allow-create
-                  default-first-option
-                  :reserve-keyword="false"
-                  @change="onChangeOrderSelect"
-                  remote
-                  remote-show-suffix 
-                  :remote-method="remoteMethod"
-                  placeholder="请选择订单编号"
-                  :loading="loadingForSecrchOrder"
-                >
-                  <el-option
-                    v-for="item in orderList"
-                    :key="item.po"
-                    :label="item.po"
-                    :value="item.neoid"
-                  ></el-option>
-              </el-select> -->
                 <el-select
                   v-model="editFollowerAndPDescriptForm.orderNeoId"
                   filterable
@@ -663,6 +632,26 @@
             <el-form-item label="客户电话" prop="phone">
               <el-input v-model="editFollowerAndPDescriptForm.phone
                 " placeholder="请输入客户电话" />
+            </el-form-item>
+            <el-form-item label="损失金额" prop="amountLoss">
+              <el-input v-model="editFollowerAndPDescriptForm.amountLoss
+                " type="number" placeholder="请输入损失金额"  />
+            </el-form-item>
+            <el-form-item label="责任环节" prop="responsibility">
+              <el-input v-model="editFollowerAndPDescriptForm.responsibility
+                " placeholder="请输入责任环节" />
+            </el-form-item>
+            <el-form-item label="责任人" prop="personInCharge">
+              <el-input v-model="editFollowerAndPDescriptForm.personInCharge
+                " placeholder="请输入责任人" />
+            </el-form-item>
+            <el-form-item label="责任人承担金额" prop="responsiblePersonShallBearAmount">
+              <el-input v-model="editFollowerAndPDescriptForm.responsiblePersonShallBearAmount
+                " type="number" placeholder="请输入责任人承担金额" />
+            </el-form-item>
+            <el-form-item label="公司承担金额" prop="amountBorneCompany">
+              <el-input v-model="editFollowerAndPDescriptForm.amountBorneCompany
+                " type="number" placeholder="请输入公司承担金额" />
             </el-form-item>
             <el-form-item label="问题描述" prop="problemDescription">
               <el-input type="textarea" v-model="editFollowerAndPDescriptForm.problemDescription
@@ -1423,7 +1412,12 @@ let editFollowerAndPDescriptForm = reactive({
   customerName:"",
   phone:"",
   orderNeoId:"",
-  problemDescription:""
+  problemDescription:"",
+  amountLoss:"",
+  responsibility:"",
+  personInCharge:"",
+  responsiblePersonShallBearAmount:"",
+  amountBorneCompany:""
 });
 
 const editFollowerAndPDescriptFormRule = reactive({
@@ -1503,7 +1497,7 @@ const onChangeOrderSelect = (event) => {
     curOrderForSelect.value=item
   }
 };
-
+//编辑保存方法
 const SaveServiceData = () => {
   let params = {
     followerId: editFollowerAndPDescriptForm["followerId"]==undefined?currentItem.value["followerId"]:editFollowerAndPDescriptForm["followerId"],
@@ -1517,7 +1511,12 @@ const SaveServiceData = () => {
     customerName:editFollowerAndPDescriptForm["customerName"],
     phone:editFollowerAndPDescriptForm["phone"],
     problemDescription:editFollowerAndPDescriptForm["problemDescription"],
-    orderNeoId:editFollowerAndPDescriptForm["orderNeoId"]
+    orderNeoId:editFollowerAndPDescriptForm["orderNeoId"],
+    amountLoss:editFollowerAndPDescriptForm["amountLoss"]==undefined?currentItem.value["amountLoss"]:editFollowerAndPDescriptForm["amountLoss"],
+    responsibility:editFollowerAndPDescriptForm["responsibility"]==undefined?currentItem.value["responsibility"]:editFollowerAndPDescriptForm["responsibility"],
+    personInCharge:editFollowerAndPDescriptForm["personInCharge"]==undefined?currentItem.value["personInCharge"]:editFollowerAndPDescriptForm["personInCharge"],
+    responsiblePersonShallBearAmount:editFollowerAndPDescriptForm["responsiblePersonShallBearAmount"]==undefined?currentItem.value["responsiblePersonShallBearAmount"]:editFollowerAndPDescriptForm["responsiblePersonShallBearAmount"],
+    amountBorneCompany:editFollowerAndPDescriptForm["amountBorneCompany"]==undefined?currentItem.value["amountBorneCompany"]:editFollowerAndPDescriptForm["amountBorneCompany"],
   };
   createServiceCase(params).then((res) => {
     let resData = res.data;
@@ -1534,6 +1533,11 @@ const SaveServiceData = () => {
         editFollowerAndPDescriptForm["problemDescription"];
       currentItem.value["orderNeoId"] =
         editFollowerAndPDescriptForm["orderNeoId"];
+        currentItem.value["amountLoss"]=editFollowerAndPDescriptForm["amountLoss"]
+        currentItem.value["responsibility"]=editFollowerAndPDescriptForm["responsibility"]
+        currentItem.value["personInCharge"]=editFollowerAndPDescriptForm["personInCharge"]
+        currentItem.value["responsiblePersonShallBearAmount"]=editFollowerAndPDescriptForm["responsiblePersonShallBearAmount"]
+        currentItem.value["amountBorneCompany"]=editFollowerAndPDescriptForm["amountBorneCompany"]
       orderDetails.value=curOrderForSelect.value
       // Object.keys(editFollowerAndPDescriptForm).forEach((key) => {
       //   if (key !== "followerId") editFollowerAndPDescriptForm[key] = "";
@@ -1605,6 +1609,11 @@ const getDetailsData = () => {
       editFollowerAndPDescriptForm["orderNeoId"] =
         currentItem.value["orderNeoId"];
       editFollowerAndPDescriptForm["followerId"]=currentItem.value["followerId"]
+      editFollowerAndPDescriptForm["amountLoss"]=currentItem.value["amountLoss"]
+      editFollowerAndPDescriptForm["responsibility"]=currentItem.value["responsibility"]
+      editFollowerAndPDescriptForm["personInCharge"]=currentItem.value["personInCharge"]
+      editFollowerAndPDescriptForm["responsiblePersonShallBearAmount"]=currentItem.value["responsiblePersonShallBearAmount"]
+      editFollowerAndPDescriptForm["amountBorneCompany"]=currentItem.value["amountBorneCompany"]
       var baseUrl =
         "https://sh.mengtian.com.cn:9595/md/api/common/file/direct-download?fileId=";
       if (

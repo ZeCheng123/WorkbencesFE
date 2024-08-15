@@ -49,7 +49,7 @@
 				</span>
 			</span>
 			<span class="right">
-				<el-button @click="combineTask()" type="primary" class="search_btn">合并交付</el-button>
+				<el-button plain @click="combineTask()" type="primary" class="search_btn">合并交付</el-button>
 				<el-button type="primary" class="reset_btn"><template #icon>
 						<img src="@/assets/images/download.png" alt="" /> </template>下载</el-button>
 				
@@ -110,7 +110,7 @@
 <script setup lang="ts">
 	import { ref, computed, getCurrentInstance, reactive, onMounted } from "vue";
 	import { getLoginInfo, getTaskByPage, mergeTask } from '../../api/common.js'
-	import { ElMessage } from "element-plus";
+	import { ElMessage,ElMessageBox } from "element-plus";
 	import _ from "lodash"
 
 	const { proxy } : any = getCurrentInstance()
@@ -320,6 +320,27 @@
 		})
 	};
 	const combineTask = () => {
+		ElMessageBox.confirm(
+			'是否确认,合并同一客户的经销商订单?',
+			'是否确认',
+			{
+				confirmButtonText: '确认',
+				cancelButtonText: '取消',
+				type: 'warning',
+			}
+		)
+		.then(() => {
+			combineTaskmethod();
+		})
+		.catch(() => {
+			ElMessage({
+				type: 'info',
+				message: '合并交付取消',
+			})
+		})
+	}
+
+	function combineTaskmethod(){
 		const selectData = tableData.value.filter(item => item.checked)
 		if (selectData.length <= 0) {
 			proxy.$message.error("必须勾选数据!");
@@ -369,7 +390,8 @@
 			});
 			console.error('合并交付失败:', error);
 		})
-	};
+	}
+
 	function formatDate(date) {
 		const year = date.getFullYear();
 		const month = padZero(date.getMonth() + 1); // 月份从0开始

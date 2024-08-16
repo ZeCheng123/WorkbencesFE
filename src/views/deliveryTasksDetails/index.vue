@@ -35,6 +35,42 @@
         </span>
       </span>
     </span>
+    <span v-if="currentStep >= 4" class="order_status">
+      <span class="title">交付子状态：{{getSubStatusName(subStatus)}}</span>
+      <!-- <span class="item">
+          <span :class="currentStep == 1 ? 'num_selected' : 'num'">1</span>
+          
+      </span> -->
+      <!-- <span class="step">
+        <span class="item">
+          <span :class="Number(subStatus) == 1 ? 'num_selected' : 'num'">1</span>
+          <span :class="Number(subStatus) >= 1 ? 'name_selected' : 'name'">待配送</span>
+        </span>
+        <span class="item">
+          <span :class="Number(subStatus) == 2 ? 'num_selected' : 'num'">2</span>
+          <span :class="Number(subStatus) >= 2 ? 'name_selected' : 'name'">配送中</span>
+        </span>
+        <span class="item">
+          <span :class="Number(subStatus) == 3 ? 'num_selected' : 'num'">2</span>
+          <span :class="Number(subStatus) >= 3 ? 'name_selected' : 'name'">待安装</span>
+        </span>
+        <span class="item">
+          <span :class="Number(subStatus) == 4 ? 'num_selected' : 'num'">4</span>
+          <span :class="Number(subStatus) >= 4 ? 'name_selected' : 'name'">安装中</span>
+        </span>
+        <span class="item">
+          <span :class="Number(subStatus) == 5 ? 'num_selected' : 'num'">5</span>
+          <span :class="Number(subStatus) >= 5 ? 'name_selected' : 'name'">待评价</span>
+        </span>
+        <span class="item">
+          <span :class="Number(subStatus) == 6 ? 'num_selected' : 'num'">5</span>
+          <span :class="Number(subStatus) >= 6 ? 'name_selected' : 'name'">已评价</span>
+        </span>
+      </span> -->
+      <!-- <span class="step">
+
+      </span> -->
+    </span>
     <span class="task_info">
       <span class="title"
         >任务详情
@@ -1090,6 +1126,7 @@ const orderId = route.query.orderId
 const taskStatus= route.query.status!=null?parseInt(route.query.status.toString(),0)+1:1
 const taskType = route.query.taskType
 const mergedOrderNo = route.query.mergedOrderNo
+let subStatus = route.query.subStatus
 const ShowRelatedFieldDialogs = ref(false)
 const actualPkgCntDialogs = ref(false)
 
@@ -1471,6 +1508,11 @@ const finishInstallationOrder = async () => {
           installationOrderForm.filePath = [];
           installationOrderForm.fieldJobContactName="";
           installationOrderForm.contactTelephone="";
+          let paramsTask = {
+            id:taskDetails.value.taskid,
+            subStatus:4
+          }
+          updateTaskData(paramsTask)
 			} else {
           ElMessage({
             message: '新增派工单失败',
@@ -1595,6 +1637,11 @@ const finishDeliveryOrder =  () => {
 						message: '新增派工单成功',
 						type: 'success'
 					})
+          let paramsTask = {
+            id:taskDetails.value.taskid,
+            subStatus:2
+          }
+          updateTaskData(paramsTask)
 
 			} else {
           ElMessage({
@@ -1747,20 +1794,40 @@ onMounted(()=>{
   }
 })
 
-// const getTaskDestails = (showMsg: boolean,fieldJobId:any)=>{
-//   getTask(fieldJobId).then((res : any) => {
-// 			let data = res.data.data
-// 			if (data!=undefined&&data.length > 0) {
+// {{scope.row.status?(subStatusCode.find(val=>val["code"]==scope.row.status)?.name):"待开始"}}
 
-// 			} else {
-				
-// 			}
+const getSubStatusName = (statusCode) => {
+  const status = subStatusCode.value.find(val => val.code === statusCode);
+  return status ? status.name : " "; // 默认返回 "待开始" 如果没有匹配的状态
+}
 
-// 		}).catch((error: any) => {
-// 			// 显示请求失败的提示框
-// 			console.error('请求数据失败:', error);
-// 		});
-// }
+const subStatusCode = ref([
+		{
+			code: "1",
+			name: "待配送",
+		},
+		{
+			code: "2",
+			name: "配送中",
+		},
+		{
+			code: "3",
+			name: "待安装",
+		},
+		{
+			code: "4",
+			name: "安装中",
+		},
+		{
+			code: "5",
+			name: "待评价",
+		},
+    {
+			code: "6",
+			name: "已评价",
+		}
+	])
+
 
 ///delivery
 const handleSuccessDelivery = (res) => {
@@ -2005,11 +2072,13 @@ const currentStepToPeiSong=()=>{
     .then(() => {
       let params={
         id:taskDetails.value.taskid,
-        status:3
+        status:3,
+        subStatus:1
       }
       updateTask(params).then((res:any)=>{
         if(res.data.code="success"){
           currentStep.value=4
+          subStatus = "1"
         }
       })
     })
@@ -2019,6 +2088,15 @@ const currentStepToPeiSong=()=>{
       //   message: 'Delete canceled',
       // })
     })
+}
+
+//更新子任务状态方法
+const updateTaskData = (params) => {
+  updateTask(params).then((res:any)=>{
+    if(res.data.code="success"){
+      subStatus = params.subStatus
+    }
+  })
 }
 
 const subtaskList =()=>{

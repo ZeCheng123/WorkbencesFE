@@ -201,6 +201,7 @@ import { ElMessage, ElMessageBox } from "element-plus"
 import { useRoute } from "vue-router";
 import { getExternalUser, getFieldJob, getInvestigation } from "../../api/common";
 import { NO } from "@vue/shared";
+import { BASE_URL } from "../../api/config";
 
 const { proxy }: any = getCurrentInstance()
 
@@ -350,7 +351,7 @@ const getFieldJobByGet = (showMsg: boolean,fieldJobId:any)=>{
 			if (data!=undefined) {
         fieldJobData.value=data
         changeStep(data["stage__c"])
-        var baseUrl="https://sh.mengtian.com.cn:9595/md/api/common/file/direct-download?fileId=";
+        var baseUrl=BASE_URL+"/md/api/common/file/direct-download?fileId=";
         if(data["goodsPicture"]!=undefined && data["goodsPicture"].length>0){
           var goodsPicture=[] as any;
           data["goodsPicture"].forEach(item => {

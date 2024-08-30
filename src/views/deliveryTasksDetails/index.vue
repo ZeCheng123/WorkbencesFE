@@ -31,7 +31,7 @@
         </span>
         <span class="item">
           <span :class="currentStep == 6 ? 'num_selected' : 'num'">5</span>
-          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">已交付</span>
+          <span :class="currentStep >= 6 ? 'name_selected' : 'name'">评价</span>
         </span>
       </span>
     </span>

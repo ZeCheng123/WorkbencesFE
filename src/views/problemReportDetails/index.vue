@@ -1615,7 +1615,7 @@ const getDetailsData = () => {
       editFollowerAndPDescriptForm["responsiblePersonShallBearAmount"]=currentItem.value["responsiblePersonShallBearAmount"]
       editFollowerAndPDescriptForm["amountBorneCompany"]=currentItem.value["amountBorneCompany"]
       var baseUrl =
-        "https://sh.mengtian.com.cn:9595/md/api/common/file/direct-download?fileId=";
+        BASE_URL+"/md/api/common/file/direct-download?fileId=";
       if (
         currentItem.value["picture"] != undefined &&
         currentItem.value["picture"].length > 0
@@ -1909,10 +1909,10 @@ const editServiceCase = () => {
     relatedDocumentsAftersalesWorkorderList.value.filter(
       (item) => parseInt(item["status__c"]) >= 2
     );
-  if (matchAfterSalesData.length > 0) {
-    proxy.$message.warning("存在处理中的售后工单,不允许修改");
-    return;
-  }
+  // if (matchAfterSalesData.length > 0) {
+  //   proxy.$message.warning("存在处理中的售后工单,不允许修改");
+  //   return;
+  // }
   editServerCasecontentDialog.value = true;
 };
 
@@ -2411,6 +2411,34 @@ const completeServiceCase = () => {
   ) {
     proxy.$message.warning("处理结论不能为空，请先编辑处理结论");
     return;
+  }
+  if(relatedDocumentsAftersalesWorkorderList.value.length>0)
+  {
+    if(currentItem.value["amountLoss"] == undefined || currentItem.value["amountLoss"] == "")
+    {
+      proxy.$message.warning("损失金额不能为空，请先编辑损失金额");
+      return;
+    }
+    if(currentItem.value["responsibility"] == undefined || currentItem.value["responsibility"] == "")
+    {
+      proxy.$message.warning("责任环节不能为空，请先编辑责任环节");
+      return;
+    }
+    if(currentItem.value["personInCharge"] == undefined || currentItem.value["personInCharge"] == "")
+    {
+      proxy.$message.warning("责任人不能为空，请先编辑损责任人");
+      return;
+    }
+    if(currentItem.value["responsiblePersonShallBearAmount"] == undefined || currentItem.value["responsiblePersonShallBearAmount"] == "")
+    {
+      proxy.$message.warning("责任人承担不能为空，请先编辑责任人承担");
+      return;
+    }
+    if(currentItem.value["amountBorneCompany"] == undefined || currentItem.value["amountBorneCompany"] == "")
+    {
+      proxy.$message.warning("公司承担金额不能为空，请先编辑公司承担金额");
+      return;
+    }
   }
   let params = {
     caseStatus: 4,

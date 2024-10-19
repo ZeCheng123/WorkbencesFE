@@ -569,7 +569,7 @@ const getSearchOrderList = () => {
 
 const getExtralUserData = ()=>{
 
-let params={"userType": 1,"name": "","phone": ""};
+let params={"userTypes": [2,6],"name": "","phone": ""};
 getExternalUser(params).then((res : any) => {
     let data = res.data.data
     if (data!=undefined&&data.length>0) {

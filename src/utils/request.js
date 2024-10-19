@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { userInfoStore } from '../../src/store/userinfo';
+import { BASE_URL } from "../../src/api/config"
 const request = axios.create({
-  baseURL: 'https://sh.mengtian.com.cn:9595'
+  baseURL: BASE_URL
 })
 
 // 请求拦截器

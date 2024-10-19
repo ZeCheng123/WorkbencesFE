@@ -204,7 +204,7 @@
                 </el-select>
               </el-form-item>
             </div>
-            <div class="custom-row">
+            <!-- <div class="custom-row">
               <el-form-item label="门店编码">              
                 <el-input placeholder="请输入门店编码" v-model="dialogForm.storeNo"/>
               </el-form-item>
@@ -219,7 +219,7 @@
               <el-form-item label="经销商名称">              
                 <el-input placeholder="请输入经销商名称" v-model="dialogForm.distributorName"/>
               </el-form-item>
-            </div>
+            </div> -->
             <!-- <div class="custom-row">
               <el-form-item label="总代编码">              
                 <el-input placeholder="请输入总代编码" v-model="dialogForm.generalAgentNo"/>

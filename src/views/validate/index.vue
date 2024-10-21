@@ -154,7 +154,6 @@ const clickBtn = () => {
   }
   login({ phone: form.phone, captcha: form.code, userType: 2 }).then(res => {
     let rtData = res.data;
-    console.info("login",res)
     if (rtData.code == "success") {
       let data = rtData.data || {};
       localStorage.setItem("token", data["token"]);

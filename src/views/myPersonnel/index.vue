@@ -608,7 +608,6 @@ const comfirmAdd = () =>{
 
 const editPersonel = (item) =>{
   let newItem = JSON.parse(JSON.stringify(item));
-  console.info("newItem",newItem)
   dialogForm.value = newItem;
   operationType.value = "edit";
   showDialog.value = true

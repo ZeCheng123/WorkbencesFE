@@ -941,7 +941,6 @@ const multipleTableRef = ref();
 const multipleSelection = ref([]);
 
 const handleSelectionChange = (val) => {
-  console.info("选择的数据：", val);
   multipleSelection.value = val;
 };
 
@@ -1558,7 +1557,6 @@ const relatedDocumentsProblemReportingList = ref([]);
 const relatedDocumentsAftersalesWorkorderList = ref([]);
 
 onMounted(() => {
-  // console.info("route.fullPath",route)
   getDetailsData();
   getProvinceList();
   getCityList();
@@ -1786,10 +1784,7 @@ const currentDialogStepBut = () => {
 
 //升级到总部售后提交按钮
 const submitDialog = () => {
-  console.info("fileIdfileId", fileIdList.value);
   const selectData = tableData2Filter.value.filter((item) => item.checked);
-
-  // console.info("过滤：", selectData["id"])
   if (selectData.length <= 0) {
     proxy.$message.error("必须勾选数据!");
     return;
@@ -1821,7 +1816,6 @@ const submitDialog = () => {
   if (solutionId != "") {
     params["id"] = solutionId;
   }
-  console.info("selectDataselectData", selectData);
 
   // dialog2Form.value["details"] = selectData
   if (
@@ -2063,7 +2057,6 @@ const bindServiceTicket = (row, editOrNot) => {
       productionOrderNo__c: orderDetails.value["productionOrderNo__c"],
       region__c: orderDetails.value["region__c"],
     };
-    // console.info("params",params)
   }
   updateOrCreateServiceticket(params)
     .then((res) => {

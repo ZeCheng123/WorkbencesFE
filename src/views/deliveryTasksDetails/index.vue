@@ -1433,8 +1433,6 @@ const editdeliveryOrderNextStep = () =>{
       // contactTelephone:editdeliveryOrderForm.contactTelephone
     }
     addFieldJob(params).then((res: any) => {
-      // console.info("res.data.code",res.data.code)
-      // console.info("res.data",res.data)
       if (res.data.code == "success") {
         editdeliveryOrderDialog.value = false
         editinstallationOrderDialog.value = false
@@ -1599,14 +1597,13 @@ const updateactualPkgCnt = () =>{
     neoId:rowList.value.neoId,
     actualPkgCnt:actualPkgCnt.value
   }
-  // console.info("paramsinfo",params)
   updateDispatchNote(params).then((res : any) => {
-    console.info("resinfo",res)
     ElMessage({
       message: '修改成功',
       type: 'success'
     })
-    otherMethod()
+    // otherMethod()
+    getDispatchNoteByOrder(false,rowList.value.orderNo)
 	}).catch((error: any) => {
     ElMessage({
       message: '实际包装数量修改失败：'+ error.message,
@@ -1742,6 +1739,7 @@ const initiateComments = () => {
 
 const otherMethod = () => {
   getOrderByOne(false,orderId)
+
 };
 
 onMounted(()=>{
@@ -1861,7 +1859,7 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
         problemReportingForm.orderNo=orderData.value.po
         // tableDataOrder.value.push(data)
         getFieldList(false,orderData.value.neoid)
-        if(mergedOrderNo&&mergedOrderNo!=""){
+        if(mergedOrderNo&&(mergedOrderNo!="" || mergedOrderNo != undefined)){
           getDispatchNoteByOrder(false,mergedOrderNo) 
         }else{
           getDispatchNoteByOrder(false,orderData.value.po)
@@ -1884,13 +1882,13 @@ const getOrderByOne = (showMsg: boolean,orderId:any)=>{
 				
 			}
   })
-  if(mergedOrderNo && mergedOrderNo!=""){
+  if(mergedOrderNo && (mergedOrderNo!="" || mergedOrderNo != undefined)){
     let params={
       orderNo:mergedOrderNo.toString().split(";")
     }
     getOrderList(params).then((res : any) => {
 			let data = res.data.data
-			if (data!=undefined) {
+			if (data!=undefined || data.length >0) {
         tableDataOrder.value=data     
 			}
   })

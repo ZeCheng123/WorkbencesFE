@@ -1063,7 +1063,6 @@ const multipleSelection = ref([])
 //经销商填写售后处理描述
 dialog2Form.value = ref({})
 const handleSelectionChange = (val) => {
-  console.info("选择的数据：", val)
   multipleSelection.value = val
 }
 

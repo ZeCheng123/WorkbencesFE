@@ -87,6 +87,13 @@
 						</div>
 					</template>
 				</el-table-column>
+				<el-table-column prop="subStatus" label="子状态">
+					<template #default="scope">
+						<div style="display:flex;align-items:center;">
+							{{scope.row.subStatus?(ordersubStatusPtions.find(val=>val["code"]==scope.row.subStatus)?.name):"待配送"}}
+						</div>
+					</template>
+				</el-table-column>
 				<el-table-column prop="url" label="操作" width="80px">
 					<template #default="scope">
 						<div style="
@@ -235,6 +242,37 @@
 			name: "评价",
 		}
 	])
+	const ordersubStatusPtions = ref([
+		{
+			code: "",
+			name: "全部",
+		},
+		{
+			code: "1",
+			name: "待配送",
+		},
+		{
+			code: "2",
+			name: "配送中",
+		},
+		{
+			code: "3",
+			name: "待安装",
+		},
+		{
+			code: "4",
+			name: "安装中",
+		},
+		{
+			code: "5",
+			name: "待评价",
+		},
+		{
+			code: "6",
+			name: "已评价",
+		}
+	])
+	
 
 	const viewDetails = (row: any) => {
 		// console.log(row)

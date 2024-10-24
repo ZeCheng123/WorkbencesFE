@@ -175,11 +175,11 @@
           >发起任务评论</span
         >
       </div>
-      <div class="right">
+      <!-- <div class="right">
         <el-button type="primary" @click="initiateComments" class="primary_btn"
           >编辑</el-button
         >
-      </div>
+      </div> -->
     </span>
     <div class="comment" v-for="item in commentList" :key="item.date">
       <div class="userinfo">

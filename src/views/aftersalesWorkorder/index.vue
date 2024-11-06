@@ -83,7 +83,7 @@
         <el-table-column prop="storeName" label="专卖店名称" />
         <el-table-column prop="productionOrderNo__c" label="生产单号" />
         <el-table-column prop="accountName" label="客户名称" />
-        <el-table-column prop="text5" label="处理方式" />
+        <el-table-column prop="solutionSummary" label="处理方式" />
         <el-table-column prop="createdTime" label="创建时间" />
         <el-table-column prop="approvalStatus" label="审批状态">
           <template #default="scope">

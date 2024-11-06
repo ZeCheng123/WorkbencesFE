@@ -86,7 +86,7 @@
         <el-table-column prop="caseNo" label="派工编号" />
         <el-table-column prop="appointmentStartTime" label="计划开始时间" />
         <el-table-column prop="appointmentEndTime" label="计划结束时间" />
-        <el-table-column prop="follower__c" label="技工名称" />
+        <el-table-column prop="followerName" label="技工名称" />
         <el-table-column prop="fieldJobType__c" label="派工种类" >
           <template #default="scope">
             <div style="display:flex;align-items:center;">

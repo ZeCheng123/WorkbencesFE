@@ -42,7 +42,7 @@
         >售后工单详情 
         <!-- <el-button class="submit_btn">已提交</el-button> -->
         <el-button v-if="aftersalesHeaderDetails['reasonReturn']!=undefined&&aftersalesHeaderDetails['reasonReturn']!=''" class="return_btn">退回原因:{{ aftersalesHeaderDetails.reasonReturn }}</el-button>
-        <el-button type="primary" @click="reSubmitApproval" class="primary_btn">重新提交审批</el-button>      
+        <!-- <el-button type="primary" @click="reSubmitApproval" class="primary_btn">重新提交审批</el-button>       -->
       </span>
       <span class="main_field">
         <span class="row_field">
@@ -105,8 +105,9 @@
             <span class="value">{{ aftersalesHeaderDetails.solutionSummary }}</span>
           </span>
           <span class="field">
-            <span class="label">审批状态:</span>
-            <span class="value">{{ approvalList(aftersalesHeaderDetails.approvalStatus) }}</span>
+            <span class="label">预定单号:</span>
+            <!-- <span class="value">{{ approvalList(aftersalesHeaderDetails.approvalStatus) }}</span> -->
+            <span class="value">{{aftersalesHeaderDetails.yddNo}}</span>
           </span>
         </span>
         <span class="row_field">

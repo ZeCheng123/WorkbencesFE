@@ -187,19 +187,19 @@ const dispatchWorkerStatusOption = ref([
 			name: "全部",
 		},
 		{
-			code: "0",
+			code: "1",
 			name: "待开始",
 		},
 		{
-			code: "1",
+			code: "2",
 			name: "进行中",
 		},
 		{
-			code: "2",
+			code: "3",
 			name: "已完成",
 		},
-		{
-			code: "3",
+    {
+			code: "4",
 			name: "已评价",
 		}
 ])

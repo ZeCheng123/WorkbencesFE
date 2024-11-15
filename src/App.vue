@@ -85,6 +85,8 @@ watch(() => proxy.$route,
             mainElement.value.style.height = "calc(100% - 16px)";
           }
         }
+        localStorage.setItem("routes",JSON.stringify(routes.value));
+        sessionStorage.setItem("routes",JSON.stringify(routes.value));
         nextTick(() =>{
           console.log("刷新");
           if(document.createEvent){
@@ -168,6 +170,10 @@ watch(() => proxy.$route,
 
 onMounted(() =>{
   nextTick(() =>{
+    let routesList = localStorage.getItem("routes") || sessionStorage.getItem("routes");
+    if(routesList){
+      routes.value = JSON.parse(routesList);
+    }
     if(mainElement.value)
     {
       const standardScale = (("100%") as any) / (("100%") as any);
@@ -259,6 +265,8 @@ const clickNav = (item,index) =>{
       path: '/main'
     })
   }
+  localStorage.setItem("routes",JSON.stringify(routes.value));
+  sessionStorage.setItem("routes",JSON.stringify(routes.value));
 }
 
 </script>

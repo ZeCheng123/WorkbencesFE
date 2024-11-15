@@ -88,6 +88,8 @@ const getSendCode = () => {
 }
 
 const getAuth = async () => {
+  localStorage.setItem("isLogin","0");
+  sessionStorage.setItem("isLogin","0");
   return new Promise(function (resolve) {
     wecom({ code: code.value, userType: 2 }).then(res => {
       let rtData = res.data;
@@ -109,6 +111,8 @@ const getAuth = async () => {
           }
           localStorage.setItem("userinfo", JSON.stringify(newData));
           sessionStorage.setItem("userinfo", JSON.stringify(newData));
+          localStorage.setItem("isLogin","1");
+          sessionStorage.setItem("isLogin","1");
           setAuth();
           proxy.$router.push({ path: "/main", query: {} });
         }
@@ -213,6 +217,8 @@ const setAuth = () =>{
     }
   });
   proxy.$router.options.routes = router;
+  localStorage.setItem("routes",JSON.stringify([]));
+  sessionStorage.setItem("routes",JSON.stringify([]));
 }
 
 

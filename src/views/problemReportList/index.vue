@@ -277,6 +277,10 @@ const caseSource = ref([
     name: "经销商",
     code: "4",
   },
+  {
+    name: "400热线",
+    code: "5",
+  },
 ]);
 
 const casequestionType = ref([

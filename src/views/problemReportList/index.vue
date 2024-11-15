@@ -65,7 +65,8 @@
     <span class="table" ref="mainTable">
       <el-table class="table_content" :data="tableData" :stripe="false" style="width: 100%">
         <el-table-column prop="caseNo" label="问题编号" />
-        <el-table-column prop="name" label="客户姓名" />
+        <el-table-column prop="name" label="工单主题" />
+        <el-table-column prop="customerName" label="客户姓名" />
         <el-table-column prop="problemDescription" label="问题描述" />
         <el-table-column prop="questionType" label="问题类别">
           <template #default="scope">
@@ -485,6 +486,7 @@ const submitProblemReporting = () => {
     externalUserPhone: problemReportingForm.value["customerPhone"],
     problemDescription: problemReportingForm.value["desc"],
     picture: problemReportingForm.value["filePath"],
+    jxsPicture:problemReportingForm.value["filePath"],
     caseStatus: "1",
     questionType: 1,
     caseSource:11,

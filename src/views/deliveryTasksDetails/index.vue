@@ -1477,7 +1477,8 @@ const finishInstallationOrder = async () => {
     type: "安装派工",
     fieldJobType__c:1,
     stage__c:0,
-    docPicture: installationOrderForm.filePath,
+    // docPicture: installationOrderForm.filePath,
+    jxsPicture: installationOrderForm.filePath,
     appointmentStartTime: installationOrderForm.appointmentStartTime,
     appointmentEndTime: installationOrderForm.appointmentEndTime,
     followerId:installationOrderForm.username,
@@ -1619,7 +1620,8 @@ const finishDeliveryOrder =  () => {
   params["contactTelephone"]=orderData.value.contactTel==undefined?"":orderData.value.contactTel.toString();
   params["address"]=orderData.value.customerAddress==undefined?"":orderData.value.customerAddress;
   params["picture"] = params.filePath;
-  params["goodsPicture"] = params.filePath;
+  // params["goodsPicture"] = params.filePath;
+  params["jxsPicture"] = params.filePath;
   params["name"] = orderData.value.accountName__C+"的配送派工单";
   params["status"]=1;
   params["orderNo__c"] = orderData.value["po"];
@@ -1980,7 +1982,6 @@ const getExtralUserData = (showMsg: boolean,userType)=>{
 
 ///install
 const handleSuccessInstall = (res) => {
-  // console.log(res);
   if(res.code == "success"){
     let path = res.data.map(val => val["fileId"]);
     if(path[0]){
@@ -2018,7 +2019,8 @@ const beforeUploadInstall = (file) => {
     ElMessage.error('上传图片大小不能超过20MB!')
     return false
   }
-  uploadDataProblemReport.value["files"] = [file];
+  // uploadDataProblemReport.value["files"] = [file];
+  uploadDataInstall.value["files"] = [file];
 }
 
 const onCahngeUserSelectForInstallion = (event) => {

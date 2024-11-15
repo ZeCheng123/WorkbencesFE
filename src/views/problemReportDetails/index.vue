@@ -2252,7 +2252,8 @@ const finishDeliveryOrder = () => {
   params["name"] = orderDetails.value["accountName__C"] + "的维修派工单";
   params["orderNo__c"] = orderDetails.value["po"];
   params["picture"] = params.filePath;
-  params["goodsPicture"] = params.filePath;
+  // params["goodsPicture"] = params.filePath;
+  params["jxsPicture"] = params.filePath;
   params["status"] = 1;
   params["address"]=orderDetails.value["customerAddress"];
   addFieldJob(params)

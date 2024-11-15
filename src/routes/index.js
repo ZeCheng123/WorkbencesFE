@@ -203,7 +203,7 @@ function isInWeChat() {
 
 router.beforeEach((to, from, next) => {
   const allowedRoutes = ['/login', '/validate','/aftersales_workorder_fordocno','/404'];
-  let isLogin = "1"; //  localStorage.getItem("isLogin") || sessionStorage.getItem("isLogin");
+  let isLogin = localStorage.getItem("isLogin") || sessionStorage.getItem("isLogin");
   console.log("isLogin:"+isLogin);
   if (!allowedRoutes.includes(to.path)) {
     if(to.meta.isAuth || isLogin == "1")

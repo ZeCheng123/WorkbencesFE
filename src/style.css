@@ -1,0 +1,53 @@
+#app, body, html {width: 100%;height: 100%;background-color: #EEF0F3}
+#app {padding: 10px;}
+
+.status{
+    width: 60px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    border-radius: 2px;
+    background: #FF8127;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    font-family: Alibaba PuHuiTi 2.0;
+    font-size: 12px;
+    font-weight: normal;
+  }
+  
+  .statusing{
+    width: 60px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    border-radius: 2px;
+    background: #0256FF;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    font-family: Alibaba PuHuiTi 2.0;
+    font-size: 12px;
+    font-weight: normal;
+  }
+  
+  .statused{
+    width: 60px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    border-radius: 2px;
+    background: #767676;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    font-family: Alibaba PuHuiTi 2.0;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+
+@font-face {
+  /* font-family: Alibaba PuHuiTi 2.0; */
+  font-family: Alibaba PuHuiTi;
+  src:url('../src/assets/fonts/AlibabaPuHuiTi-2-55-Regular.ttf')
+}
+
+

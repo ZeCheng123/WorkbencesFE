@@ -797,6 +797,7 @@ const getList = (orderId) => {
     if (dataInfo.length > 0) {
       let data = dataInfo[0]
       taskStatus.value = data.status != null ? parseInt(data.status.toString(), 0) + 1 : 1
+      subStatus=taskStatus.value;
       taskDetails.value = {
         taskid: data.id,
         orderId: data.orderId,
